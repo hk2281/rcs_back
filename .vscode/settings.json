@@ -1,0 +1,4 @@
+{
+    "python.pythonPath": "/home/admin/.venv/rcs_back/bin/python3",
+    "python.linting.pylintEnabled": true
+}
