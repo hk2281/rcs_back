@@ -3,7 +3,7 @@ version: '3'
 volumes:
   production_postgres_data: {}
   production_postgres_data_backups: {}
-  static_volume: {}
+  production_static_volume: {}
   certs: {}
 
 services:
@@ -20,7 +20,7 @@ services:
       - ./.envs/.production/.postgres
     command: /start
     volumes: 
-      - static_volume:/app/staticfiles
+      - production_static_volume:/app/staticfiles
     expose: 
       - 8000
 

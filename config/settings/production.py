@@ -7,7 +7,7 @@ from sentry_sdk.integrations.celery import CeleryIntegration
 
 from sentry_sdk.integrations.redis import RedisIntegration
 
-from .base import *  # noqa
+from .base import *
 from .base import env
 
 # GENERAL

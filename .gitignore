@@ -282,3 +282,6 @@ rcs_back/media/
 
 # SSL certs
 certs/
+
+# Django migrations
+migrations/
