@@ -15,6 +15,12 @@ env = environ.Env()
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = env.bool("DJANGO_DEBUG", False)
+
+SECRET_KEY = env.str(
+    "DJANGO_SECRET_KEY",
+    default="v9rOQQO47ZQ8yVZ5Z2n3Wl2PREKg40CaV6GbEeXEmEbOzldlgr8KysOCTjDK3Qsg",
+)
+
 # Local time zone. Choices are
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # though not all of them may be available with every OS.
@@ -73,7 +79,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    "rcs_back.users_app"  # FIXME Will it work this way?
+    "rcs_back.users_app"
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -203,7 +209,7 @@ EMAIL_TIMEOUT = 5
 # ADMIN
 # ------------------------------------------------------------------------------
 # Django Admin URL.
-ADMIN_URL = "django-admin/"
+ADMIN_URL = env.str("DJANGO_ADMIN_URL", "django-admin/")
 # https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = [("""Egor Kondrashov""", "e.kondr01@gmail.com")]
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers

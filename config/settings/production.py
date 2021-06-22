@@ -2,7 +2,7 @@ import logging
 
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.logging import LoggingIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration, ignore_logger
 from sentry_sdk.integrations.celery import CeleryIntegration
 
 from sentry_sdk.integrations.redis import RedisIntegration
@@ -10,12 +10,9 @@ from sentry_sdk.integrations.redis import RedisIntegration
 from .base import *
 from .base import env
 
-# GENERAL
-# ------------------------------------------------------------------------------
-# https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
-SECRET_KEY = env("DJANGO_SECRET_KEY")
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["e-kondr01.ru", "www.e-kondr01.ru", "188.227.86.62"]
+ALLOWED_HOSTS = ["e-kondr01.ru", "www.e-kondr01.ru"]
 
 # DATABASES
 # ------------------------------------------------------------------------------
@@ -94,11 +91,6 @@ EMAIL_SUBJECT_PREFIX = env(
     default="[RCS Back]",
 )
 
-# ADMIN
-# ------------------------------------------------------------------------------
-# Django Admin URL regex.
-ADMIN_URL = env("DJANGO_ADMIN_URL")
-
 # Anymail
 # ------------------------------------------------------------------------------
 # https://anymail.readthedocs.io/en/stable/installation/#installing-anymail
@@ -175,3 +167,5 @@ sentry_sdk.init(
     environment=env("SENTRY_ENVIRONMENT", default="production"),
     traces_sample_rate=env.float("SENTRY_TRACES_SAMPLE_RATE", default=0.0),
 )
+
+ignore_logger("django.security.DisallowedHost")
