@@ -35,9 +35,10 @@ ENV BUILD_ENV ${BUILD_ENVIRONMENT}
 
 WORKDIR ${APP_HOME}
 
-RUN addgroup --system django \
-    && adduser --system --ingroup django django
+RUN addgroup --gid 777 --system django \
+    && adduser --uid 777 --system --ingroup django django
 
+# Need to chown django logs to 777:777
 
 # Install required system dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \

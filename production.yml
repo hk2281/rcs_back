@@ -3,7 +3,6 @@ version: '3'
 volumes:
   production_postgres_data: {}
   production_postgres_data_backups: {}
-  nginx_logs: {}
 
 services:
   django: &django
@@ -14,6 +13,8 @@ services:
     depends_on:
       - postgres
       - redis
+    volumes:
+      - ./logs/gunicorn:/app/logs/gunicorn
     env_file:
       - ./.envs/.production/.django
       - ./.envs/.production/.postgres
@@ -39,7 +40,7 @@ services:
       - "443:443"
       - "5555:5555"
     volumes:
-      - nginx_logs:/etc/nginx/logs
+      - ./logs/nginx:/etc/nginx/logs
     depends_on:
       - django
 
