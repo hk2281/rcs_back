@@ -4,7 +4,4 @@
 
 gunicorn==20.1.0  # https://github.com/benoitc/gunicorn
 sentry-sdk==1.1.0  # https://github.com/getsentry/sentry-python
-
-# Django
-# ------------------------------------------------------------------------------
 django-anymail[sendinblue]==8.2  # https://github.com/anymail/django-anymail
