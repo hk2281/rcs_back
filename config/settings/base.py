@@ -79,6 +79,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
+    "rcs_back.containers_app",
     "rcs_back.users_app"
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

@@ -6,4 +6,5 @@ from django.urls import include, path
 urlpatterns = [
     # Django Admin
     path(settings.ADMIN_URL, admin.site.urls),
+    path("", include("rcs_back.containers_app.urls"))
 ]
