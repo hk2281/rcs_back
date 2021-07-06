@@ -72,6 +72,7 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "django_celery_beat",
+    "django_filters",
     "rest_framework",
     "corsheaders",
     "djcelery_email",
@@ -80,7 +81,8 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "rcs_back.containers_app",
-    "rcs_back.users_app"
+    "rcs_back.users_app",
+    "rcs_back.takeouts_app"
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -270,6 +272,9 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
+    ]
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup

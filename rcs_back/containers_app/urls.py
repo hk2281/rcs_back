@@ -4,5 +4,6 @@ from .views import *
 
 
 urlpatterns = [
-    path("containers/<int:pk>/fill", FillContainerView.as_view())
+    path("<int:pk>/fill", FillContainerView.as_view()),
+    path("<int:pk>", ContainerView.as_view())
 ]
