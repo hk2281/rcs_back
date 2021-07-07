@@ -33,3 +33,13 @@ class ContainerSerializer(serializers.ModelSerializer):
             "is_full",
             "is_active"
         ]
+
+
+class BuildingSerializer(serializers.ModelSerializer):
+    """Сериализатор здания"""
+    class Meta:
+        model = Building
+        fields = [
+            "id",
+            "address"
+        ]

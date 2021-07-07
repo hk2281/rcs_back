@@ -22,7 +22,13 @@ class FillContainerView(generics.UpdateAPIView):
         serializer.save()
 
 
-class ContainerView(generics.RetrieveUpdateDestroyAPIView):
+class ContainerDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """ View для CRUD-операций с контейнерами """
+    serializer_class = ContainerSerializer
+    queryset = Container.objects.all()
+
+
+class ContainerListView(generics.ListCreateAPIView):
     """ View для CRUD-операций с контейнерами """
     serializer_class = ContainerSerializer
     queryset = Container.objects.all()
@@ -34,3 +40,9 @@ class ContainerView(generics.RetrieveUpdateDestroyAPIView):
         "is_full",
         "is_active"
     ]
+
+
+class BuildingListView(generics.ListAPIView):
+    """Списко зданий (для опций при создании контейнера)"""
+    serializer_class = BuildingSerializer
+    queryset = Building.objects.all()

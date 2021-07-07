@@ -208,6 +208,14 @@ X_FRAME_OPTIONS = "DENY"
 EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-timeout
 EMAIL_TIMEOUT = 5
+DEFAULT_FROM_EMAIL = env(
+    "DJANGO_DEFAULT_FROM_EMAIL", default="RCS Back <noreply@e-kondr01.ru>"
+)
+SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
+EMAIL_SUBJECT_PREFIX = env(
+    "DJANGO_EMAIL_SUBJECT_PREFIX",
+    default="[RCS Back]",
+)
 
 # ADMIN
 # ------------------------------------------------------------------------------
@@ -273,7 +281,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
+        "rest_framework.permissions.DjangoModelPermissions",
     ]
 }
 
@@ -283,11 +291,13 @@ CORS_URLS_REGEX = r"^/api/.*$"
 # Djoser
 
 DJOSER = {
-    'USER_CREATE_PASSWORD_RETYPE': True,
-    'SEND_ACTIVATION_EMAIL': True,
-    'SET_PASSWORD_RETYPE': True,
-    'PASSWORD_RESET_CONFIRM_RETYPE': True,
-    'TOKEN_MODEL': None,  # We use only JWT
-    'ACTIVATION_URL': 'auth/verify/{uid}/{token}/',
-    'PASSWORD_RESET_CONFIRM_URL': 'auth/password/reset/{uid}/{token}/',
+    "TOKEN_MODEL": None,  # We use only JWT
+    "HIDE_USERS": True
 }
+
+# Constants
+
+# Groups
+
+ECO_GROUP = "эко"
+HOZ_GROUP = "хоз"

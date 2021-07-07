@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class FullContainersNotification(models.Model):
+class EnoughFullContainersNotification(models.Model):
     """Модель оповещения о достаточном кол-ве
     полных контейнеров"""
 
@@ -20,12 +20,6 @@ class FullContainersNotification(models.Model):
 
 class TakeoutRequest(models.Model):
     """Модель запроса выноса"""
-
-    notification = models.OneToOneField(
-        to=FullContainersNotification,
-        on_delete=models.PROTECT,
-        verbose_name="оповещение"
-    )
 
     created_at = models.DateTimeField(
         auto_now_add=True,

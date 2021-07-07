@@ -4,4 +4,4 @@ from .models import *
 
 
 admin.site.register(TakeoutRequest)
-admin.site.register(FullContainersNotification)
+admin.site.register(EnoughFullContainersNotification)

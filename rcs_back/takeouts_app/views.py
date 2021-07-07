@@ -1,3 +1,10 @@
-from django.shortcuts import render
+from rest_framework import generics
 
-# Create your views here.
+from .models import TakeoutRequest
+from .serializers import TakeoutRequestSerializer
+
+
+class TakeoutListView(generics.ListCreateAPIView):
+    """CRUD для заявки на вынос"""
+    serializer_class = TakeoutRequestSerializer
+    queryset = TakeoutRequest.objects.all()
