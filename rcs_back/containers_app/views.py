@@ -1,8 +1,12 @@
 from django_filters import rest_framework as filters
 from rest_framework import generics, permissions
+from rest_framework.response import Response
+from io import BytesIO
+from django.core.files import File
 
 from .models import Container, FullContainerReport
 from .serializers import *
+from .qr import generate_sticker
 
 
 class FillContainerView(generics.UpdateAPIView):
@@ -46,3 +50,24 @@ class BuildingListView(generics.ListAPIView):
     """Списко зданий (для опций при создании контейнера)"""
     serializer_class = BuildingSerializer
     queryset = Building.objects.all()
+
+
+class GetStickerView(generics.RetrieveAPIView):
+    """View для получения стикера контейнера"""
+    queryset = Container.objects.all()
+    serializer_class = ContainerStickerSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        if not instance.sticker:
+            """Генерируем стикер, если его ещё нет."""
+            sticker_im = generate_sticker(instance.pk)
+            sticker_io = BytesIO()
+            sticker_im.save(sticker_io, "JPEG", quality=85)
+            sticker = File(sticker_io, name=f"sticker_{instance.pk}")
+            instance.sticker = sticker
+            instance.save()
+
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)

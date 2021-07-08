@@ -43,3 +43,13 @@ class BuildingSerializer(serializers.ModelSerializer):
             "id",
             "address"
         ]
+
+
+class ContainerStickerSerializer(serializers.ModelSerializer):
+    """Сериализатор стикера контейнера"""
+    class Meta:
+        model = Container
+        fields = [
+            "id",
+            "sticker"
+        ]

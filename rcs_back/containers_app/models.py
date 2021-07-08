@@ -122,6 +122,12 @@ class Container(LifecycleModel):
         verbose_name="активен"
     )
 
+    sticker = models.ImageField(
+        verbose_name="стикер",
+        upload_to="stickers/",
+        blank=True
+    )
+
     @hook(AFTER_UPDATE, when="is_full", was=False, is_now=True)
     def on_fill(self) -> None:
         """При заполнении контейнера нужно зафиксировать,
