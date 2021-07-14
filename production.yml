@@ -3,7 +3,6 @@ version: '3'
 volumes:
   production_postgres_data: {}
   production_postgres_data_backups: {}
-  production_django_static: {}
 
 services:
   django: &django
@@ -17,7 +16,6 @@ services:
     volumes:
       - ./logs/gunicorn:/app/logs/gunicorn
       - ./rcs_back/media:/app/rcs_back/media
-      - production_django_static:/app/staticfiles
     env_file:
       - ./.envs/.production/.django
       - ./.envs/.production/.postgres
@@ -45,8 +43,6 @@ services:
       - "5555:5555"
     volumes:
       - ./logs/nginx:/etc/nginx/logs
-      - ./rcs_back/media:/app/rcs_back/media
-      - production_django_static:/app/staticfiles
     depends_on:
       - django
 
