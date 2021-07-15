@@ -3,7 +3,6 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django_lifecycle import LifecycleModel, hook, AFTER_UPDATE
 
-from rcs_back.takeouts_app.models import EnoughFullContainersNotification
 from rcs_back.users_app.models import User
 
 
@@ -14,28 +13,6 @@ class Building(models.Model):
         max_length=2048,
         verbose_name="адрес"
     )
-
-    is_full = models.BooleanField(
-        default=False,
-        verbose_name="нужно вынести бумагу"
-    )
-
-    enough_full_containers_count = models.PositiveSmallIntegerField(
-        verbose_name="достаточное количество контейнеров для выноса"
-    )
-
-    def check_full_count(self) -> bool:
-        """Проверяет, достаточно ли в здании полных контейнеров
-        для выноса"""
-        full_count = Container.objects.filter(
-            is_active=True
-        ).filter(
-            is_full=True
-        ).filter(
-            building=self
-        ).count()
-        is_enough = full_count >= self.enough_full_containers_count
-        return is_enough
 
     def generate_full_msg(self) -> str:
         full_containers = Container.objects.filter(
@@ -58,6 +35,7 @@ class Building(models.Model):
         return msg
 
     def handle_full(self) -> None:
+        # FIXME: новые условия для отбора
         """Фиксирует то, что накопилось достаточно
         полных контейнеров и оповещает сотрудников."""
         EnoughFullContainersNotification.objects.create()
@@ -85,6 +63,30 @@ class Building(models.Model):
     class Meta:
         verbose_name = "здание"
         verbose_name_plural = "здания"
+
+
+class EnoughFullContainersNotification(models.Model):
+    """Модель оповещения о достаточном кол-ве
+    полных контейнеров"""
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="время создания"
+    )
+
+    building = models.ForeignKey(
+        to=Building,
+        on_delete=models.CASCADE,
+        related_name="full_containers_notifications",
+        verbose_name="здание"
+    )
+
+    def __str__(self) -> str:
+        return f"Оповещение от {self.created_at} в {self.building}"
+
+    class Meta:
+        verbose_name = "оповещение о полных контейнерах"
+        verbose_name_plural = "оповещения о полных контейнерах"
 
 
 class Container(LifecycleModel):
@@ -128,6 +130,15 @@ class Container(LifecycleModel):
         blank=True
     )
 
+    def last_full_report(self):
+        """Возвращает FullContainerReport
+        для этого контейнера, который ещё не
+        отметили как опустошённый"""
+        return FullContainerReport.objects.filter(
+            container=self).filter(
+                emptied_at__isnull=True
+        )[0]
+
     @hook(AFTER_UPDATE, when="is_full", was=False, is_now=True)
     def on_fill(self) -> None:
         """При заполнении контейнера нужно зафиксировать,
@@ -137,6 +148,7 @@ class Container(LifecycleModel):
         )
         """Если в здании достаточно полных контейнеров,
         сообщаем"""
+        # FIXME: новые условия отбора
         if not self.building.is_full:
             is_building_full = self.building.check_full_count()
             if is_building_full:
@@ -154,9 +166,9 @@ class Container(LifecycleModel):
 
 class FullContainerReport(models.Model):
     """Модель, хранящая информацию о том, когда
-    был заполнен контейнер"""
+    был заполнен и очищен контейнер"""
 
-    created_at = models.DateTimeField(
+    reported_full_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name="первый раз получено"
     )
@@ -173,8 +185,15 @@ class FullContainerReport(models.Model):
         verbose_name="количество сообщений"
     )
 
+    emptied_at = models.DateTimeField(
+        verbose_name="контейнер вынесен",
+        blank=True,
+        null=True
+    )
+
     def __str__(self) -> str:
-        return f"Контейнер №{self.container.pk} заполнен, {self.created_at}"
+        return (f"Контейнер №{self.container.pk} заполнен, "
+                f"{self.reported_full_at}")
 
     class Meta:
         verbose_name = "контейнер заполнен"

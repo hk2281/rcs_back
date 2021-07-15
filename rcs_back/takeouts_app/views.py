@@ -1,10 +1,29 @@
+from django.utils import timezone
 from rest_framework import generics
 
-from .models import TakeoutRequest
-from .serializers import TakeoutRequestSerializer
+from .models import *
+from .serializers import *
 
 
-class TakeoutListView(generics.ListCreateAPIView):
-    """CRUD для заявки на вынос"""
-    serializer_class = TakeoutRequestSerializer
-    queryset = TakeoutRequest.objects.all()
+class ContainersTakeoutListView(generics.ListCreateAPIView):
+    """CRUD для заявки на вынос контейнеров"""
+    serializer_class = ContainersTakeoutRequestSerializer
+    queryset = ContainersTakeoutRequest.objects.all()
+
+
+class ContainersTakeoutConfirmationListView(generics.CreateAPIView):
+    """View для создания подтверждения выноса контейнеров"""
+    serializer_class = ContainersTakeoutConfirmationSerializer
+    queryset = ContainersTakeoutConfirmation.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save()
+        containers = serializer.validated_data["containers"]
+        for container in containers:
+            """Меняем статус контейнера и
+            фиксируем время подтверждения выноса"""
+            container.is_full = False
+            container.save()
+            last_full_report = container.last_full_report()
+            last_full_report.emptied_at = timezone.now()
+            last_full_report.save()

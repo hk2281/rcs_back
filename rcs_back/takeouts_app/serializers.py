@@ -1,17 +1,42 @@
 from rest_framework import serializers
 
+from rcs_back.containers_app.models import Container
 from .models import *
 
 
-class TakeoutRequestSerializer(serializers.ModelSerializer):
-    """Сериализатор для заявки на вынос"""
+class ContainersTakeoutRequestSerializer(serializers.ModelSerializer):
+
+    containers = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Container.objects.all()
+    )
 
     class Meta:
-        model = TakeoutRequest
+        model = ContainersTakeoutRequest
         fields = [
             "id",
-            "created_at"
+            "created_at",
+            "containers"
         ]
         read_only_fields = [
             "created_at"
+        ]
+
+
+class ContainersTakeoutConfirmationSerializer(serializers.ModelSerializer):
+
+    building = serializers.PrimaryKeyRelatedField(
+        many=False, queryset=Building.objects.all()
+    )
+
+    containers = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Container.objects.filter(is_active=True)
+    )
+
+    class Meta:
+        model = ContainersTakeoutConfirmation
+        fields = [
+            "id",
+            "building",
+            "containers",
+            "worker_info"
         ]
