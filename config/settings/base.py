@@ -43,6 +43,21 @@ USE_TZ = True
 DATABASES = {"default": env.db("DATABASE_URL")}
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
+# CACHES
+# ------------------------------------------------------------------------------
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": env("REDIS_URL"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            # Mimicing memcache behavior.
+            # https://github.com/jazzband/django-redis#memcached-exceptions-behavior
+            "IGNORE_EXCEPTIONS": False,
+        },
+    }
+}
+
 # MIGRATIONS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#migration-modules
@@ -80,7 +95,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    "rcs_back.containers_app",
+    "rcs_back.containers_app.apps.ContainersAppConfig",
     "rcs_back.users_app",
     "rcs_back.takeouts_app"
 ]

@@ -1,6 +1,10 @@
 from django.db import models
+from django.utils import timezone
 
 from rcs_back.containers_app.models import Container, Building
+
+
+tz = timezone.get_default_timezone()
 
 
 class ContainersTakeoutRequest(models.Model):
@@ -23,7 +27,8 @@ class ContainersTakeoutRequest(models.Model):
     )
 
     def __str__(self) -> str:
-        return f"Запрос выноса контейнеров от {self.created_at}"
+        return (f"Запрос выноса контейнеров от "
+                f"{self.created_at.astimezone(tz).strftime('%d.%m.%Y %H:%M')}")
 
     class Meta:
         verbose_name = "запрос выноса контейнеров"
@@ -57,7 +62,8 @@ class ContainersTakeoutConfirmation(models.Model):
     )
 
     def __str__(self) -> str:
-        return (f"Подтверждение выноса контейнеров от {self.created_at} "
+        return (f"Подтверждение выноса контейнеров от "
+                f"{self.created_at.astimezone(tz).strftime('%d.%m.%Y %H:%M')} "
                 f"в {self.building}")
 
     class Meta:
@@ -81,8 +87,9 @@ class TankTakeoutRequest(models.Model):
     )
 
     def __str__(self) -> str:
-        return (f"Запрос вывоза накопительного бака от {self.created_at} "
-                "в {self.building}")
+        return (f"Запрос вывоза накопительного бака от "
+                f"{self.created_at.astimezone(tz).strftime('%d.%m.%Y %H:%M')} "
+                f"в {self.building}")
 
     class Meta:
         verbose_name = "запрос вывоза бака"

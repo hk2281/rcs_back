@@ -4,9 +4,10 @@ from rest_framework.response import Response
 from io import BytesIO
 from django.core.files import File
 
-from .models import Container, FullContainerReport
+from rcs_back.containers_app.models import Container, FullContainerReport
 from .serializers import *
 from .qr import generate_sticker
+from .tasks import calc_avg_fill_time
 
 
 class FillContainerView(generics.UpdateAPIView):
@@ -18,11 +19,24 @@ class FillContainerView(generics.UpdateAPIView):
     def perform_update(self, serializer) -> None:
         instance = self.get_object()
         if instance.is_full:
-            full_container_report = FullContainerReport.objects.order_by(
-                "-created_at"
-            )[0]
-            full_container_report.count += 1
-            full_container_report.save()
+            # Повторное сообщение
+            instance.last_full_report().count += 1
+            instance.last_full_report().save()
+        else:
+            # FIXME: продублировать в update
+            FullContainerReport.objects.create(
+                container=instance
+            )
+            calc_avg_fill_time.delay(instance.pk)
+            """Если в здании достаточно полных контейнеров,
+            сообщаем"""
+            # FIXME: новые условия отбора
+            # if not self.building.is_full:
+            #     is_building_full = self.building.check_full_count()
+            #     if is_building_full:
+            #         self.building.is_full = True
+            #         self.building.save()
+            #         self.building.handle_full()
         serializer.save()
 
 

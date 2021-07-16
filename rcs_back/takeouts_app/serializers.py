@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from rcs_back.containers_app.models import Container
-from .models import *
+from rcs_back.takeouts_app.models import *
 
 
 class ContainersTakeoutRequestSerializer(serializers.ModelSerializer):

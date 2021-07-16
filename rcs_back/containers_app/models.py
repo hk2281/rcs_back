@@ -1,9 +1,14 @@
 from django.db import models
+from django.core.cache import cache
 from django.core.mail import send_mail
 from django.conf import settings
+from django.utils import timezone
 from django_lifecycle import LifecycleModel, hook, AFTER_UPDATE
 
 from rcs_back.users_app.models import User
+
+
+tz = timezone.get_default_timezone()
 
 
 class Building(models.Model):
@@ -82,7 +87,9 @@ class EnoughFullContainersNotification(models.Model):
     )
 
     def __str__(self) -> str:
-        return f"Оповещение от {self.created_at} в {self.building}"
+        return (f"Оповещение от "
+                f"{self.created_at.astimezone(tz).strftime('%d.%m.%Y %H:%M')}"
+                "в {self.building}")
 
     class Meta:
         verbose_name = "оповещение о полных контейнерах"
@@ -114,6 +121,10 @@ class Container(LifecycleModel):
         verbose_name="аудитория/описание"
     )
 
+    capacity = models.PositiveSmallIntegerField(
+        verbose_name="объём"
+    )
+
     is_full = models.BooleanField(
         default=False,
         verbose_name="заполнен"
@@ -124,10 +135,20 @@ class Container(LifecycleModel):
         verbose_name="активен"
     )
 
+    is_public = models.BooleanField(
+        default=False,
+        verbose_name="находится в общественном месте"
+    )
+
     sticker = models.ImageField(
         verbose_name="стикер",
         upload_to="stickers/",
         blank=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="время добавления в систему"
     )
 
     def last_full_report(self):
@@ -137,24 +158,42 @@ class Container(LifecycleModel):
         return FullContainerReport.objects.filter(
             container=self).filter(
                 emptied_at__isnull=True
-        )[0]
+        ).first()
 
-    @hook(AFTER_UPDATE, when="is_full", was=False, is_now=True)
-    def on_fill(self) -> None:
-        """При заполнении контейнера нужно зафиксировать,
-        когда это произошло"""
-        FullContainerReport.objects.create(
-            container=self
-        )
-        """Если в здании достаточно полных контейнеров,
-        сообщаем"""
-        # FIXME: новые условия отбора
-        if not self.building.is_full:
-            is_building_full = self.building.check_full_count()
-            if is_building_full:
-                self.building.is_full = True
-                self.building.save()
-                self.building.handle_full()
+    def cur_fill_time(self) -> str:
+        """Текущее время заполнения контейнера"""
+        if self.last_full_report():
+            return "Контейнер уже заполнен."
+        else:
+            previous_report = FullContainerReport.objects.filter(
+                container=self).order_by("-emptied_at")[0]
+            fill_time = timezone.now() - previous_report.emptied_at
+            return str(fill_time)
+
+    def cur_takeout_wait_time(self) -> str:
+        """Текущее время ожидания выноса контейнера"""
+        if self.last_full_report():
+            wait_time = (timezone.now() -
+                         self.last_full_report().reported_full_at)
+            return str(wait_time)
+        else:
+            return "Контейнер ещё не заполнен."
+
+    def avg_fill_time(self) -> str:
+        """Среднее время заполнения этого контейнера"""
+        avg_fill_time = cache.get(f"{self.pk}_avg_fill_time")
+        if not avg_fill_time:
+            return "Среднее время заполнения контейнера рассчитывается..."
+        else:
+            return avg_fill_time
+
+    def avg_takeout_wait_time(self) -> str:
+        """Среднее время ожидания выноса этого контейнера"""
+        avg_takeout_wat_time = cache.get(f"{self.pk}_avg_takeout_wait_time")
+        if not avg_takeout_wat_time:
+            return "Среднее время ожидания выноса контейнера рассчитывается..."
+        else:
+            return avg_takeout_wat_time
 
     def __str__(self) -> str:
         return f"Контейнер №{self.pk}"
@@ -193,7 +232,7 @@ class FullContainerReport(models.Model):
 
     def __str__(self) -> str:
         return (f"Контейнер №{self.container.pk} заполнен, "
-                f"{self.reported_full_at}")
+                f"{self.reported_full_at.astimezone(tz).strftime('%d.%m.%Y %H:%M')}")
 
     class Meta:
         verbose_name = "контейнер заполнен"

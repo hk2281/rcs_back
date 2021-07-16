@@ -31,7 +31,10 @@ class ContainerSerializer(serializers.ModelSerializer):
             "floor",
             "location",
             "is_full",
-            "is_active"
+            "is_active",
+            "cur_fill_time",
+            "cur_takeout_wait_time",
+            "avg_fill_time"
         ]
 
 
