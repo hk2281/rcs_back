@@ -165,10 +165,13 @@ class Container(LifecycleModel):
         if self.last_full_report():
             return "Контейнер уже заполнен."
         else:
-            previous_report = FullContainerReport.objects.filter(
-                container=self).order_by("-emptied_at")[0]
-            fill_time = timezone.now() - previous_report.emptied_at
-            return str(fill_time)
+            previous_reports = FullContainerReport.objects.filter(
+                container=self).order_by("-emptied_at")
+            if previous_reports:
+                fill_time = timezone.now() - previous_reports[0].emptied_at
+                return str(fill_time)
+            else:
+                return "Пока нет информации о времени заполнения"
 
     def cur_takeout_wait_time(self) -> str:
         """Текущее время ожидания выноса контейнера"""
