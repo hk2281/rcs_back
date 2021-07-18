@@ -1,4 +1,3 @@
-from django_filters import rest_framework as filters
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from io import BytesIO
