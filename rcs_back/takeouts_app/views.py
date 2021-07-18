@@ -1,9 +1,8 @@
-from django.utils import timezone
 from rest_framework import generics
 
 from rcs_back.takeouts_app.models import *
 from rcs_back.takeouts_app.serializers import *
-from rcs_back.containers_app.tasks import calc_avg_takeout_wait_time
+from rcs_back.containers_app.view_utils import handle_empty_container
 
 
 class ContainersTakeoutListView(generics.ListCreateAPIView):
@@ -25,9 +24,9 @@ class ContainersTakeoutConfirmationListView(generics.CreateAPIView):
             фиксируем время подтверждения выноса"""
             container.is_full = False
             container.save()
-            last_full_report = container.last_full_report()
-            if last_full_report:
-                last_full_report.emptied_at = timezone.now()
-                last_full_report.save()
-                calc_avg_takeout_wait_time.delay(container.pk)
-            # FIXME продублировать эту логику
+            handle_empty_container(container)
+
+
+class TankTakeoutRequestListView(generics.ListCreateAPIView):
+    serializer_class = TankTakeoutRequestSerializer
+    queryset = TankTakeoutRequest.objects.all()

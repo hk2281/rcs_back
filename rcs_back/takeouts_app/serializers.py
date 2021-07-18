@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from rcs_back.containers_app.models import Container
+from rcs_back.containers_app.models import Container, Building
 from rcs_back.takeouts_app.models import *
 
 
@@ -39,4 +39,21 @@ class ContainersTakeoutConfirmationSerializer(serializers.ModelSerializer):
             "building",
             "containers",
             "worker_info"
+        ]
+
+
+class TankTakeoutRequestSerializer(serializers.ModelSerializer):
+    building = serializers.PrimaryKeyRelatedField(
+        queryset=Building.objects.all()
+    )
+
+    class Meta:
+        model = TankTakeoutRequest
+        fields = [
+            "id",
+            "created_at",
+            "building"
+        ]
+        read_only_fields = [
+            "created_at"
         ]

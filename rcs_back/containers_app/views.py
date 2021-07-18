@@ -4,10 +4,10 @@ from rest_framework.response import Response
 from io import BytesIO
 from django.core.files import File
 
-from rcs_back.containers_app.models import Container, FullContainerReport
+from rcs_back.containers_app.models import Container
+from rcs_back.containers_app.view_utils import *
 from .serializers import *
 from .qr import generate_sticker
-from .tasks import calc_avg_fill_time
 
 
 class FillContainerView(generics.UpdateAPIView):
@@ -23,20 +23,8 @@ class FillContainerView(generics.UpdateAPIView):
             instance.last_full_report().count += 1
             instance.last_full_report().save()
         else:
-            # FIXME: продублировать в update
-            FullContainerReport.objects.create(
-                container=instance
-            )
-            calc_avg_fill_time.delay(instance.pk)
-            """Если в здании достаточно полных контейнеров,
-            сообщаем"""
-            # FIXME: новые условия отбора
-            # if not self.building.is_full:
-            #     is_building_full = self.building.check_full_count()
-            #     if is_building_full:
-            #         self.building.is_full = True
-            #         self.building.save()
-            #         self.building.handle_full()
+            """Заполнение контейнера через главную страницу"""
+            handle_full_container(instance)
         serializer.save()
 
 
@@ -45,12 +33,21 @@ class ContainerDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ContainerSerializer
     queryset = Container.objects.all()
 
+    def perform_update(self, serializer):
+        instance = self.get_object()
+        """Изменение заполненности контейнера хоз отделом/эко"""
+        if "is_full" in serializer.validated_data:
+            if not instance.is_full and serializer.validated_data["is_full"]:
+                handle_full_container(instance)
+            if instance.is_full and not serializer.validated_data["is_full"]:
+                handle_empty_container(instance)
+        serializer.save()
+
 
 class ContainerListView(generics.ListCreateAPIView):
     """ View для CRUD-операций с контейнерами """
     serializer_class = ContainerSerializer
     queryset = Container.objects.all()
-    filter_backends = [filters.DjangoFilterBackend]
     filterset_fields = [
         "building",
         "building_part",
