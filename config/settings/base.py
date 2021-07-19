@@ -43,6 +43,21 @@ USE_TZ = True
 DATABASES = {"default": env.db("DATABASE_URL")}
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
+# CACHES
+# ------------------------------------------------------------------------------
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": env("REDIS_URL"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            # Mimicing memcache behavior.
+            # https://github.com/jazzband/django-redis#memcached-exceptions-behavior
+            "IGNORE_EXCEPTIONS": False,
+        },
+    }
+}
+
 # MIGRATIONS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#migration-modules
@@ -72,6 +87,7 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "django_celery_beat",
+    "django_filters",
     "rest_framework",
     "corsheaders",
     "djcelery_email",
@@ -79,7 +95,9 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    "rcs_back.users_app"
+    "rcs_back.containers_app.apps.ContainersAppConfig",
+    "rcs_back.users_app",
+    "rcs_back.takeouts_app"
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -135,7 +153,7 @@ MIDDLEWARE = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-root
 STATIC_ROOT = str(ROOT_DIR / "staticfiles")
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-url
-STATIC_URL = "/static/"
+STATIC_URL = "/django-static/"
 # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
@@ -205,6 +223,14 @@ X_FRAME_OPTIONS = "DENY"
 EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-timeout
 EMAIL_TIMEOUT = 5
+DEFAULT_FROM_EMAIL = env(
+    "DJANGO_DEFAULT_FROM_EMAIL", default="RCS Back <noreply@e-kondr01.ru>"
+)
+SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
+EMAIL_SUBJECT_PREFIX = env(
+    "DJANGO_EMAIL_SUBJECT_PREFIX",
+    default="[RCS Back]",
+)
 
 # ADMIN
 # ------------------------------------------------------------------------------
@@ -217,8 +243,8 @@ MANAGERS = ADMINS
 
 # LOGGING
 # ------------------------------------------------------------------------------
-# https://docs.djangoproject.com/en/dev/ref/settings/#logging
-# See https://docs.djangoproject.com/en/dev/topics/logging for
+# https: // docs.djangoproject.com/en/dev/ref/settings/  # logging
+# See https: // docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
 LOGGING = {
     "version": 1,
@@ -269,6 +295,12 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
@@ -277,11 +309,13 @@ CORS_URLS_REGEX = r"^/api/.*$"
 # Djoser
 
 DJOSER = {
-    'USER_CREATE_PASSWORD_RETYPE': True,
-    'SEND_ACTIVATION_EMAIL': True,
-    'SET_PASSWORD_RETYPE': True,
-    'PASSWORD_RESET_CONFIRM_RETYPE': True,
-    'TOKEN_MODEL': None,  # We use only JWT
-    'ACTIVATION_URL': 'auth/verify/{uid}/{token}/',
-    'PASSWORD_RESET_CONFIRM_URL': 'auth/password/reset/{uid}/{token}/',
+    "TOKEN_MODEL": None,  # We use only JWT
+    "HIDE_USERS": True
 }
+
+# Constants
+
+# Groups
+
+ECO_GROUP = "эко"
+HOZ_GROUP = "хоз"

@@ -2,16 +2,16 @@ argon2-cffi==20.1.0  # https://github.com/hynek/argon2_cffi
 whitenoise==5.2.0  # https://github.com/evansd/whitenoise
 redis==3.5.3  # https://github.com/andymccurdy/redis-py
 hiredis==1.1.0  # https://github.com/redis/hiredis-py
-celery==4.4.6  # pyup: < 5.0,!=4.4.7  # https://github.com/celery/celery
-django-celery-beat==2.2.0  # https://github.com/celery/django-celery-beat
-flower==0.9.7  # https://github.com/mher/flower
+celery==5.1.2
+django-celery-beat==2.2.1
+flower==1.0.0  # https://github.com/mher/flower
 psycopg2-binary==2.9.1
 pillow==8.2.0
 qrcode==6.1
 
 # Django
 # ------------------------------------------------------------------------------
-django==3.1.12  # pyup: < 3.2  # https://www.djangoproject.com/
+django==3.2.5
 django-environ==0.4.5  # https://github.com/joke2k/django-environ
 django-redis==4.12.1  # https://github.com/jazzband/django-redis
 django-jazzmin==2.4.7
@@ -21,3 +21,4 @@ djangorestframework==3.12.4  # https://github.com/encode/django-rest-framework
 django-cors-headers==3.7.0 # https://github.com/adamchainz/django-cors-headers
 djangorestframework-simplejwt==4.7.1
 djoser==2.1.0
+django-filter==2.4.0

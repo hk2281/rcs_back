@@ -1,15 +1,11 @@
 import qrcode
 
+from django.conf import settings
 from PIL import Image, ImageDraw, ImageFont
 
 
-def generate_url(container_id: int) -> str:
-    url = f"https://placeholder.com/containers/{container_id}"
-    return url
-
-
 def generate_qr(container_id: int) -> Image:
-    url = generate_url(container_id=container_id)
+    url = f"https://placeholder.com/containers/{container_id}"
     qr = qrcode.QRCode(
         box_size=10,
         border=9
@@ -22,7 +18,9 @@ def generate_qr(container_id: int) -> Image:
 
 def add_container_id(container_id: int, sticker: Image) -> Image:
     img1 = ImageDraw.Draw(sticker)
-    font = ImageFont.truetype("./Roboto-Regular.ttf", 60)
+    font_path = str(settings.APPS_DIR / "containers_app" /
+                    "Roboto-Regular.ttf")
+    font = ImageFont.truetype(font_path, 60)
     coords = (100, 0)
     text = f"id: {container_id}"
     img1.text(coords, text, font=font)
@@ -31,7 +29,9 @@ def add_container_id(container_id: int, sticker: Image) -> Image:
 
 def add_logo(sticker: Image) -> Image:
     img1 = ImageDraw.Draw(sticker)
-    font = ImageFont.truetype("./Roboto-Regular.ttf", 50)
+    font_path = str(settings.APPS_DIR / "containers_app" /
+                    "Roboto-Regular.ttf")
+    font = ImageFont.truetype(font_path, 50)
     coords = (100, 400)
     text = "rcs-itmo.ru"
     img1.text(coords, text, font=font)

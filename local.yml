@@ -3,6 +3,7 @@ version: '3'
 volumes:
   local_postgres_data: {}
   local_postgres_data_backups: {}
+  local_redis_data: {}
 
 services:
   django: &django
@@ -44,6 +45,9 @@ services:
   redis:
     image: redis:5.0
     container_name: redis
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+        - local_redis_data:/data
 
   celeryworker:
     <<: *django

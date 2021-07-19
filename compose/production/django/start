@@ -6,7 +6,6 @@ set -o nounset
 
 
 python /app/manage.py collectstatic --noinput
-python /app/manage.py makemigrations
 python /app/manage.py migrate
 
-/usr/local/bin/gunicorn config.wsgi --bind 0.0.0.0:8000 --chdir=/app --access-logfile /app/logs/gunicorn/access.log --error-logfile /app/logs/gunicorn/error.log
+/usr/local/bin/gunicorn config.wsgi --bind 0.0.0.0:8000 --workers=5 --chdir=/app --error-logfile /app/logs/gunicorn/error.log --access-logfile /app/logs/gunicorn/access.log --worker-tmp-dir=/dev/shm --threads=4

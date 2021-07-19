@@ -3,6 +3,7 @@ version: '3'
 volumes:
   production_postgres_data: {}
   production_postgres_data_backups: {}
+  production_redis_data: {}
 
 services:
   django: &django
@@ -15,12 +16,14 @@ services:
       - redis
     volumes:
       - ./logs/gunicorn:/app/logs/gunicorn
+      - ./rcs_back/media:/app/rcs_back/media
     env_file:
       - ./.envs/.production/.django
       - ./.envs/.production/.postgres
     command: /start
     expose: 
       - 8000
+
 
   postgres:
     build:
@@ -46,6 +49,9 @@ services:
 
   redis:
     image: redis:5.0
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+        - production_redis_data:/data
 
   celeryworker:
     <<: *django
