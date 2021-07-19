@@ -1,11 +1,6 @@
 from django.db import models
 from django.core.cache import cache
-from django.core.mail import send_mail
-from django.conf import settings
 from django.utils import timezone
-from django_lifecycle import LifecycleModel, hook, AFTER_UPDATE
-
-from rcs_back.users_app.models import User
 
 
 tz = timezone.get_default_timezone()
@@ -19,49 +14,6 @@ class Building(models.Model):
         verbose_name="адрес"
     )
 
-    def generate_full_msg(self) -> str:
-        full_containers = Container.objects.filter(
-            is_active=True
-        ).filter(
-            is_full=True
-        ).filter(
-            building=self
-        )
-        msg = "Список полных контейнеров:\n\n"
-        for container in full_containers:
-            msg += (f"Контейнер №{container.pk}, "
-                    f"расположение: {container.building}, ")
-            if container.building_part:
-                msg += f"корпус {container.building_part}, "
-            msg += (f"этаж {container.floor}, "
-                    f"{container.location}.\n")
-        msg += ("\nЭто сообщение было автоматически сгенерировано "
-                "сервисом RCS for IF.")
-        return msg
-
-    def handle_full(self) -> None:
-        # FIXME: новые условия для отбора
-        """Фиксирует то, что накопилось достаточно
-        полных контейнеров и оповещает сотрудников."""
-        EnoughFullContainersNotification.objects.create()
-        msg = self.generate_full_msg()
-        subject = ("[RCS for IF] В корпусу ИТМО по адресу "
-                   f"{self.address} накопилось достаточно полных контейнеров "
-                   "с бумагой для выноса.")
-        recipients = User.objects.filter(
-            models.Q(groups__name=settings.ECO_GROUP) |
-            models.Q(groups__name=settings.HOZ_GROUP)
-        )
-        recipient_list = []
-        for recipient in recipients:
-            recipient_list.append(recipient.email)
-        send_mail(
-            subject=subject,
-            message=msg,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=recipient_list
-        )
-
     def __str__(self) -> str:
         return self.address
 
@@ -70,9 +22,9 @@ class Building(models.Model):
         verbose_name_plural = "здания"
 
 
-class EnoughFullContainersNotification(models.Model):
-    """Модель оповещения о достаточном кол-ве
-    полных контейнеров"""
+class TakeoutConditionMet(models.Model):
+    """Модель оповещения о выполненных
+    условиях для выноса"""
 
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -87,16 +39,16 @@ class EnoughFullContainersNotification(models.Model):
     )
 
     def __str__(self) -> str:
-        return (f"Оповещение от "
+        return (f"Выполнено условие для выноса "
                 f"{self.created_at.astimezone(tz).strftime('%d.%m.%Y %H:%M')}"
-                "в {self.building}")
+                f"в {self.building}")
 
     class Meta:
-        verbose_name = "оповещение о полных контейнерах"
-        verbose_name_plural = "оповещения о полных контейнерах"
+        verbose_name = "выполнено условие для выноса"
+        verbose_name_plural = "выполнены условия для выноса"
 
 
-class Container(LifecycleModel):
+class Container(models.Model):
     """ Модель контейнера """
 
     building = models.ForeignKey(

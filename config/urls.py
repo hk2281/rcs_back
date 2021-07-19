@@ -13,8 +13,10 @@ urlpatterns = [
     re_path(r"^auth/", include("djoser.urls.jwt")),
     path("containers/", include("rcs_back.containers_app.urls")),
     path("buildings", BuildingListView.as_view()),
-    path("takeout-confirmations",
-         ContainersTakeoutConfirmationListView.as_view()),
+    path("container-takeout-requests/<int:pk>",
+         ContainersTakeoutConfirmationView.as_view()),
     path("tank-takeout-requests", TankTakeoutRequestListView.as_view()),
-    path("takeout-requests", ContainersTakeoutListView.as_view()),
+    path("tank-takeout-requests/<int:pk>",
+         TankTakeoutConfirmationView.as_view()),
+    path("container-takeout-requests", ContainersTakeoutListView.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

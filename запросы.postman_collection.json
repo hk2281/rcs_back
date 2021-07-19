@@ -481,42 +481,6 @@
 			"name": "выносы контейнеров",
 			"item": [
 				{
-					"name": "создать подтверждение выноса",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"building\": 1,\n    \"worker_info\": \"Тест Тестов\",\n    \"containers\": [1, 2]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{host}}/takeout-confirmations",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"takeout-confirmations"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "list",
 					"request": {
 						"auth": {
@@ -532,12 +496,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/takeout-requests",
+							"raw": "{{host}}/container-takeout-requests",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
-								"takeout-requests"
+								"container-takeout-requests"
 							]
 						}
 					},
@@ -548,12 +512,12 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/takeout-requests",
+									"raw": "{{host}}/container-takeout-requests",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
-										"takeout-requests"
+										"container-takeout-requests"
 									]
 								}
 							},
@@ -563,7 +527,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sun, 18 Jul 2021 10:42:20 GMT"
+									"value": "Mon, 19 Jul 2021 14:48:35 GMT"
 								},
 								{
 									"key": "Server",
@@ -587,7 +551,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "77"
+									"value": "333"
 								},
 								{
 									"key": "Content-Language",
@@ -607,7 +571,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "[\n    {\n        \"id\": 2,\n        \"created_at\": \"2021-07-18T13:41:54.308565+03:00\",\n        \"containers\": [\n            1,\n            2\n        ]\n    }\n]"
+							"body": "[\n    {\n        \"id\": 2,\n        \"created_at\": \"2021-07-18T13:41:54.308565+03:00\",\n        \"containers\": [\n            1,\n            2\n        ],\n        \"confirmed_at\": null,\n        \"emptied_containers\": [],\n        \"worker_info\": \"\"\n    },\n    {\n        \"id\": 3,\n        \"created_at\": \"2021-07-19T16:44:08.799140+03:00\",\n        \"containers\": [\n            1,\n            2\n        ],\n        \"confirmed_at\": \"2021-07-19T16:48:21.258925+03:00\",\n        \"emptied_containers\": [\n            1,\n            2\n        ],\n        \"worker_info\": \"Тест Тестович\"\n    }\n]"
 						}
 					]
 				},
@@ -636,93 +600,53 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/takeout-requests",
+							"raw": "{{host}}/container-takeout-requests",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
-								"takeout-requests"
+								"container-takeout-requests"
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "create",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"containers\": [1, 2]\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{host}}/takeout-requests",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"takeout-requests"
-									]
+					"response": []
+				},
+				{
+					"name": "confirm takeout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
 								}
-							},
-							"status": "Created",
-							"code": 201,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Sun, 18 Jul 2021 10:41:54 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "WSGIServer/0.2 CPython/3.9.5"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Vary",
-									"value": "Accept, Accept-Language"
-								},
-								{
-									"key": "Allow",
-									"value": "GET, POST, HEAD, OPTIONS"
-								},
-								{
-									"key": "X-Frame-Options",
-									"value": "DENY"
-								},
-								{
-									"key": "Content-Length",
-									"value": "75"
-								},
-								{
-									"key": "Content-Language",
-									"value": "ru"
-								},
-								{
-									"key": "X-Content-Type-Options",
-									"value": "nosniff"
-								},
-								{
-									"key": "X-XSS-Protection",
-									"value": "1; mode=block"
-								},
-								{
-									"key": "Referrer-Policy",
-									"value": "same-origin"
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"emptied_containers\": [1, 2],\n    \"worker_info\": \"Тест Тестович\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/container-takeout-requests/3",
+							"host": [
+								"{{host}}"
 							],
-							"cookie": [],
-							"body": "{\n    \"id\": 2,\n    \"created_at\": \"2021-07-18T13:41:54.308565+03:00\",\n    \"containers\": [\n        1,\n        2\n    ]\n}"
+							"path": [
+								"container-takeout-requests",
+								"3"
+							]
 						}
-					]
+					},
+					"response": []
 				}
 			]
 		},
@@ -751,6 +675,11 @@
 									"key": "building",
 									"value": "1",
 									"type": "text"
+								},
+								{
+									"key": "mass",
+									"value": "3000",
+									"type": "text"
 								}
 							]
 						},
@@ -777,6 +706,11 @@
 											"key": "building",
 											"value": "1",
 											"type": "text"
+										},
+										{
+											"key": "mass",
+											"value": "3000",
+											"type": "text"
 										}
 									]
 								},
@@ -796,7 +730,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sun, 18 Jul 2021 10:36:56 GMT"
+									"value": "Mon, 19 Jul 2021 14:59:36 GMT"
 								},
 								{
 									"key": "Server",
@@ -820,7 +754,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "69"
+									"value": "193"
 								},
 								{
 									"key": "Content-Language",
@@ -840,7 +774,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"id\": 1,\n    \"created_at\": \"2021-07-18T13:36:56.886051+03:00\",\n    \"building\": 1\n}"
+							"body": "{\n    \"id\": 5,\n    \"created_at\": \"2021-07-19T17:59:36.750636+03:00\",\n    \"building\": 1,\n    \"mass\": 3000,\n    \"confirmed_at\": null,\n    \"confirmed_mass\": null,\n    \"wait_time\": \"Ещё не вывезли\",\n    \"fill_time\": \"0:05:48.170475\"\n}"
 						}
 					]
 				},
@@ -891,7 +825,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sun, 18 Jul 2021 10:37:45 GMT"
+									"value": "Mon, 19 Jul 2021 15:00:07 GMT"
 								},
 								{
 									"key": "Server",
@@ -915,7 +849,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "71"
+									"value": "670"
 								},
 								{
 									"key": "Content-Language",
@@ -935,7 +869,124 @@
 								}
 							],
 							"cookie": [],
-							"body": "[\n    {\n        \"id\": 1,\n        \"created_at\": \"2021-07-18T13:36:56.886051+03:00\",\n        \"building\": 1\n    }\n]"
+							"body": "[\n    {\n        \"id\": 3,\n        \"created_at\": \"2021-07-19T17:53:02.989796+03:00\",\n        \"building\": 1,\n        \"mass\": 3000,\n        \"confirmed_at\": \"2021-07-19T17:53:48.580161+03:00\",\n        \"confirmed_mass\": null,\n        \"wait_time\": \"0:00:45.590365\",\n        \"fill_time\": \"-1 day, 23:57:46.778140\"\n    },\n    {\n        \"id\": 1,\n        \"created_at\": \"2021-07-18T13:36:56.886051+03:00\",\n        \"building\": 1,\n        \"mass\": 3000,\n        \"confirmed_at\": \"2021-07-19T17:55:16.211656+03:00\",\n        \"confirmed_mass\": 3000,\n        \"wait_time\": \"1 day, 4:18:19.325605\",\n        \"fill_time\": \"Нельзя посчитать\"\n    },\n    {\n        \"id\": 5,\n        \"created_at\": \"2021-07-19T17:59:36.750636+03:00\",\n        \"building\": 1,\n        \"mass\": 3000,\n        \"confirmed_at\": \"2021-07-19T17:59:57.207105+03:00\",\n        \"confirmed_mass\": 3000,\n        \"wait_time\": \"0:00:20.456469\",\n        \"fill_time\": \"0:05:48.170475\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "подтвердить вывоз",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "confirmed_mass",
+									"value": "3000",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/tank-takeout-requests/5",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"tank-takeout-requests",
+								"5"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "подтвердить вывоз",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "confirmed_mass",
+											"value": "3000",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/tank-takeout-requests/5",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"tank-takeout-requests",
+										"5"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 19 Jul 2021 14:59:57 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language"
+								},
+								{
+									"key": "Allow",
+									"value": "PUT, PATCH, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "199"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 5,\n    \"created_at\": \"2021-07-19T17:59:36.750636+03:00\",\n    \"building\": 1,\n    \"confirmed_at\": \"2021-07-19T17:59:57.207105+03:00\",\n    \"confirmed_mass\": 3000,\n    \"wait_time\": \"0:00:20.456469\",\n    \"fill_time\": \"0:05:48.170475\"\n}"
 						}
 					]
 				}
