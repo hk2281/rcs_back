@@ -11,7 +11,7 @@ urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
     re_path(r"auth/", include("djoser.urls")),
     re_path(r"^auth/", include("djoser.urls.jwt")),
-    path("containers/", include("rcs_back.containers_app.urls")),
+    path("containers", include("rcs_back.containers_app.urls")),
     path("buildings", BuildingListView.as_view()),
     path("container-takeout-requests/<int:pk>",
          ContainersTakeoutConfirmationView.as_view()),

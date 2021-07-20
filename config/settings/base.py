@@ -21,6 +21,7 @@ SECRET_KEY = env.str(
     default="v9rOQQO47ZQ8yVZ5Z2n3Wl2PREKg40CaV6GbEeXEmEbOzldlgr8KysOCTjDK3Qsg",
 )
 
+APPEND_SLASH = False
 # Local time zone. Choices are
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # though not all of them may be available with every OS.
@@ -296,7 +297,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ],
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',

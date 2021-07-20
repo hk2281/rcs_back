@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import timedelta
 from django.db import models
 from django.utils import timezone
 
@@ -14,6 +14,13 @@ class ContainersTakeoutRequest(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name="время создания"
+    )
+
+    building = models.ForeignKey(
+        to=Building,
+        on_delete=models.CASCADE,
+        related_name="containers_takeout_requests",
+        verbose_name="здание"
     )
 
     containers = models.ManyToManyField(
@@ -40,12 +47,13 @@ class ContainersTakeoutRequest(models.Model):
         blank=True
     )
 
-    def building(self) -> Building:
-        container = self.containers.first()
-        if container:
-            return container.building
-        else:
-            return "контейнеры не выбраны"
+    def mass(self) -> int:
+        """Возвращает массу бумаги в подтверждённых контейнерах"""
+        mass = 0
+        if self.emptied_containers.all():
+            for container in self.emptied_containers.all():
+                mass += container.capacity
+        return mass
 
     def __str__(self) -> str:
         return (f"Запрос выноса контейнеров от "
@@ -69,10 +77,6 @@ class TankTakeoutRequest(models.Model):
         on_delete=models.CASCADE,
         related_name="tank_takeout_requests",
         verbose_name="здание"
-    )
-
-    mass = models.PositiveSmallIntegerField(
-        verbose_name="масса вывоза в кг"
     )
 
     confirmed_at = models.DateTimeField(
@@ -107,6 +111,28 @@ class TankTakeoutRequest(models.Model):
             return str(self.created_at-requests[0].confirmed_at)
         else:
             return "Нельзя посчитать"
+
+    def mass(self) -> int:
+        """Рассчитанная масса вывоза как
+        сумма масс выносов контейнеров"""
+        previous_tank_takeout = TankTakeoutRequest.objects.filter(
+            building=self.building, confirmed_at__lt=self.created_at
+        ).order_by("-created_at")
+        if previous_tank_takeout:
+            previous_datetime = previous_tank_takeout[0].confirmed_at
+        else:
+            previous_datetime = self.created_at - timedelta(days=365)
+        takeouts = ContainersTakeoutRequest.objects.filter(
+            building=self.building
+        ).filter(
+            created_at__gt=previous_datetime
+        ).filter(
+            created_at__lt=self.created_at
+        )
+        mass = 0
+        for takeout in takeouts:
+            mass += takeout.mass()
+        return mass
 
     def __str__(self) -> str:
         return (f"Запрос вывоза накопительного бака от "

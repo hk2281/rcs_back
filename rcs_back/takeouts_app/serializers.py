@@ -7,8 +7,11 @@ from rcs_back.takeouts_app.models import *
 class ContainersTakeoutRequestSerializer(serializers.ModelSerializer):
     """Для создания заявки на вынос контейнера"""
 
+    building = serializers.PrimaryKeyRelatedField(
+        queryset=Building.objects.all()
+    )
     containers = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=Container.objects.filter(is_active=True)
+        many=True, queryset=Container.objects.filter(status=Container.ACTIVE)
     )
     emptied_containers = serializers.PrimaryKeyRelatedField(
         many=True, read_only=True
@@ -19,10 +22,12 @@ class ContainersTakeoutRequestSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "created_at",
+            "building",
             "containers",
             "confirmed_at",
             "emptied_containers",
-            "worker_info"
+            "worker_info",
+            "mass"
         ]
         read_only_fields = [
             "created_at",
@@ -35,11 +40,14 @@ class ContainersTakeoutRequestSerializer(serializers.ModelSerializer):
 class ContainersTakeoutConfirmationSerializer(serializers.ModelSerializer):
     """Для подтверждения выноса контейнеров"""
 
+    building = serializers.PrimaryKeyRelatedField(
+        read_only=True
+    )
     containers = serializers.PrimaryKeyRelatedField(
         many=True, read_only=True
     )
     emptied_containers = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=Container.objects.filter(is_active=True)
+        many=True, queryset=Container.objects.filter(status=Container.ACTIVE)
     )
 
     class Meta:
@@ -47,13 +55,16 @@ class ContainersTakeoutConfirmationSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "created_at",
+            "building",
             "containers",
             "confirmed_at",
             "emptied_containers",
-            "worker_info"
+            "worker_info",
+            "mass"
         ]
         read_only_fields = [
             "created_at",
+            "building",
             "containers",
             "confirmed_at"
         ]
@@ -71,11 +82,11 @@ class TankTakeoutRequestSerializer(serializers.ModelSerializer):
             "id",
             "created_at",
             "building",
-            "mass",
             "confirmed_at",
             "confirmed_mass",
             "wait_time",
-            "fill_time"
+            "fill_time",
+            "mass"
         ]
         read_only_fields = [
             "created_at",
@@ -99,11 +110,11 @@ class TankTakeoutConfirmationSerializer(serializers.ModelSerializer):
             "confirmed_at",
             "confirmed_mass",
             "wait_time",
-            "fill_time"
+            "fill_time",
+            "mass"
         ]
         read_only_fields = [
             "building",
-            "mass",
             "created_at",
             "confirmed_at"
         ]

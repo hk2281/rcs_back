@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, views
 from rest_framework.response import Response
 from io import BytesIO
 from django.core.files import File
@@ -13,7 +13,7 @@ class FillContainerView(generics.UpdateAPIView):
     """ View для заполнения контейнера """
     permission_classes = [permissions.AllowAny]
     serializer_class = FillContainerSerializer
-    queryset = Container.objects.filter(is_active=True)
+    queryset = Container.objects.filter(status=Container.ACTIVE)
 
     def perform_update(self, serializer) -> None:
         instance = self.get_object()
@@ -29,8 +29,13 @@ class FillContainerView(generics.UpdateAPIView):
 
 class ContainerDetailView(generics.RetrieveUpdateDestroyAPIView):
     """ View для CRUD-операций с контейнерами """
-    serializer_class = ContainerSerializer
     queryset = Container.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return ContainerSerializer
+        else:
+            return ChangeContainerSerializer
 
     def perform_update(self, serializer):
         instance = self.get_object()
@@ -45,15 +50,20 @@ class ContainerDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class ContainerListView(generics.ListCreateAPIView):
     """ View для CRUD-операций с контейнерами """
-    serializer_class = ContainerSerializer
     queryset = Container.objects.all()
     filterset_fields = [
         "building",
         "building_part",
         "floor",
         "is_full",
-        "is_active"
+        "status"
     ]
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return ContainerSerializer
+        else:
+            return ChangeContainerSerializer
 
 
 class BuildingListView(generics.ListAPIView):
@@ -81,3 +91,33 @@ class GetStickerView(generics.RetrieveAPIView):
 
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
+
+
+class ContainerPublicAddView(generics.CreateAPIView):
+    """Добавление своего контейнера с главной страницы"""
+    queryset = Container.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ContainerPublicAddSerializer
+
+    def perform_create(self, serializer):
+        instance = serializer.save(status=Container.WAITING)
+        public_container_add_notify(instance)
+
+
+class ContainerStatusOptionsView(views.APIView):
+    """Статусы для контейнеров"""
+    statuses = {
+        1: "ожидает подключения",
+        2: "активный",
+        3: "не активный"
+    }
+
+    def get(self, request, *args, **kwargs):
+        return Response(self.statuses)
+
+
+class ActivateContainerView(generics.UpdateAPIView):
+    """ View для активации контейнера """
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ActivateContainerSerializer
+    queryset = Container.objects.filter(status=Container.WAITING)

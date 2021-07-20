@@ -51,6 +51,15 @@ class TakeoutConditionMet(models.Model):
 class Container(models.Model):
     """ Модель контейнера """
 
+    WAITING = 1
+    ACTIVE = 2
+    INACTIVE = 3
+    STATUS_CHOICES = (
+        (WAITING, "ожидает подключения"),
+        (ACTIVE, "активный"),
+        (INACTIVE, "не активный")
+    )
+
     building = models.ForeignKey(
         to=Building,
         on_delete=models.PROTECT,
@@ -82,9 +91,10 @@ class Container(models.Model):
         verbose_name="заполнен"
     )
 
-    is_active = models.BooleanField(
-        default=True,
-        verbose_name="активен"
+    status = models.PositiveSmallIntegerField(
+        choices=STATUS_CHOICES,
+        default=ACTIVE,
+        verbose_name="состояние"
     )
 
     is_public = models.BooleanField(
@@ -101,6 +111,17 @@ class Container(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name="время добавления в систему"
+    )
+
+    email = models.EmailField(
+        verbose_name="почта (для связи)",
+        blank=True
+    )
+
+    phone = models.CharField(
+        max_length=24,
+        verbose_name="номер телефона (для связи)",
+        blank=True
     )
 
     def last_full_report(self):

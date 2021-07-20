@@ -35,3 +35,7 @@ def handle_empty_container(container: Container) -> None:
         last_full_report.emptied_at = timezone.now()
         last_full_report.save()
         calc_avg_takeout_wait_time.delay(container.pk)
+
+
+def public_container_add_notify(container: Container) -> None:
+    pass
