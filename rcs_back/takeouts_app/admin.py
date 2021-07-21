@@ -5,3 +5,4 @@ from .models import *
 
 admin.site.register(ContainersTakeoutRequest)
 admin.site.register(TankTakeoutRequest)
+admin.site.register(TakeoutCompany)

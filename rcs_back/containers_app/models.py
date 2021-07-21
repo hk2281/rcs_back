@@ -14,12 +14,38 @@ class Building(models.Model):
         verbose_name="адрес"
     )
 
+    email = models.EmailField(
+        verbose_name="email коменданта здания"
+    )
+
     def __str__(self) -> str:
         return self.address
 
     class Meta:
         verbose_name = "здание"
         verbose_name_plural = "здания"
+
+
+class BuildingPart(models.Model):
+    """Модель корпуса здания"""
+
+    num = models.PositiveSmallIntegerField(
+        verbose_name="номер корпуса"
+    )
+
+    building = models.ForeignKey(
+        to=Building,
+        on_delete=models.CASCADE,
+        related_name="building_parts",
+        verbose_name="здание"
+    )
+
+    def __str__(self) -> str:
+        return f"корпус {self.num}"
+
+    class Meta:
+        verbose_name = "корпус здания"
+        verbose_name_plural = "корпусы зданий"
 
 
 class TakeoutConditionMet(models.Model):
@@ -67,7 +93,10 @@ class Container(models.Model):
         verbose_name="здание"
     )
 
-    building_part = models.PositiveSmallIntegerField(
+    building_part = models.ForeignKey(
+        to=BuildingPart,
+        on_delete=models.CASCADE,
+        related_name="containers",
         blank=True,
         null=True,
         verbose_name="корпус"

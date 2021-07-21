@@ -14,4 +14,6 @@ class ContainerAdmin(admin.ModelAdmin):
 
 admin.site.register(Container, ContainerAdmin)
 admin.site.register(Building)
+admin.site.register(BuildingPart)
 admin.site.register(FullContainerReport)
+admin.site.register(TakeoutConditionMet)

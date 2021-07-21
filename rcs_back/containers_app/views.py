@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from io import BytesIO
 from django.core.files import File
 
-from rcs_back.containers_app.models import Container
+from rcs_back.containers_app.models import BuildingPart, Container
 from rcs_back.containers_app.view_utils import *
 from .serializers import *
 from .qr import generate_sticker
@@ -30,6 +30,7 @@ class FillContainerView(generics.UpdateAPIView):
 class ContainerDetailView(generics.RetrieveUpdateDestroyAPIView):
     """ View для CRUD-операций с контейнерами """
     queryset = Container.objects.all()
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_serializer_class(self):
         if self.request.method == "GET":
@@ -121,3 +122,30 @@ class ActivateContainerView(generics.UpdateAPIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = ActivateContainerSerializer
     queryset = Container.objects.filter(status=Container.WAITING)
+
+
+class PublicFeedbackView(views.APIView):
+    """View для обратной связи на главной странице"""
+    serializer_class = PublicFeedbackSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data["email"]
+        container_id = 0
+        if "container_id" in serializer.validated_data:
+            container_id = serializer.validated_data["container_id"]
+        msg = serializer.validated_data["msg"]
+        send_public_feedback(email, msg, container_id)
+        resp = {
+            "status": "email sent"
+        }
+        return Response(resp)
+
+
+class BuildingPartView(generics.ListAPIView):
+    """View списка корпусов"""
+    serializer_class = BuildingPartSerializer
+    queryset = BuildingPart.objects.all()
+    filterset_fields = ["building"]

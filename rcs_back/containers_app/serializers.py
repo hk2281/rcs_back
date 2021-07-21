@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Container, Building
+from .models import BuildingPart, Container, Building
 
 
 class FillContainerSerializer(serializers.ModelSerializer):
@@ -63,9 +63,6 @@ class ContainerSerializer(serializers.ModelSerializer):
 class ChangeContainerSerializer(serializers.ModelSerializer):
     """ Сериализатор контейнера с цифрой для статуса
     и id у здания"""
-    building = serializers.PrimaryKeyRelatedField(
-        queryset=Building.objects.all()
-    )
 
     class Meta:
         model = Container
@@ -89,13 +86,28 @@ class ChangeContainerSerializer(serializers.ModelSerializer):
         ]
 
 
+class BuildingPartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BuildingPart
+        fields = [
+            "id",
+            "num"
+        ]
+
+
 class BuildingSerializer(serializers.ModelSerializer):
     """Сериализатор здания"""
+    building_parts = BuildingPartSerializer(
+        many=True, read_only=True
+    )
+
     class Meta:
         model = Building
         fields = [
             "id",
-            "address"
+            "address",
+            "email",
+            "building_parts"
         ]
 
 
@@ -111,9 +123,6 @@ class ContainerStickerSerializer(serializers.ModelSerializer):
 
 class ContainerPublicAddSerializer(serializers.ModelSerializer):
     """Сериализатор для добавления контейнера рандомами"""
-    building = serializers.PrimaryKeyRelatedField(
-        queryset=Building.objects.all()
-    )
 
     class Meta:
         model = Container
@@ -131,3 +140,9 @@ class ContainerPublicAddSerializer(serializers.ModelSerializer):
             "email": {"required": True},
             "phone": {"required": True}
         }
+
+
+class PublicFeedbackSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    container_id = serializers.IntegerField(required=False)
+    msg = serializers.CharField(max_length=4096)

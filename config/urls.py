@@ -3,7 +3,9 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
 
-from rcs_back.containers_app.views import BuildingListView
+from rcs_back.containers_app.views import (BuildingListView,
+                                           PublicFeedbackView,
+                                           BuildingPartView)
 from rcs_back.takeouts_app.views import *
 
 
@@ -19,4 +21,6 @@ urlpatterns = [
     path("tank-takeout-requests/<int:pk>",
          TankTakeoutConfirmationView.as_view()),
     path("container-takeout-requests", ContainersTakeoutListView.as_view()),
+    path("public-feedback", PublicFeedbackView.as_view()),
+    path("building-parts", BuildingPartView.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
