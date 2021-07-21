@@ -324,6 +324,495 @@
 							"body": "{\n    \"id\": 7,\n    \"status\": 2\n}"
 						}
 					]
+				},
+				{
+					"name": "обратная связь",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "test@test.com",
+									"type": "text"
+								},
+								{
+									"key": "msg",
+									"value": "С контейнерами всё в порядке ",
+									"type": "text"
+								},
+								{
+									"key": "container_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/public-feedback",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"public-feedback"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "обратная связь",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "test@test.com",
+											"type": "text"
+										},
+										{
+											"key": "msg",
+											"value": "С контейнерами всё в порядке ",
+											"type": "text"
+										},
+										{
+											"key": "container_id",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/public-feedback",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"public-feedback"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 21 Jul 2021 14:08:41 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language"
+								},
+								{
+									"key": "Allow",
+									"value": "POST, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "23"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"email sent\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "пользователи",
+			"item": [
+				{
+					"name": "войти/получить JWT",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "test_hoz@test.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "TESTtest123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/auth/jwt/create/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"jwt",
+								"create",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "войти/получить JWT",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "test@test.com",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "TESTtest123",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/auth/jwt/create/",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"jwt",
+										"create",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 07 Jul 2021 08:58:55 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language"
+								},
+								{
+									"key": "Allow",
+									"value": "POST, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "438"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"refresh\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY1NzI3MDczNCwianRpIjoiODdmZTA5OTEwMTA4NGIxYWE2OWEzNTVmZjI2Mjc5MTQiLCJ1c2VyX2lkIjoyfQ.JbvkcLhO5q5ZiQKu47O1xHsnol4PGzsGhWSFfhym5lc\",\n    \"access\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU3MTg0MzM0LCJqdGkiOiJmMzk2NjliNmUzOTg0NzY3ODA0MWI1ZWE5YWM3OTdlYiIsInVzZXJfaWQiOjJ9.sOTa6dwkz83YyZY5rSCXG2kCibh3D63oU9TtGYluvv4\"\n}"
+						}
+					]
+				},
+				{
+					"name": "обновить JWT",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "refresh",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY1NzI3MDczNCwianRpIjoiODdmZTA5OTEwMTA4NGIxYWE2OWEzNTVmZjI2Mjc5MTQiLCJ1c2VyX2lkIjoyfQ.JbvkcLhO5q5ZiQKu47O1xHsnol4PGzsGhWSFfhym5lc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/auth/jwt/refresh/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"jwt",
+								"refresh",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "обновить JWT",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "refresh",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY1NzI3MDczNCwianRpIjoiODdmZTA5OTEwMTA4NGIxYWE2OWEzNTVmZjI2Mjc5MTQiLCJ1c2VyX2lkIjoyfQ.JbvkcLhO5q5ZiQKu47O1xHsnol4PGzsGhWSFfhym5lc",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/auth/jwt/refresh/",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"jwt",
+										"refresh",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 07 Jul 2021 09:00:21 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language"
+								},
+								{
+									"key": "Allow",
+									"value": "POST, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "218"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"access\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU3MTg0NDIxLCJqdGkiOiI2YmM3OThmYWZhZGY0N2VhYjI1YzEyNGMwNDNkNjQxOSIsInVzZXJfaWQiOjJ9.1ZuvDAIrA9I2I6ZMwuFvxyB6kK1gelzAve5pFr2kaj4\"\n}"
+						}
+					]
+				},
+				{
+					"name": "сменить пароль",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "new_password",
+									"value": "TESTtest123",
+									"type": "text"
+								},
+								{
+									"key": "current_password",
+									"value": "TESTtest1233",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/auth/users/set_password/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"set_password",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "сменить пароль",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "new_password",
+											"value": "TESTtest123",
+											"type": "text"
+										},
+										{
+											"key": "current_password",
+											"value": "TESTtest1233",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/auth/users/set_password/",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"users",
+										"set_password",
+										""
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 21 Jul 2021 13:36:18 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language"
+								},
+								{
+									"key": "Allow",
+									"value": "POST, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "0"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
 				}
 			]
 		},
@@ -836,243 +1325,6 @@
 			]
 		},
 		{
-			"name": "пользователи",
-			"item": [
-				{
-					"name": "войти/получить JWT",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "email",
-									"value": "test_hoz@test.com",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "TESTtest123",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{host}}/auth/jwt/create/",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"auth",
-								"jwt",
-								"create",
-								""
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "войти/получить JWT",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "email",
-											"value": "test@test.com",
-											"type": "text"
-										},
-										{
-											"key": "password",
-											"value": "TESTtest123",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/auth/jwt/create/",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"auth",
-										"jwt",
-										"create",
-										""
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Wed, 07 Jul 2021 08:58:55 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "WSGIServer/0.2 CPython/3.9.5"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Vary",
-									"value": "Accept, Accept-Language"
-								},
-								{
-									"key": "Allow",
-									"value": "POST, OPTIONS"
-								},
-								{
-									"key": "X-Frame-Options",
-									"value": "DENY"
-								},
-								{
-									"key": "Content-Length",
-									"value": "438"
-								},
-								{
-									"key": "Content-Language",
-									"value": "ru"
-								},
-								{
-									"key": "X-Content-Type-Options",
-									"value": "nosniff"
-								},
-								{
-									"key": "X-XSS-Protection",
-									"value": "1; mode=block"
-								},
-								{
-									"key": "Referrer-Policy",
-									"value": "same-origin"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"refresh\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY1NzI3MDczNCwianRpIjoiODdmZTA5OTEwMTA4NGIxYWE2OWEzNTVmZjI2Mjc5MTQiLCJ1c2VyX2lkIjoyfQ.JbvkcLhO5q5ZiQKu47O1xHsnol4PGzsGhWSFfhym5lc\",\n    \"access\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU3MTg0MzM0LCJqdGkiOiJmMzk2NjliNmUzOTg0NzY3ODA0MWI1ZWE5YWM3OTdlYiIsInVzZXJfaWQiOjJ9.sOTa6dwkz83YyZY5rSCXG2kCibh3D63oU9TtGYluvv4\"\n}"
-						}
-					]
-				},
-				{
-					"name": "обновить JWT",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "refresh",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY1NzI3MDczNCwianRpIjoiODdmZTA5OTEwMTA4NGIxYWE2OWEzNTVmZjI2Mjc5MTQiLCJ1c2VyX2lkIjoyfQ.JbvkcLhO5q5ZiQKu47O1xHsnol4PGzsGhWSFfhym5lc",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{host}}/auth/jwt/refresh/",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"auth",
-								"jwt",
-								"refresh",
-								""
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "обновить JWT",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "refresh",
-											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY1NzI3MDczNCwianRpIjoiODdmZTA5OTEwMTA4NGIxYWE2OWEzNTVmZjI2Mjc5MTQiLCJ1c2VyX2lkIjoyfQ.JbvkcLhO5q5ZiQKu47O1xHsnol4PGzsGhWSFfhym5lc",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/auth/jwt/refresh/",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"auth",
-										"jwt",
-										"refresh",
-										""
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Wed, 07 Jul 2021 09:00:21 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "WSGIServer/0.2 CPython/3.9.5"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Vary",
-									"value": "Accept, Accept-Language"
-								},
-								{
-									"key": "Allow",
-									"value": "POST, OPTIONS"
-								},
-								{
-									"key": "X-Frame-Options",
-									"value": "DENY"
-								},
-								{
-									"key": "Content-Length",
-									"value": "218"
-								},
-								{
-									"key": "Content-Language",
-									"value": "ru"
-								},
-								{
-									"key": "X-Content-Type-Options",
-									"value": "nosniff"
-								},
-								{
-									"key": "X-XSS-Protection",
-									"value": "1; mode=block"
-								},
-								{
-									"key": "Referrer-Policy",
-									"value": "same-origin"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"access\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU3MTg0NDIxLCJqdGkiOiI2YmM3OThmYWZhZGY0N2VhYjI1YzEyNGMwNDNkNjQxOSIsInVzZXJfaWQiOjJ9.1ZuvDAIrA9I2I6ZMwuFvxyB6kK1gelzAve5pFr2kaj4\"\n}"
-						}
-					]
-				}
-			]
-		},
-		{
 			"name": "здания",
 			"item": [
 				{
@@ -1100,7 +1352,187 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "list",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/buildings",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"buildings"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 21 Jul 2021 15:27:34 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "144"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 1,\n        \"address\": \"Кронверкский 49\",\n        \"email\": \"test@test.com\",\n        \"building_parts\": [\n            {\n                \"id\": 1,\n                \"num\": 1\n            },\n            {\n                \"id\": 2,\n                \"num\": 2\n            },\n            {\n                \"id\": 3,\n                \"num\": 3\n            }\n        ]\n    }\n]"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "корпусы зданий",
+			"item": [
+				{
+					"name": "List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/building-parts?building=1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"building-parts"
+							],
+							"query": [
+								{
+									"key": "building",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "List",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/building-parts?building=1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"building-parts"
+									],
+									"query": [
+										{
+											"key": "building",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 21 Jul 2021 15:27:27 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "52"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 1,\n        \"num\": 1\n    },\n    {\n        \"id\": 2,\n        \"num\": 2\n    },\n    {\n        \"id\": 3,\n        \"num\": 3\n    }\n]"
+						}
+					]
 				}
 			]
 		},
