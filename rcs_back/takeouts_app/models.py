@@ -2,7 +2,7 @@ from datetime import timedelta
 from django.db import models
 from django.utils import timezone
 
-from rcs_back.containers_app.models import Container, Building
+from rcs_back.containers_app.models import Container, Building, BuildingPart
 
 
 tz = timezone.get_default_timezone()
@@ -162,3 +162,63 @@ class TakeoutCompany(models.Model):
     class Meta:
         verbose_name = "заготовитель"
         verbose_name_plural = "заготовители"
+
+
+class TakeoutCondition(models.Model):
+    """Модель условия для сбора"""
+
+    OFFICE_DAYS = 1
+    PUBLIC_DAYS = 2
+    MASS = 3
+    IGNORE_REPORTS = 4
+
+    TYPE_CHOICES = (
+        (OFFICE_DAYS, "не больше N дней в офисе"),
+        (PUBLIC_DAYS, "не больше N дней в общественном месте"),
+        (MASS, "суммарная масса бумаги в корпусе не больше N кг"),
+        (IGNORE_REPORTS, ("игнорировать первые N сообщений"
+                          "о заполненности контейнера в общественном месте"))
+    )
+
+    type = models.PositiveSmallIntegerField(
+        choices=TYPE_CHOICES,
+        verbose_name="тип условия"
+    )
+
+    number = models.PositiveIntegerField(
+        verbose_name="N"
+    )
+
+    building = models.ForeignKey(
+        to=Building,
+        on_delete=models.CASCADE,
+        related_name="takeout_conditions",
+        verbose_name="здание"
+    )
+
+    building_part = models.ForeignKey(
+        to=BuildingPart,
+        on_delete=models.CASCADE,
+        related_name="takeout_conditions",
+        null=True,
+        blank=True,
+        verbose_name="корпус здания"
+    )
+
+    def __str__(self) -> str:
+        string = (f"Условие {self.get_type_display()} "
+                  f"в {self.building}")
+        if self.building_part:
+            string += ", "
+            string += str(self.building_part)
+        return string
+
+    class Meta:
+        verbose_name = "условие для сбора"
+        verbose_name_plural = "условия для сбора"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["building_part", "type"],
+                name="unique_condition_for_building"
+            )
+        ]

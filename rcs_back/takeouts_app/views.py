@@ -1,5 +1,6 @@
 from django.utils import timezone
-from rest_framework import generics
+from rest_framework import generics, views
+from rest_framework.response import Response
 
 from rcs_back.takeouts_app.models import *
 from rcs_back.takeouts_app.serializers import *
@@ -53,3 +54,38 @@ class TankTakeoutConfirmationView(generics.UpdateAPIView):
 
     def perform_update(self, serializer):
         serializer.save(confirmed_at=timezone.now())
+
+
+class TakeoutConditionListView(generics.ListCreateAPIView):
+    queryset = TakeoutCondition.objects.all()
+    filterset_fields = ["building", "building_part"]
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return AddTakeoutConditionSerializer
+        else:
+            return TakeoutConditionSerializer
+
+
+class TakeoutConditionDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = TakeoutCondition.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return TakeoutConditionSerializer
+        else:
+            return AddTakeoutConditionSerializer
+
+
+class TakeoutConditionTypeOptionsView(views.APIView):
+    """Типы условий для сбора"""
+    types = {
+        1: "не больше N дней в офисе",
+        2: "не больше N дней в общественном месте",
+        3: "суммарная масса бумаги в корпусе не больше N кг",
+        4: ("игнорировать первые N сообщений"
+            "о заполненности контейнера в общественном месте")
+    }
+
+    def get(self, request, *args, **kwargs):
+        return Response(self.types)

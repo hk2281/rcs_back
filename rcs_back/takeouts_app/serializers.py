@@ -118,3 +118,37 @@ class TankTakeoutConfirmationSerializer(serializers.ModelSerializer):
             "created_at",
             "confirmed_at"
         ]
+
+
+class TakeoutConditionSerializer(serializers.ModelSerializer):
+    type = serializers.CharField(source="get_type_display")
+    building = serializers.StringRelatedField(
+        read_only=True
+    )
+    building_part = serializers.StringRelatedField(
+        read_only=True
+    )
+
+    class Meta:
+        model = TakeoutCondition
+        fields = [
+            "id",
+            "type",
+            "number",
+            "building",
+            "building_part"
+        ]
+
+
+class AddTakeoutConditionSerializer(serializers.ModelSerializer):
+    """Сериализатор с цифрой у типа и для id здания и корпуса"""
+
+    class Meta:
+        model = TakeoutCondition
+        fields = [
+            "id",
+            "type",
+            "number",
+            "building",
+            "building_part"
+        ]

@@ -23,4 +23,8 @@ urlpatterns = [
     path("container-takeout-requests", ContainersTakeoutListView.as_view()),
     path("public-feedback", PublicFeedbackView.as_view()),
     path("building-parts", BuildingPartView.as_view()),
+    path("takeout-conditions", TakeoutConditionListView.as_view()),
+    path("takeout-conditions/<int:pk>", TakeoutConditionDetailView.as_view()),
+    path("takeout-conditions/type-options",
+         TakeoutConditionTypeOptionsView.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

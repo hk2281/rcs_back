@@ -96,7 +96,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    "rcs_back.containers_app.apps.ContainersAppConfig",
+    "rcs_back.containers_app",
     "rcs_back.users_app",
     "rcs_back.takeouts_app"
 ]
