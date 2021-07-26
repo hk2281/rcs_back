@@ -18,6 +18,26 @@ class Building(models.Model):
         verbose_name="email коменданта здания"
     )
 
+    def current_mass(self) -> int:
+        """Возвращает накопившуюся массу бумаги
+        по зданию"""
+        current_mass = 0
+        for container in self.containers:
+            if container.is_enough_reported:
+                current_mass += container.mass
+        return current_mass
+
+    def meets_takeout_condition(self) -> bool:
+        """Выполняются ли в корпусе условия для сбора.
+        3 - условие на массу"""
+        mass_condition = self.takeout_conditions.filter(
+            type=3
+        )
+        if mass_condition and self.current_mass() > mass_condition.number:
+            return True
+        else:
+            return False
+
     def __str__(self) -> str:
         return self.address
 
@@ -39,6 +59,26 @@ class BuildingPart(models.Model):
         related_name="building_parts",
         verbose_name="здание"
     )
+
+    def current_mass(self) -> int:
+        """Возвращает накопившуюся массу бумаги
+        по корпусу"""
+        current_mass = 0
+        for container in self.containers:
+            if container.is_enough_reported:
+                current_mass += container.mass
+        return current_mass
+
+    def meets_takeout_condition(self) -> bool:
+        """Выполняются ли в корпусе условия для сбора.
+        3 - условие на массу"""
+        mass_condition = self.takeout_conditions.filter(
+            type=3
+        )
+        if mass_condition and self.current_mass() > mass_condition.number:
+            return True
+        else:
+            return False
 
     def __str__(self) -> str:
         return f"корпус {self.num}"
@@ -156,11 +196,46 @@ class Container(models.Model):
     def last_full_report(self):
         """Возвращает FullContainerReport
         для этого контейнера, который ещё не
-        отметили как опустошённый"""
+        отметили как опустошённый (то есть последний
+        незакрытый), либо None"""
         return FullContainerReport.objects.filter(
             container=self).filter(
                 emptied_at__isnull=True
         ).first()
+
+    def ignore_reports_count(self) -> int:
+        """Возвращает количество сообщений о заполненности,
+        которое нужно игнорировать, если контейнер в общественом месте"""
+        if not self.is_public:
+            return 0
+        if self.building_part:
+            """type=4 - условие на игнорирование сообщений.
+            В приоритете правило для корпуса"""
+            if self.building_part.takeout_conditions.filter(
+                type=4
+            ):
+                return self.building_part.takeout_conditions.filter(
+                    type=4
+                ).number
+        if self.building.takeout_conditions.filter(
+            type=4
+        ):
+            return self.building.takeout_conditions.filter(
+                type=4).number
+        else:
+            return 0
+
+    def is_reported_enough(self) -> bool:
+        """Достаточно ли сообщений о заполненности поступило.
+        Количество учиытвается только для общественных контейнеров."""
+        if self.last_full_report():
+            if not self.is_public:
+                return True
+            ignore_count = self.ignore_reports_count()
+            if self.last_full_report().count > ignore_count:
+                return True
+        else:
+            return False
 
     def cur_fill_time(self) -> str:
         """Текущее время заполнения контейнера"""

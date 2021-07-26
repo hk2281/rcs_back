@@ -21,9 +21,10 @@ class FillContainerView(generics.UpdateAPIView):
             # Повторное сообщение
             instance.last_full_report().count += 1
             instance.last_full_report().save()
+            handle_repeat_full_report(instance)
         else:
             """Заполнение контейнера через главную страницу"""
-            handle_full_container(instance)
+            handle_first_full_report(instance)
         serializer.save()
 
 
@@ -43,7 +44,7 @@ class ContainerDetailView(generics.RetrieveUpdateDestroyAPIView):
         """Изменение заполненности контейнера хоз отделом/эко"""
         if "is_full" in serializer.validated_data:
             if not instance.is_full and serializer.validated_data["is_full"]:
-                handle_full_container(instance)
+                handle_first_full_report(instance)
             if instance.is_full and not serializer.validated_data["is_full"]:
                 handle_empty_container(instance)
         serializer.save()

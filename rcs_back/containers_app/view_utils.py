@@ -4,9 +4,16 @@ from rcs_back.containers_app.models import Container, FullContainerReport
 from rcs_back.containers_app.tasks import *
 
 
-def check_takeout_condition():
-    # TODO
-    pass
+def check_takeout_condition(container: Container) -> bool:
+    """Проверяет, выполнены ли условия для сбора после заполнений
+    текущего контейнера"""
+    if (container.building_part and
+            container.building_part.meets_takeout_condition()):
+        return True
+    elif container.building.meets_takeout_condition():
+        return True
+    else:
+        return False
 
 
 def takeout_condition_met_notify():
@@ -14,7 +21,12 @@ def takeout_condition_met_notify():
     pass
 
 
-def handle_full_container(container: Container) -> None:
+def handle_repeat_full_report(container: Container) -> None:
+    if check_takeout_condition(container):
+        takeout_condition_met_notify()
+
+
+def handle_first_full_report(container: Container) -> None:
     """При заполнении контейнера нужно запомнить время
     и пересчитать среднее время заполнения"""
     FullContainerReport.objects.create(
@@ -23,7 +35,7 @@ def handle_full_container(container: Container) -> None:
     calc_avg_fill_time.delay(container.pk)
     """Если выполняются условия для вывоза по
     кол-ву бумаги, сообщаем"""
-    if check_takeout_condition():
+    if check_takeout_condition(container):
         takeout_condition_met_notify()
 
 
