@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 from django.core.cache import cache
 from django.utils import timezone
@@ -53,6 +54,24 @@ class Building(models.Model):
         else:
             return False
         # Добавить условие на время
+
+    def public_days_condition(self) -> int:
+        condition = self.takeout_conditions.filter(
+            type=2
+        ).first()
+        if condition:
+            return condition.number
+        else:
+            return 0
+
+    def office_days_condition(self) -> int:
+        condition = self.takeout_conditions.filter(
+            type=1
+        ).first()
+        if condition:
+            return condition.number
+        else:
+            return 0
 
     def __str__(self) -> str:
         return self.address
@@ -112,38 +131,30 @@ class BuildingPart(models.Model):
                 containers_for_takeout.append(container)
         return containers_for_takeout
 
+    def public_days_condition(self) -> int:
+        condition = self.takeout_conditions.filter(
+            type=2
+        ).first()
+        if condition:
+            return condition.number
+        else:
+            return 0
+
+    def office_days_condition(self) -> int:
+        condition = self.takeout_conditions.filter(
+            type=1
+        ).first()
+        if condition:
+            return condition.number
+        else:
+            return 0
+
     def __str__(self) -> str:
         return f"корпус {self.num}"
 
     class Meta:
         verbose_name = "корпус здания"
         verbose_name_plural = "корпусы зданий"
-
-
-class TakeoutConditionMet(models.Model):
-    """Модель оповещения о выполненных
-    условиях для выноса"""
-
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name="время создания"
-    )
-
-    building = models.ForeignKey(
-        to=Building,
-        on_delete=models.CASCADE,
-        related_name="full_containers_notifications",
-        verbose_name="здание"
-    )
-
-    def __str__(self) -> str:
-        return (f"Выполнено условие для выноса "
-                f"{self.created_at.astimezone(tz).strftime('%d.%m.%Y %H:%M')}"
-                f"в {self.building}")
-
-    class Meta:
-        verbose_name = "выполнено условие для выноса"
-        verbose_name_plural = "выполнены условия для выноса"
 
 
 class Container(models.Model):
@@ -266,19 +277,42 @@ class Container(models.Model):
         else:
             return False
 
+    def check_time_conditions(self) -> bool:
+        '''Выполнены ли условия "не больше N дней"'''
+        if self.last_full_report():
+            return True
+        previous_reports = self.full_reports.order_by("-emptied_at")
+        if not previous_reports:
+            return False
+
+        days = (timezone.now() - previous_reports[0].emptied_at).days
+        if self.is_public:
+            if (self.building_part.public_days_condition() and
+                    days > self.building_part.public_days_condition()):
+                return True
+            if (self.building.public_days_condition() and
+                    days > self.building.public_days_condition()):
+                return True
+            return False
+        else:
+            if (self.building_part.office_days_condition() and
+                    days > self.building_part.office_days_condition()):
+                return True
+            if (self.building.office_days_condition() and
+                    days > self.building.office_days_condition()):
+                return True
+            return False
+
     def needs_takeout(self) -> bool:
         """Нужно ли вынести контейнер"""
-        if self.is_reported_enough():
-            return True
-        # Условие на вынос по времени
+        return self.is_reported_enough() or self.check_time_conditions()
 
     def cur_fill_time(self) -> str:
         """Текущее время заполнения контейнера"""
         if self.last_full_report():
             return "Контейнер уже заполнен."
         else:
-            previous_reports = FullContainerReport.objects.filter(
-                container=self).order_by("-emptied_at")
+            previous_reports = self.full_reports.order_by("-emptied_at")
             if previous_reports:
                 fill_time = timezone.now() - previous_reports[0].emptied_at
                 return str(fill_time)

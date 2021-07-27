@@ -4,7 +4,7 @@ from io import BytesIO
 from django.core.files import File
 
 from rcs_back.containers_app.models import BuildingPart, Container
-from rcs_back.containers_app.view_utils import *
+from .utils import *
 from .serializers import *
 from .qr import generate_sticker
 

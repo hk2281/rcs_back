@@ -2,6 +2,7 @@ from django.utils import timezone
 
 from rcs_back.containers_app.models import Container, FullContainerReport
 from rcs_back.containers_app.tasks import *
+from rcs_back.takeouts_app.utils.email import takeout_condition_met_notify
 
 
 def check_mass_takeout_condition(container: Container) -> bool:
@@ -14,11 +15,6 @@ def check_mass_takeout_condition(container: Container) -> bool:
         return True
     else:
         return False
-
-
-def takeout_condition_met_notify(container: Container) -> None:
-    """Оповещение о необходимости сбора"""
-    pass
 
 
 def handle_repeat_full_report(container: Container) -> None:
@@ -48,14 +44,3 @@ def handle_empty_container(container: Container) -> None:
         last_full_report.emptied_at = timezone.now()
         last_full_report.save()
         calc_avg_takeout_wait_time.delay(container.pk)
-
-
-def public_container_add_notify(container: Container) -> None:
-    """Отправляет сообщение с инструкциями для активации
-    добавленного контейнера"""
-    pass
-
-
-def send_public_feedback(email: str, msg: str, container_id: int = 0) -> None:
-    """Отправляет сообщение с обратной связью на почту экологу"""
-    pass

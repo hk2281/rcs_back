@@ -222,3 +222,29 @@ class TakeoutCondition(models.Model):
                 name="unique_condition_for_building"
             )
         ]
+
+
+class TakeoutConditionMet(models.Model):
+    """Модель оповещения о выполненных
+    условиях для выноса"""
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="время создания"
+    )
+
+    building = models.ForeignKey(
+        to=Building,
+        on_delete=models.CASCADE,
+        related_name="full_containers_notifications",
+        verbose_name="здание"
+    )
+
+    def __str__(self) -> str:
+        return (f"Выполнено условие для выноса "
+                f"{self.created_at.astimezone(tz).strftime('%d.%m.%Y %H:%M')}"
+                f"в {self.building}")
+
+    class Meta:
+        verbose_name = "выполнено условие для выноса"
+        verbose_name_plural = "выполнены условия для выноса"

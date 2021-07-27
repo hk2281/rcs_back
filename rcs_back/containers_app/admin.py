@@ -9,7 +9,8 @@ class ContainerAdmin(admin.ModelAdmin):
         "cur_takeout_wait_time",
         "avg_fill_time",
         "avg_takeout_wait_time",
-        "last_full_report"
+        "last_full_report",
+        "check_time_conditions"
     ]
 
 
@@ -17,4 +18,3 @@ admin.site.register(Container, ContainerAdmin)
 admin.site.register(Building)
 admin.site.register(BuildingPart)
 admin.site.register(FullContainerReport)
-admin.site.register(TakeoutConditionMet)

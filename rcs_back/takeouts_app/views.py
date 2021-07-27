@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rcs_back.takeouts_app.models import *
 from rcs_back.takeouts_app.serializers import *
 from rcs_back.takeouts_app.utils import *
-from rcs_back.containers_app.view_utils import handle_empty_container
+from rcs_back.containers_app.utils import handle_empty_container
 
 
 class ContainersTakeoutListView(generics.ListCreateAPIView):
