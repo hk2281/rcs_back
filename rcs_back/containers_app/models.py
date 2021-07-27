@@ -22,21 +22,37 @@ class Building(models.Model):
         """Возвращает накопившуюся массу бумаги
         по зданию"""
         current_mass = 0
-        for container in self.containers:
-            if container.is_enough_reported:
-                current_mass += container.mass
+        for container in self.containers.all():
+            if container.is_reported_enough():
+                current_mass += container.capacity
         return current_mass
 
-    def meets_takeout_condition(self) -> bool:
+    def meets_mass_takeout_condition(self) -> bool:
         """Выполняются ли в корпусе условия для сбора.
         3 - условие на массу"""
         mass_condition = self.takeout_conditions.filter(
             type=3
-        )
+        ).first()
         if mass_condition and self.current_mass() > mass_condition.number:
             return True
         else:
             return False
+
+    def containers_for_takeout(self):
+        """Возвращает список контейнеров, которые нужно вынести"""
+        containers_for_takeout = []
+        for container in self.containers.all():
+            if container.needs_takeout():
+                containers_for_takeout.append(container)
+        return containers_for_takeout
+
+    def needs_takeout(self) -> bool:
+        """Нужно ли вынести бумагу?"""
+        if self.meets_mass_takeout_condition():
+            return True
+        else:
+            return False
+        # Добавить условие на время
 
     def __str__(self) -> str:
         return self.address
@@ -64,21 +80,37 @@ class BuildingPart(models.Model):
         """Возвращает накопившуюся массу бумаги
         по корпусу"""
         current_mass = 0
-        for container in self.containers:
-            if container.is_enough_reported:
-                current_mass += container.mass
+        for container in self.containers.all():
+            if container.is_reported_enough():
+                current_mass += container.capacity
         return current_mass
 
-    def meets_takeout_condition(self) -> bool:
+    def meets_mass_takeout_condition(self) -> bool:
         """Выполняются ли в корпусе условия для сбора.
         3 - условие на массу"""
         mass_condition = self.takeout_conditions.filter(
             type=3
-        )
+        ).first()
         if mass_condition and self.current_mass() > mass_condition.number:
             return True
         else:
             return False
+
+    def needs_takeout(self) -> bool:
+        """Нужно ли вынести бумагу?"""
+        if self.meets_mass_takeout_condition():
+            return True
+        else:
+            return False
+        # Добавить условие на время
+
+    def containers_for_takeout(self):
+        """Возвращает список контейнеров, которые нужно вынести"""
+        containers_for_takeout = []
+        for container in self.containers.all():
+            if container.needs_takeout():
+                containers_for_takeout.append(container)
+        return containers_for_takeout
 
     def __str__(self) -> str:
         return f"корпус {self.num}"
@@ -211,17 +243,14 @@ class Container(models.Model):
         if self.building_part:
             """type=4 - условие на игнорирование сообщений.
             В приоритете правило для корпуса"""
-            if self.building_part.takeout_conditions.filter(
-                type=4
-            ):
-                return self.building_part.takeout_conditions.filter(
-                    type=4
-                ).number
-        if self.building.takeout_conditions.filter(
-            type=4
-        ):
-            return self.building.takeout_conditions.filter(
-                type=4).number
+            building_part_condition = self.building_part.takeout_conditions.filter(
+                type=4).first()
+            if building_part_condition:
+                return building_part_condition.number
+        building_condition = self.building.takeout_conditions.filter(
+            type=4).first()
+        if building_condition:
+            return building_condition.number
         else:
             return 0
 
@@ -236,6 +265,12 @@ class Container(models.Model):
                 return True
         else:
             return False
+
+    def needs_takeout(self) -> bool:
+        """Нужно ли вынести контейнер"""
+        if self.is_reported_enough():
+            return True
+        # Условие на вынос по времени
 
     def cur_fill_time(self) -> str:
         """Текущее время заполнения контейнера"""

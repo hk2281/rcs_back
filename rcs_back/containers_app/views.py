@@ -19,8 +19,9 @@ class FillContainerView(generics.UpdateAPIView):
         instance = self.get_object()
         if instance.is_full:
             # Повторное сообщение
-            instance.last_full_report().count += 1
-            instance.last_full_report().save()
+            report = instance.last_full_report()
+            report.count += 1
+            report.save()
             handle_repeat_full_report(instance)
         else:
             """Заполнение контейнера через главную страницу"""

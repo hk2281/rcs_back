@@ -4,26 +4,27 @@ from rcs_back.containers_app.models import Container, FullContainerReport
 from rcs_back.containers_app.tasks import *
 
 
-def check_takeout_condition(container: Container) -> bool:
+def check_mass_takeout_condition(container: Container) -> bool:
     """Проверяет, выполнены ли условия для сбора после заполнений
     текущего контейнера"""
     if (container.building_part and
-            container.building_part.meets_takeout_condition()):
+            container.building_part.meets_mass_takeout_condition()):
         return True
-    elif container.building.meets_takeout_condition():
+    elif container.building.meets_mass_takeout_condition():
         return True
     else:
         return False
 
 
-def takeout_condition_met_notify():
-    # TODO
+def takeout_condition_met_notify(container: Container) -> None:
+    """Оповещение о необходимости сбора"""
     pass
 
 
 def handle_repeat_full_report(container: Container) -> None:
-    if check_takeout_condition(container):
-        takeout_condition_met_notify()
+    """Проверяем, не нужно ли отправить оповещение для сбора контейнеров"""
+    if check_mass_takeout_condition(container):
+        takeout_condition_met_notify(container)
 
 
 def handle_first_full_report(container: Container) -> None:
@@ -35,8 +36,8 @@ def handle_first_full_report(container: Container) -> None:
     calc_avg_fill_time.delay(container.pk)
     """Если выполняются условия для вывоза по
     кол-ву бумаги, сообщаем"""
-    if check_takeout_condition(container):
-        takeout_condition_met_notify()
+    if check_mass_takeout_condition(container):
+        takeout_condition_met_notify(container)
 
 
 def handle_empty_container(container: Container) -> None:
