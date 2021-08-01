@@ -23,6 +23,15 @@ class ContainersTakeoutRequest(models.Model):
         verbose_name="здание"
     )
 
+    building_part = models.ForeignKey(
+        to=BuildingPart,
+        on_delete=models.CASCADE,
+        related_name="containers_takeout_requests",
+        blank=True,
+        null=True,
+        verbose_name="корпус"
+    )
+
     containers = models.ManyToManyField(
         to=Container,
         related_name="takeout_requests",

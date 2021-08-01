@@ -1,10 +1,9 @@
 from rest_framework import generics, permissions, views
 from rest_framework.response import Response
-from io import BytesIO
-from django.core.files import File
 
 from rcs_back.containers_app.models import BuildingPart, Container
-from .utils import *
+from .utils.email import *
+from .utils.view import *
 from .serializers import *
 
 
@@ -79,21 +78,6 @@ class GetStickerView(generics.RetrieveAPIView):
     queryset = Container.objects.all()
     serializer_class = ContainerStickerSerializer
 
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-
-        if not instance.sticker:
-            """Генерируем стикер, если его ещё нет."""
-            sticker_im = generate_sticker(instance.pk)
-            sticker_io = BytesIO()
-            sticker_im.save(sticker_io, "JPEG", quality=85)
-            sticker = File(sticker_io, name=f"sticker_{instance.pk}")
-            instance.sticker = sticker
-            instance.save()
-
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
-
 
 class ContainerPublicAddView(generics.CreateAPIView):
     """Добавление своего контейнера с главной страницы"""
@@ -103,7 +87,8 @@ class ContainerPublicAddView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         instance = serializer.save(status=Container.WAITING)
-        public_container_add_notify(instance)
+        print(instance.pk)
+        public_container_add_notify.delay(instance.pk)
 
 
 class ContainerStatusOptionsView(views.APIView):

@@ -2,9 +2,11 @@ import datetime
 import time
 
 from django.core.cache import cache
+from django.core.mail import send_mail
 from celery import shared_task
 
-from rcs_back.containers_app.models import FullContainerReport
+from rcs_back.containers_app.models import FullContainerReport, Container
+from rcs_back.containers_app.utils.email import get_public_container_add_msg
 
 
 @shared_task
@@ -48,3 +50,18 @@ def calc_avg_takeout_wait_time(container_pk: int) -> str:
         cache.set(f"{container_pk}_avg_takeout_wait_time",
                   avg_takeout_wait_time, None)
         return f"container {container_pk}: {avg_takeout_wait_time}"
+
+
+@shared_task
+def public_container_add_notify(container_id: int) -> None:
+    """Отправляет сообщение с инструкциями для активации
+    добавленного контейнера"""
+    time.sleep(10)  # Ждём сохранения в БД и генерации стикера
+    container = Container.objects.get(pk=container_id)
+    msg = get_public_container_add_msg(container)
+    send_mail(
+        "Добавление контейнера в сервисе RCS",
+        msg,
+        "noreply@rcs-itmo.ru",
+        [container.email]
+    )

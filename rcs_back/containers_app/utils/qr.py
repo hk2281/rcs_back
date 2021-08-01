@@ -19,7 +19,7 @@ def generate_qr(container_id: int) -> Image:
 def add_container_id(container_id: int, sticker: Image) -> Image:
     img1 = ImageDraw.Draw(sticker)
     font_path = str(settings.APPS_DIR / "containers_app" /
-                    "Roboto-Regular.ttf")
+                    "utils" / "Roboto-Regular.ttf")
     font = ImageFont.truetype(font_path, 60)
     coords = (100, 0)
     text = f"id: {container_id}"
@@ -30,7 +30,7 @@ def add_container_id(container_id: int, sticker: Image) -> Image:
 def add_logo(sticker: Image) -> Image:
     img1 = ImageDraw.Draw(sticker)
     font_path = str(settings.APPS_DIR / "containers_app" /
-                    "Roboto-Regular.ttf")
+                    "utils" / "Roboto-Regular.ttf")
     font = ImageFont.truetype(font_path, 50)
     coords = (100, 400)
     text = "rcs-itmo.ru"

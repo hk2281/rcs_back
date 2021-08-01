@@ -7,9 +7,6 @@ from rcs_back.takeouts_app.models import *
 class ContainersTakeoutRequestSerializer(serializers.ModelSerializer):
     """Для создания заявки на вынос контейнера"""
 
-    building = serializers.PrimaryKeyRelatedField(
-        queryset=Building.objects.all()
-    )
     containers = serializers.PrimaryKeyRelatedField(
         many=True, queryset=Container.objects.filter(status=Container.ACTIVE)
     )
@@ -23,6 +20,7 @@ class ContainersTakeoutRequestSerializer(serializers.ModelSerializer):
             "id",
             "created_at",
             "building",
+            "building_part",
             "containers",
             "confirmed_at",
             "emptied_containers",
@@ -40,9 +38,6 @@ class ContainersTakeoutRequestSerializer(serializers.ModelSerializer):
 class ContainersTakeoutConfirmationSerializer(serializers.ModelSerializer):
     """Для подтверждения выноса контейнеров"""
 
-    building = serializers.PrimaryKeyRelatedField(
-        read_only=True
-    )
     containers = serializers.PrimaryKeyRelatedField(
         many=True, read_only=True
     )
@@ -65,6 +60,7 @@ class ContainersTakeoutConfirmationSerializer(serializers.ModelSerializer):
         read_only_fields = [
             "created_at",
             "building",
+            "building_part"
             "containers",
             "confirmed_at"
         ]

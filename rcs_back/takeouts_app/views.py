@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rcs_back.takeouts_app.models import *
 from rcs_back.takeouts_app.serializers import *
 from rcs_back.takeouts_app.utils import *
-from rcs_back.containers_app.utils import handle_empty_container
+from rcs_back.containers_app.utils.view import handle_empty_container
 
 
 class ContainersTakeoutListView(generics.ListCreateAPIView):
@@ -14,8 +14,11 @@ class ContainersTakeoutListView(generics.ListCreateAPIView):
     queryset = ContainersTakeoutRequest.objects.all()
 
     def perform_create(self, serializer):
-        serializer.save()
-        containers_takeout_notify()
+        instance = serializer.save()
+        if instance.building_part:
+            containers_takeout_notify(building_part=instance.building_part)
+        else:
+            containers_takeout_notify(building=instance.building)
 
 
 class ContainersTakeoutConfirmationView(generics.UpdateAPIView):
@@ -41,8 +44,8 @@ class TankTakeoutRequestListView(generics.ListCreateAPIView):
     queryset = TankTakeoutRequest.objects.all()
 
     def perform_create(self, serializer):
-        serializer.save()
-        tank_takeout_notify()
+        instance = serializer.save()
+        tank_takeout_notify(instance.building)
 
 
 class TankTakeoutConfirmationView(generics.UpdateAPIView):
