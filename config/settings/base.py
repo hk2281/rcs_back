@@ -292,7 +292,7 @@ CELERY_TASK_SOFT_TIME_LIMIT = 60
 CELERY_BEAT_SCHEDULE = {
     "check-time-conditions": {
         "task": "rcs_back.takeouts_app.tasks.check_time_conditions",
-        "schedule": crontab(hour=22, minute=10)
+        "schedule": crontab(hour=0, minute=0)
     }
 }
 

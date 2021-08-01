@@ -29,7 +29,7 @@ class Building(models.Model):
         return current_mass
 
     def meets_mass_takeout_condition(self) -> bool:
-        """Выполняются ли в корпусе условия для сбора.
+        """Выполняются ли в здании условия для сбора по общей массе.
         3 - условие на массу"""
         mass_condition = self.takeout_conditions.filter(
             type=3
@@ -38,6 +38,14 @@ class Building(models.Model):
             return True
         else:
             return False
+
+    def meets_time_takeout_condition(self) -> bool:
+        '''Выполняются ли в здании условия для сбора
+        по времени.'''
+        for container in self.containers.all():
+            if container.check_time_conditions():
+                return True
+        return False
 
     def containers_for_takeout(self):
         """Возвращает список контейнеров, которые нужно вынести"""
@@ -49,11 +57,8 @@ class Building(models.Model):
 
     def needs_takeout(self) -> bool:
         """Нужно ли вынести бумагу?"""
-        if self.meets_mass_takeout_condition():
-            return True
-        else:
-            return False
-        # Добавить условие на время
+        return (self.meets_mass_takeout_condition() or
+                self.meets_time_takeout_condition())
 
     def public_days_condition(self) -> int:
         condition = self.takeout_conditions.filter(
@@ -105,7 +110,7 @@ class BuildingPart(models.Model):
         return current_mass
 
     def meets_mass_takeout_condition(self) -> bool:
-        """Выполняются ли в корпусе условия для сбора.
+        """Выполняются ли в корпусе условия для сбора по общей массе.
         3 - условие на массу"""
         mass_condition = self.takeout_conditions.filter(
             type=3
@@ -115,13 +120,18 @@ class BuildingPart(models.Model):
         else:
             return False
 
+    def meets_time_takeout_condition(self) -> bool:
+        '''Выполняются ли в корпусе здания условия для сбора
+        по времени.'''
+        for container in self.containers.all():
+            if container.check_time_conditions():
+                return True
+        return False
+
     def needs_takeout(self) -> bool:
         """Нужно ли вынести бумагу?"""
-        if self.meets_mass_takeout_condition():
-            return True
-        else:
-            return False
-        # Добавить условие на время
+        return (self.meets_mass_takeout_condition() or
+                self.meets_time_takeout_condition())
 
     def containers_for_takeout(self):
         """Возвращает список контейнеров, которые нужно вынести"""

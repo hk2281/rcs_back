@@ -6,7 +6,6 @@ from django.core.files import File
 from rcs_back.containers_app.models import BuildingPart, Container
 from .utils import *
 from .serializers import *
-from .qr import generate_sticker
 
 
 class FillContainerView(generics.UpdateAPIView):
