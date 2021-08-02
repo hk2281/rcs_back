@@ -14,8 +14,14 @@ class Building(models.Model):
         verbose_name="адрес"
     )
 
-    email = models.EmailField(
-        verbose_name="email коменданта здания"
+    itmo_worker_email = models.EmailField(
+        verbose_name="email коменданта здания",
+        blank=True
+    )
+
+    containers_takeout_email = models.EmailField(
+        verbose_name="email компании, выносящей баки",
+        blank=True
     )
 
     def current_mass(self) -> int:

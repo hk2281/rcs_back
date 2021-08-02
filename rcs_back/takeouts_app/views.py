@@ -15,10 +15,7 @@ class ContainersTakeoutListView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         instance = serializer.save()
-        if instance.building_part:
-            containers_takeout_notify(building_part=instance.building_part)
-        else:
-            containers_takeout_notify(building=instance.building)
+        containers_takeout_notify(request=instance)
 
 
 class ContainersTakeoutConfirmationView(generics.UpdateAPIView):

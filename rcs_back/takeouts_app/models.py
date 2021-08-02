@@ -153,7 +153,7 @@ class TankTakeoutRequest(models.Model):
         verbose_name_plural = "запросы вывоза баков"
 
 
-class TakeoutCompany(models.Model):
+class TankTakeoutCompany(models.Model):
     """Модель компании, ответственной за вывоз бака"""
 
     email = models.EmailField(
@@ -169,8 +169,8 @@ class TakeoutCompany(models.Model):
         return self.email
 
     class Meta:
-        verbose_name = "заготовитель"
-        verbose_name_plural = "заготовители"
+        verbose_name = "компания, вывоза бака"
+        verbose_name_plural = "компании, вывоз бака"
 
 
 class TakeoutCondition(models.Model):
