@@ -88,7 +88,6 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    "django_celery_beat",
     "django_filters",
     "rest_framework",
     "corsheaders",
@@ -292,7 +291,7 @@ CELERY_TASK_SOFT_TIME_LIMIT = 60
 CELERY_BEAT_SCHEDULE = {
     "check-time-conditions": {
         "task": "rcs_back.takeouts_app.tasks.check_time_conditions",
-        "schedule": crontab(hour=0, minute=0)
+        "schedule": crontab(minute=0, hour=0)
     }
 }
 

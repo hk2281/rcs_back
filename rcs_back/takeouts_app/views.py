@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rcs_back.takeouts_app.models import *
 from rcs_back.takeouts_app.serializers import *
 from rcs_back.takeouts_app.utils import *
-from rcs_back.containers_app.utils.view import handle_empty_container
+from rcs_back.containers_app.tasks import handle_empty_container
 
 
 class ContainersTakeoutListView(generics.ListCreateAPIView):
@@ -33,7 +33,7 @@ class ContainersTakeoutConfirmationView(generics.UpdateAPIView):
             фиксируем время подтверждения выноса"""
             container.is_full = False
             container.save()
-            handle_empty_container(container)
+            handle_empty_container.delay(container.pk)
 
 
 class TankTakeoutRequestListView(generics.ListCreateAPIView):

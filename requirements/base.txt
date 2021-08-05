@@ -3,7 +3,6 @@ whitenoise==5.2.0  # https://github.com/evansd/whitenoise
 redis==3.5.3  # https://github.com/andymccurdy/redis-py
 hiredis==1.1.0  # https://github.com/redis/hiredis-py
 celery==5.1.2
-django-celery-beat==2.2.1
 flower==1.0.0  # https://github.com/mher/flower
 psycopg2-binary==2.9.1
 pillow==8.2.0

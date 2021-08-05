@@ -233,9 +233,9 @@ class TakeoutCondition(models.Model):
         ]
 
 
-class TakeoutConditionMet(models.Model):
-    """Модель оповещения о выполненных
-    условиях для выноса"""
+class MassTakeoutConditionCommit(models.Model):
+    """Модель фиксации выполнения
+    условия на вынос по массе"""
 
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -245,14 +245,22 @@ class TakeoutConditionMet(models.Model):
     building = models.ForeignKey(
         to=Building,
         on_delete=models.CASCADE,
-        related_name="full_containers_notifications",
+        related_name="mass_condition_commits",
         verbose_name="здание"
+    )
+
+    building_part = models.ForeignKey(
+        to=BuildingPart,
+        on_delete=models.CASCADE,
+        related_name="mass_condition_commits",
+        null=True,
+        blank=True,
+        verbose_name="корпус здания"
     )
 
     def __str__(self) -> str:
         return (f"Выполнено условие для выноса "
-                f"{self.created_at.astimezone(tz).strftime('%d.%m.%Y %H:%M')}"
-                f"в {self.building}")
+                f"{self.created_at.astimezone(tz).strftime('%d.%m.%Y %H:%M')}")
 
     class Meta:
         verbose_name = "выполнено условие для выноса"

@@ -3,8 +3,8 @@ from rest_framework.response import Response
 
 from rcs_back.containers_app.models import BuildingPart, Container
 from .utils.email import *
-from .utils.view import *
 from .serializers import *
+from .tasks import *
 
 
 class FillContainerView(generics.UpdateAPIView):
@@ -17,13 +17,10 @@ class FillContainerView(generics.UpdateAPIView):
         instance = self.get_object()
         if instance.is_full:
             # Повторное сообщение
-            report = instance.last_full_report()
-            report.count += 1
-            report.save()
-            handle_repeat_full_report(instance)
+            handle_repeat_full_report.delay(instance.pk)
         else:
-            """Заполнение контейнера через главную страницу"""
-            handle_first_full_report(instance)
+            # Заполнение контейнера через главную страницу
+            handle_first_full_report.delay(instance.pk)
         serializer.save()
 
 
@@ -43,9 +40,9 @@ class ContainerDetailView(generics.RetrieveUpdateDestroyAPIView):
         """Изменение заполненности контейнера хоз отделом/эко"""
         if "is_full" in serializer.validated_data:
             if not instance.is_full and serializer.validated_data["is_full"]:
-                handle_first_full_report(instance)
+                handle_first_full_report.delay(instance.pk)
             if instance.is_full and not serializer.validated_data["is_full"]:
-                handle_empty_container(instance)
+                handle_empty_container.delay(instance.pk)
         serializer.save()
 
 

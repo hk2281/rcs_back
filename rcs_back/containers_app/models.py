@@ -6,7 +6,93 @@ from django.utils import timezone
 tz = timezone.get_default_timezone()
 
 
-class Building(models.Model):
+class BaseBuilding(models.Model):
+    """Абстрактный класс для общих методов
+    здания и корпуса"""
+
+    def current_mass(self) -> int:
+        """Возвращает накопившуюся массу бумаги
+        по зданию/корпусу"""
+        current_mass = 0
+        for container in self.containers.all():
+            if container.is_reported_enough():
+                current_mass += container.capacity
+        return current_mass
+
+    def meets_mass_takeout_condition(self) -> bool:
+        """Выполняются ли в здании/корпусе условия для сбора по общей массе.
+        3 - условие на массу"""
+        mass_condition = self.takeout_conditions.filter(
+            type=3
+        ).first()
+        if mass_condition and self.current_mass() > mass_condition.number:
+            return True
+        else:
+            return False
+
+    def meets_time_takeout_condition(self) -> bool:
+        '''Выполняются ли в здании/корпусе условия для сбора
+        по времени.'''
+        for container in self.containers.all():
+            if container.check_time_conditions():
+                return True
+        return False
+
+    def needs_takeout(self) -> bool:
+        """Нужно ли вынести бумагу?"""
+        return (self.meets_mass_takeout_condition() or
+                self.meets_time_takeout_condition())
+
+    def containers_for_takeout(self):
+        """Возвращает список контейнеров, которые нужно вынести"""
+        containers_for_takeout = []
+        for container in self.containers.all():
+            if container.needs_takeout():
+                containers_for_takeout.append(container)
+        return containers_for_takeout
+
+    def public_days_condition(self) -> int:
+        """Возвращает кол-во дней, через которое
+        нужно выносить бумагу в общественных местах"""
+        condition = self.takeout_conditions.filter(
+            type=2
+        ).first()
+        if condition:
+            return condition.number
+        else:
+            return 0
+
+    def office_days_condition(self) -> int:
+        """Возвращает кол-во дней, через которое
+        нужно выносить бумагу в офисе"""
+        condition = self.takeout_conditions.filter(
+            type=1
+        ).first()
+        if condition:
+            return condition.number
+        else:
+            return 0
+
+    def is_mass_condition_commited(self) -> bool:
+        """Зафиксировано ли выполнение условия по массе?"""
+        latest_commit = self.mass_condition_commits.order_by(
+            "-created_at"
+        ).first()
+        latest_takeout_request = self.containers_takeout_requests.filter(
+            emptied_at__isnull=False
+        ).order_by(
+            "-created_at"
+        ).first()
+        if latest_commit and latest_takeout_request:
+            if latest_commit.created_at > latest_takeout_request.created_at:
+                return False
+        return False
+
+    class Meta:
+        abstract = True
+
+
+class Building(BaseBuilding):
     """ Модель здания """
 
     address = models.CharField(
@@ -24,65 +110,6 @@ class Building(models.Model):
         blank=True
     )
 
-    def current_mass(self) -> int:
-        """Возвращает накопившуюся массу бумаги
-        по зданию"""
-        current_mass = 0
-        for container in self.containers.all():
-            if container.is_reported_enough():
-                current_mass += container.capacity
-        return current_mass
-
-    def meets_mass_takeout_condition(self) -> bool:
-        """Выполняются ли в здании условия для сбора по общей массе.
-        3 - условие на массу"""
-        mass_condition = self.takeout_conditions.filter(
-            type=3
-        ).first()
-        if mass_condition and self.current_mass() > mass_condition.number:
-            return True
-        else:
-            return False
-
-    def meets_time_takeout_condition(self) -> bool:
-        '''Выполняются ли в здании условия для сбора
-        по времени.'''
-        for container in self.containers.all():
-            if container.check_time_conditions():
-                return True
-        return False
-
-    def containers_for_takeout(self):
-        """Возвращает список контейнеров, которые нужно вынести"""
-        containers_for_takeout = []
-        for container in self.containers.all():
-            if container.needs_takeout():
-                containers_for_takeout.append(container)
-        return containers_for_takeout
-
-    def needs_takeout(self) -> bool:
-        """Нужно ли вынести бумагу?"""
-        return (self.meets_mass_takeout_condition() or
-                self.meets_time_takeout_condition())
-
-    def public_days_condition(self) -> int:
-        condition = self.takeout_conditions.filter(
-            type=2
-        ).first()
-        if condition:
-            return condition.number
-        else:
-            return 0
-
-    def office_days_condition(self) -> int:
-        condition = self.takeout_conditions.filter(
-            type=1
-        ).first()
-        if condition:
-            return condition.number
-        else:
-            return 0
-
     def __str__(self) -> str:
         return self.address
 
@@ -91,7 +118,7 @@ class Building(models.Model):
         verbose_name_plural = "здания"
 
 
-class BuildingPart(models.Model):
+class BuildingPart(BaseBuilding):
     """Модель корпуса здания"""
 
     num = models.PositiveSmallIntegerField(
@@ -104,65 +131,6 @@ class BuildingPart(models.Model):
         related_name="building_parts",
         verbose_name="здание"
     )
-
-    def current_mass(self) -> int:
-        """Возвращает накопившуюся массу бумаги
-        по корпусу"""
-        current_mass = 0
-        for container in self.containers.all():
-            if container.is_reported_enough():
-                current_mass += container.capacity
-        return current_mass
-
-    def meets_mass_takeout_condition(self) -> bool:
-        """Выполняются ли в корпусе условия для сбора по общей массе.
-        3 - условие на массу"""
-        mass_condition = self.takeout_conditions.filter(
-            type=3
-        ).first()
-        if mass_condition and self.current_mass() > mass_condition.number:
-            return True
-        else:
-            return False
-
-    def meets_time_takeout_condition(self) -> bool:
-        '''Выполняются ли в корпусе здания условия для сбора
-        по времени.'''
-        for container in self.containers.all():
-            if container.check_time_conditions():
-                return True
-        return False
-
-    def needs_takeout(self) -> bool:
-        """Нужно ли вынести бумагу?"""
-        return (self.meets_mass_takeout_condition() or
-                self.meets_time_takeout_condition())
-
-    def containers_for_takeout(self):
-        """Возвращает список контейнеров, которые нужно вынести"""
-        containers_for_takeout = []
-        for container in self.containers.all():
-            if container.needs_takeout():
-                containers_for_takeout.append(container)
-        return containers_for_takeout
-
-    def public_days_condition(self) -> int:
-        condition = self.takeout_conditions.filter(
-            type=2
-        ).first()
-        if condition:
-            return condition.number
-        else:
-            return 0
-
-    def office_days_condition(self) -> int:
-        condition = self.takeout_conditions.filter(
-            type=1
-        ).first()
-        if condition:
-            return condition.number
-        else:
-            return 0
 
     def __str__(self) -> str:
         return f"корпус {self.num}"
@@ -251,15 +219,21 @@ class Container(models.Model):
         blank=True
     )
 
-    def last_full_report(self):
+    def last_unconfirmed_report(self):
         """Возвращает FullContainerReport
         для этого контейнера, который ещё не
         отметили как опустошённый (то есть последний
-        незакрытый), либо None"""
-        return FullContainerReport.objects.filter(
-            container=self).filter(
-                emptied_at__isnull=True
+        незакрытый), либо None.
+        Этот FullContainerReport также должен быть
+        последним (актуальным)"""
+        report = FullContainerReport.objects.filter(
+            container=self).order_by(
+                "-reported_full_at"
         ).first()
+        if not report.emptied_at:
+            return report
+        else:
+            return None
 
     def ignore_reports_count(self) -> int:
         """Возвращает количество сообщений о заполненности,
@@ -283,18 +257,28 @@ class Container(models.Model):
     def is_reported_enough(self) -> bool:
         """Достаточно ли сообщений о заполненности поступило.
         Количество учиытвается только для общественных контейнеров."""
-        if self.last_full_report():
+        if self.last_unconfirmed_report():
             if not self.is_public:
                 return True
             ignore_count = self.ignore_reports_count()
-            if self.last_full_report().count > ignore_count:
-                return True
+            return self.last_unconfirmed_report().count > ignore_count
+        else:
+            return False
+
+    def is_reported_just_enough(self) -> bool:
+        """Ровно ли достаточно сообщений о заполненности поступило,
+        чтобы считать контейнер полным?"""
+        if self.last_unconfirmed_report():
+            if not self.is_public:
+                return self.last_unconfirmed_report().count == 1
+            ignore_count = self.ignore_reports_count()
+            return self.last_unconfirmed_report().count == ignore_count + 1
         else:
             return False
 
     def check_time_conditions(self) -> bool:
         '''Выполнены ли условия "не больше N дней"'''
-        if self.last_full_report():
+        if self.last_unconfirmed_report():
             return True
         previous_reports = self.full_reports.order_by("-emptied_at")
         if not previous_reports:
@@ -322,9 +306,20 @@ class Container(models.Model):
         """Нужно ли вынести контейнер"""
         return self.is_reported_enough() or self.check_time_conditions()
 
+    def what_triggers_mass_rule(self):
+        """Проверяет, выполняется ли правило по массе.
+        Если да, то возвращает корпус контейнера или здание контейнера.
+        Если нет, то возвращает None"""
+        if (self.building_part and
+                self.building_part.meets_mass_takeout_condition()):
+            return self.building_part
+        elif self.building.meets_mass_takeout_condition():
+            return self.building
+        return None
+
     def cur_fill_time(self) -> str:
         """Текущее время заполнения контейнера"""
-        if self.last_full_report():
+        if self.last_unconfirmed_report():
             return "Контейнер уже заполнен."
         else:
             previous_reports = self.full_reports.order_by("-emptied_at")
@@ -336,9 +331,9 @@ class Container(models.Model):
 
     def cur_takeout_wait_time(self) -> str:
         """Текущее время ожидания выноса контейнера"""
-        if self.last_full_report():
+        if self.last_unconfirmed_report():
             wait_time = (timezone.now() -
-                         self.last_full_report().reported_full_at)
+                         self.last_unconfirmed_report().reported_full_at)
             return str(wait_time)
         else:
             return "Контейнер ещё не заполнен."

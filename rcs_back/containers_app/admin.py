@@ -9,8 +9,6 @@ class ContainerAdmin(admin.ModelAdmin):
         "cur_takeout_wait_time",
         "avg_fill_time",
         "avg_takeout_wait_time",
-        "last_full_report",
-        "check_time_conditions"
     ]
 
 
