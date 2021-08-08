@@ -513,6 +513,91 @@
 							"body": "{\n    \"status\": \"email sent\"\n}"
 						}
 					]
+				},
+				{
+					"name": "статистика собранной массы",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/collected-mass",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"collected-mass"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "статистика собранной массы",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/collected-mass",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"collected-mass"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 08 Aug 2021 15:51:17 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language, Origin"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "102"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"Кронверкский 49\": {\n        \"total\": 70,\n        \"корпус 1\": 10,\n        \"корпус 2\": 0,\n        \"корпус 3\": 0\n    }\n}"
+						}
+					]
 				}
 			]
 		},

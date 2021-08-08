@@ -30,7 +30,8 @@ class BuildingAdmin(admin.ModelAdmin):
         "containers_for_takeout",
         "public_days_condition",
         "office_days_condition",
-        "is_mass_condition_commited"
+        "is_mass_condition_commited",
+        "collected_mass"
     ]
 
 

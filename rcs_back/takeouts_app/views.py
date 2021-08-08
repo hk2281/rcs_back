@@ -1,10 +1,11 @@
 from django.utils import timezone
-from rest_framework import generics, views
+from rest_framework import generics, views, permissions
 from rest_framework.response import Response
 
 from rcs_back.takeouts_app.models import *
 from rcs_back.takeouts_app.serializers import *
 from rcs_back.takeouts_app.utils import *
+from rcs_back.containers_app.models import Building
 from rcs_back.containers_app.tasks import handle_empty_container
 
 
@@ -85,3 +86,19 @@ class TakeoutConditionTypeOptionsView(views.APIView):
 
     def get(self, request, *args, **kwargs):
         return Response(self.types)
+
+
+class CollectedMassView(views.APIView):
+    """Статистика собранной массы макулатуры для главной страницы"""
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        resp = {}
+        for building in Building.objects.all():
+            building_dict = {}
+            building_dict["total"] = building.collected_mass()
+            for building_part in building.building_parts.all():
+                building_dict[str(building_part)
+                              ] = building_part.collected_mass()
+            resp[str(building)] = building_dict
+        return Response(resp)

@@ -90,6 +90,15 @@ class BaseBuilding(models.Model):
             return True
         return False
 
+    def collected_mass(self) -> int:
+        """Собранная масса макулатуры за какой-то промежуток"""
+        mass = 0
+        for request in self.containers_takeout_requests.filter(
+            confirmed_at__isnull=False
+        ):
+            mass += request.mass()
+        return mass
+
     class Meta:
         abstract = True
 

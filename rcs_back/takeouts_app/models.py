@@ -65,12 +65,12 @@ class ContainersTakeoutRequest(models.Model):
         return mass
 
     def __str__(self) -> str:
-        return (f"Запрос выноса контейнеров от "
+        return (f"Запрос сбора контейнеров от "
                 f"{self.created_at.astimezone(tz).strftime('%d.%m.%Y %H:%M')}")
 
     class Meta:
-        verbose_name = "запрос выноса контейнеров"
-        verbose_name_plural = "запросы выноса контейнеров"
+        verbose_name = "запрос сбора контейнеров"
+        verbose_name_plural = "запросы сбора контейнеров"
 
 
 class TankTakeoutRequest(models.Model):
