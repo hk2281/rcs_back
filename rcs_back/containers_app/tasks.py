@@ -70,18 +70,22 @@ def public_container_add_notify(container_id: int) -> None:
 def check_mass_condition_to_notify(container: Container) -> None:
     """Проверяем, нужно ли отправить оповещение для сбора контейнеров.
     Если правило по массе выполняется, то оповещаем и фиксируем выполнение."""
-    trigger = container.what_triggers_mass_rule()
+    trigger = container.get_mass_rule_trigger()
     if trigger:
-        takeout_condition_met_notify(building=container.building)
-
-        if not trigger.is_mass_condition_commited():
-            if isinstance(trigger, BuildingPart):
+        if isinstance(trigger, BuildingPart):
+            takeout_condition_met_notify(
+                "mass",
+                building_part=container.building_part)
+            if not trigger.is_mass_condition_commited():
                 MassTakeoutConditionCommit.objects.create(
+                    building=container.building,
                     building_part=container.building_part
                 )
-                takeout_condition_met_notify(
-                    building_part=container.building_part)
-            if isinstance(trigger, Building):
+        if isinstance(trigger, Building):
+            takeout_condition_met_notify(
+                "mass",
+                building_part=container.building)
+            if not trigger.is_mass_condition_commited():
                 MassTakeoutConditionCommit.objects.create(
                     building=container.building
                 )
@@ -110,7 +114,7 @@ def handle_repeat_full_report(container_id: int) -> None:
     """При повторном сообщении о заполнении нужно
     увеличить кол-во сообщений"""
     container = Container.objects.get(pk=container_id)
-    report = container.last_unconfirmed_report()
+    report = container.last_full_report()
     report.count += 1
     report.save()
 
@@ -127,9 +131,9 @@ def handle_empty_container(container_id: int) -> None:
     """При опустошении контейнера нужно запомнить время
     и перечитать среднее время выноса"""
     container = Container.objects.get(pk=container_id)
-    last_unconfirmed_report = container.last_unconfirmed_report()
-    if last_unconfirmed_report:
-        last_unconfirmed_report.emptied_at = timezone.now()
-        last_unconfirmed_report.save()
+    last_full_report = container.last_full_report()
+    if last_full_report:
+        last_full_report.emptied_at = timezone.now()
+        last_full_report.save()
         time.sleep(10)  # Ждём сохранения в БД
         calc_avg_takeout_wait_time(container)

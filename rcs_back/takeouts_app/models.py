@@ -259,9 +259,9 @@ class MassTakeoutConditionCommit(models.Model):
     )
 
     def __str__(self) -> str:
-        return (f"Выполнено условие для выноса "
-                f"{self.created_at.astimezone(tz).strftime('%d.%m.%Y %H:%M')}")
+        return (f"{self.created_at.astimezone(tz).strftime('%d.%m.%Y %H:%M')}"
+                f"в {self.building}")
 
     class Meta:
-        verbose_name = "выполнено условие для выноса"
-        verbose_name_plural = "выполнены условия для выноса"
+        verbose_name = "выполнено условие для сбора"
+        verbose_name_plural = "выполнены условия для сбора"

@@ -79,13 +79,15 @@ class BaseBuilding(models.Model):
             "-created_at"
         ).first()
         latest_takeout_request = self.containers_takeout_requests.filter(
-            emptied_at__isnull=False
+            confirmed_at__isnull=False
         ).order_by(
             "-created_at"
         ).first()
         if latest_commit and latest_takeout_request:
             if latest_commit.created_at > latest_takeout_request.created_at:
-                return False
+                return True
+        if not latest_takeout_request and latest_commit:
+            return True
         return False
 
     class Meta:
@@ -219,7 +221,7 @@ class Container(models.Model):
         blank=True
     )
 
-    def last_unconfirmed_report(self):
+    def last_full_report(self):
         """Возвращает FullContainerReport
         для этого контейнера, который ещё не
         отметили как опустошённый (то есть последний
@@ -230,7 +232,7 @@ class Container(models.Model):
             container=self).order_by(
                 "-reported_full_at"
         ).first()
-        if not report.emptied_at:
+        if report and not report.emptied_at:
             return report
         else:
             return None
@@ -257,28 +259,28 @@ class Container(models.Model):
     def is_reported_enough(self) -> bool:
         """Достаточно ли сообщений о заполненности поступило.
         Количество учиытвается только для общественных контейнеров."""
-        if self.last_unconfirmed_report():
+        if self.last_full_report():
             if not self.is_public:
                 return True
             ignore_count = self.ignore_reports_count()
-            return self.last_unconfirmed_report().count > ignore_count
+            return self.last_full_report().count > ignore_count
         else:
             return False
 
     def is_reported_just_enough(self) -> bool:
         """Ровно ли достаточно сообщений о заполненности поступило,
         чтобы считать контейнер полным?"""
-        if self.last_unconfirmed_report():
+        if self.last_full_report():
             if not self.is_public:
-                return self.last_unconfirmed_report().count == 1
+                return self.last_full_report().count == 1
             ignore_count = self.ignore_reports_count()
-            return self.last_unconfirmed_report().count == ignore_count + 1
+            return self.last_full_report().count == ignore_count + 1
         else:
             return False
 
     def check_time_conditions(self) -> bool:
         '''Выполнены ли условия "не больше N дней"'''
-        if self.last_unconfirmed_report():
+        if self.last_full_report():
             return True
         previous_reports = self.full_reports.order_by("-emptied_at")
         if not previous_reports:
@@ -306,7 +308,7 @@ class Container(models.Model):
         """Нужно ли вынести контейнер"""
         return self.is_reported_enough() or self.check_time_conditions()
 
-    def what_triggers_mass_rule(self):
+    def get_mass_rule_trigger(self):
         """Проверяет, выполняется ли правило по массе.
         Если да, то возвращает корпус контейнера или здание контейнера.
         Если нет, то возвращает None"""
@@ -319,7 +321,7 @@ class Container(models.Model):
 
     def cur_fill_time(self) -> str:
         """Текущее время заполнения контейнера"""
-        if self.last_unconfirmed_report():
+        if self.last_full_report():
             return "Контейнер уже заполнен."
         else:
             previous_reports = self.full_reports.order_by("-emptied_at")
@@ -331,9 +333,9 @@ class Container(models.Model):
 
     def cur_takeout_wait_time(self) -> str:
         """Текущее время ожидания выноса контейнера"""
-        if self.last_unconfirmed_report():
+        if self.last_full_report():
             wait_time = (timezone.now() -
-                         self.last_unconfirmed_report().reported_full_at)
+                         self.last_full_report().reported_full_at)
             return str(wait_time)
         else:
             return "Контейнер ещё не заполнен."
