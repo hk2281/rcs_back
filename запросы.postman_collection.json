@@ -11,31 +11,107 @@
 				{
 					"name": "заполнить контейнер",
 					"request": {
-						"method": "PATCH",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "is_full",
-									"value": "true",
+									"key": "container",
+									"value": "1",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{host}}/containers/1/fill",
+							"raw": "{{host}}/full-container-reports",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
-								"containers",
-								"1",
-								"fill"
+								"full-container-reports"
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "заполнить контейнер",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "container",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/full-container-reports",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"full-container-reports"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 08 Aug 2021 13:39:50 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language, Origin"
+								},
+								{
+									"key": "Allow",
+									"value": "POST, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "15"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"container\": 1\n}"
+						}
+					]
 				},
 				{
 					"name": "добавить свой контейнер",
@@ -45,12 +121,6 @@
 						"body": {
 							"mode": "formdata",
 							"formdata": [
-								{
-									"key": "",
-									"value": "",
-									"type": "text",
-									"disabled": true
-								},
 								{
 									"key": "email",
 									"value": "test@test.com",
@@ -82,8 +152,8 @@
 									"type": "text"
 								},
 								{
-									"key": "capacity",
-									"value": "30",
+									"key": "kind",
+									"value": "2",
 									"type": "text"
 								}
 							]
@@ -108,12 +178,6 @@
 								"body": {
 									"mode": "formdata",
 									"formdata": [
-										{
-											"key": "",
-											"value": "",
-											"type": "text",
-											"disabled": true
-										},
 										{
 											"key": "email",
 											"value": "test@test.com",
@@ -145,8 +209,8 @@
 											"type": "text"
 										},
 										{
-											"key": "capacity",
-											"value": "30",
+											"key": "kind",
+											"value": "2",
 											"type": "text"
 										}
 									]
@@ -168,7 +232,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Tue, 20 Jul 2021 11:53:16 GMT"
+									"value": "Sun, 08 Aug 2021 13:50:38 GMT"
 								},
 								{
 									"key": "Server",
@@ -180,7 +244,7 @@
 								},
 								{
 									"key": "Vary",
-									"value": "Accept, Accept-Language"
+									"value": "Accept, Accept-Language, Origin"
 								},
 								{
 									"key": "Allow",
@@ -192,7 +256,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "158"
+									"value": "154"
 								},
 								{
 									"key": "Content-Language",
@@ -212,7 +276,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"id\": 6,\n    \"email\": \"test@test.com\",\n    \"phone\": \"89999999999\",\n    \"building\": 1,\n    \"building_part\": 2,\n    \"floor\": 3,\n    \"location\": \"тестовая аудитория\",\n    \"capacity\": 30\n}"
+							"body": "{\n    \"id\": 26,\n    \"email\": \"test@test.com\",\n    \"phone\": \"89999999999\",\n    \"building\": 1,\n    \"building_part\": 2,\n    \"floor\": 3,\n    \"location\": \"тестовая аудитория\",\n    \"kind\": 2\n}"
 						}
 					]
 				},
@@ -586,7 +650,7 @@
 							"formdata": [
 								{
 									"key": "refresh",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY1NzI3MDczNCwianRpIjoiODdmZTA5OTEwMTA4NGIxYWE2OWEzNTVmZjI2Mjc5MTQiLCJ1c2VyX2lkIjoyfQ.JbvkcLhO5q5ZiQKu47O1xHsnol4PGzsGhWSFfhym5lc",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY1OTEyMzQ2MSwianRpIjoiZWYwM2Q4NWJhOTc2NDg1MWEyNzAyZDdmZWFlZDU3ZGIiLCJ1c2VyX2lkIjo0fQ.qgqE5M4PS4dyH-wcxeMutyO6DBLhrbJqW53rHXpdp8w",
 									"type": "text"
 								}
 							]
@@ -615,7 +679,7 @@
 									"formdata": [
 										{
 											"key": "refresh",
-											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY1NzI3MDczNCwianRpIjoiODdmZTA5OTEwMTA4NGIxYWE2OWEzNTVmZjI2Mjc5MTQiLCJ1c2VyX2lkIjoyfQ.JbvkcLhO5q5ZiQKu47O1xHsnol4PGzsGhWSFfhym5lc",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY1OTEyMzQ2MSwianRpIjoiZWYwM2Q4NWJhOTc2NDg1MWEyNzAyZDdmZWFlZDU3ZGIiLCJ1c2VyX2lkIjo0fQ.qgqE5M4PS4dyH-wcxeMutyO6DBLhrbJqW53rHXpdp8w",
 											"type": "text"
 										}
 									]
@@ -639,7 +703,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Wed, 07 Jul 2021 09:00:21 GMT"
+									"value": "Wed, 28 Jul 2021 19:38:00 GMT"
 								},
 								{
 									"key": "Server",
@@ -663,7 +727,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "218"
+									"value": "438"
 								},
 								{
 									"key": "Content-Language",
@@ -683,7 +747,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"access\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU3MTg0NDIxLCJqdGkiOiI2YmM3OThmYWZhZGY0N2VhYjI1YzEyNGMwNDNkNjQxOSIsInVzZXJfaWQiOjJ9.1ZuvDAIrA9I2I6ZMwuFvxyB6kK1gelzAve5pFr2kaj4\"\n}"
+							"body": "{\n    \"access\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU5MDM3MDgwLCJqdGkiOiI5ZWMzNGQ5ZjJmZjI0MzJjYTVjMjAyYWZiYjk0YzNlOCIsInVzZXJfaWQiOjR9.s4bLL8aK3dhiuaNgF2dD80WkkXN7daNT0GHtU2lbcuE\",\n    \"refresh\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY1OTEyMzQ4MCwianRpIjoiOTc3NGRlOTYyODUzNDhhZWJiNzRiYjk4ZWYwZDQ0MTIiLCJ1c2VyX2lkIjo0fQ.-6iVAVoTbxK2yMqAEKNnxgDjmAjUWFUUwYR4eNE-onE\"\n}"
 						}
 					]
 				},
@@ -866,7 +930,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Tue, 20 Jul 2021 09:37:37 GMT"
+									"value": "Sun, 08 Aug 2021 11:25:00 GMT"
 								},
 								{
 									"key": "Server",
@@ -878,7 +942,7 @@
 								},
 								{
 									"key": "Vary",
-									"value": "Accept, Accept-Language"
+									"value": "Accept, Accept-Language, Origin"
 								},
 								{
 									"key": "Allow",
@@ -890,7 +954,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "841"
+									"value": "1659"
 								},
 								{
 									"key": "Content-Language",
@@ -910,7 +974,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "[\n    {\n        \"id\": 1,\n        \"building\": \"Кронверкский 49\",\n        \"building_part\": 2,\n        \"floor\": 4,\n        \"location\": \"asd\",\n        \"capacity\": 5,\n        \"is_full\": false,\n        \"status\": 2,\n        \"is_public\": false,\n        \"created_at\": \"2021-07-16T17:36:25.961942+03:00\",\n        \"email\": \"\",\n        \"phone\": \"\",\n        \"cur_fill_time\": \"0:21:31.467983\",\n        \"cur_takeout_wait_time\": \"Контейнер ещё не заполнен.\",\n        \"avg_fill_time\": \"8:29:22.832386\",\n        \"avg_takeout_wait_time\": \"0:06:28.132844\"\n    },\n    {\n        \"id\": 2,\n        \"building\": \"Кронверкский 49\",\n        \"building_part\": 2,\n        \"floor\": 3,\n        \"location\": \"аудитория 123456\",\n        \"capacity\": 10,\n        \"is_full\": false,\n        \"status\": 2,\n        \"is_public\": false,\n        \"created_at\": \"2021-07-16T17:36:25.961942+03:00\",\n        \"email\": \"\",\n        \"phone\": \"\",\n        \"cur_fill_time\": \"0:21:31.473761\",\n        \"cur_takeout_wait_time\": \"Контейнер ещё не заполнен.\",\n        \"avg_fill_time\": \"1 day, 3:55:31.114448\",\n        \"avg_takeout_wait_time\": \"0:02:04.432859\"\n    }\n]"
+							"body": "[\n    {\n        \"id\": 2,\n        \"kind\": \"экобокс\",\n        \"mass\": 10,\n        \"building\": \"Кронверкский 49\",\n        \"building_part\": 1,\n        \"floor\": 3,\n        \"location\": \"аудитория 123456\",\n        \"is_full\": true,\n        \"status\": \"активный\",\n        \"is_public\": false,\n        \"created_at\": \"2021-07-16T17:36:25.961942+03:00\",\n        \"email\": \"\",\n        \"phone\": \"\",\n        \"cur_fill_time\": \"Контейнер уже заполнен.\",\n        \"cur_takeout_wait_time\": \"2 days, 16:21:25.600939\",\n        \"avg_fill_time\": \"1 day, 3:55:31.114448\",\n        \"avg_takeout_wait_time\": \"0:02:04.432859\"\n    },\n    {\n        \"id\": 7,\n        \"kind\": \"экобокс\",\n        \"mass\": 10,\n        \"building\": \"Кронверкский 49\",\n        \"building_part\": 1,\n        \"floor\": 3,\n        \"location\": \"тестовая аудитория\",\n        \"is_full\": true,\n        \"status\": \"активный\",\n        \"is_public\": false,\n        \"created_at\": \"2021-07-20T15:08:29.230303+03:00\",\n        \"email\": \"test@test.com\",\n        \"phone\": \"89999999999\",\n        \"cur_fill_time\": \"Пока нет информации о времени заполнения\",\n        \"cur_takeout_wait_time\": \"Контейнер ещё не заполнен.\",\n        \"avg_fill_time\": \"Среднее время заполнения контейнера рассчитывается...\",\n        \"avg_takeout_wait_time\": \"Среднее время ожидания выноса контейнера рассчитывается...\"\n    },\n    {\n        \"id\": 1,\n        \"kind\": \"экобокс\",\n        \"mass\": 10,\n        \"building\": \"Кронверкский 49\",\n        \"building_part\": 1,\n        \"floor\": 4,\n        \"location\": \"asd\",\n        \"is_full\": true,\n        \"status\": \"активный\",\n        \"is_public\": false,\n        \"created_at\": \"2021-07-16T17:36:25.961942+03:00\",\n        \"email\": \"\",\n        \"phone\": \"\",\n        \"cur_fill_time\": \"Контейнер уже заполнен.\",\n        \"cur_takeout_wait_time\": \"0:29:45.057166\",\n        \"avg_fill_time\": \"1 day, 16:34:21.862497\",\n        \"avg_takeout_wait_time\": \"0:06:28.132844\"\n    }\n]"
 						}
 					]
 				},
@@ -953,8 +1017,8 @@
 									"type": "text"
 								},
 								{
-									"key": "capacity",
-									"value": "50",
+									"key": "kind",
+									"value": "1",
 									"type": "text"
 								},
 								{
@@ -1005,8 +1069,8 @@
 											"type": "text"
 										},
 										{
-											"key": "capacity",
-											"value": "50",
+											"key": "kind",
+											"value": "1",
 											"type": "text"
 										},
 										{
@@ -1033,7 +1097,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Tue, 20 Jul 2021 10:47:06 GMT"
+									"value": "Sun, 08 Aug 2021 11:27:23 GMT"
 								},
 								{
 									"key": "Server",
@@ -1045,7 +1109,7 @@
 								},
 								{
 									"key": "Vary",
-									"value": "Accept, Accept-Language"
+									"value": "Accept, Accept-Language, Origin"
 								},
 								{
 									"key": "Allow",
@@ -1057,7 +1121,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "637"
+									"value": "163"
 								},
 								{
 									"key": "Content-Language",
@@ -1077,7 +1141,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"id\": 5,\n    \"building\": 1,\n    \"building_part\": 3,\n    \"floor\": 2,\n    \"location\": \"аудитория 3205\",\n    \"capacity\": 50,\n    \"is_full\": false,\n    \"status\": 2,\n    \"is_public\": false,\n    \"created_at\": \"2021-07-20T13:47:06.293538+03:00\",\n    \"email\": \"\",\n    \"phone\": \"\",\n    \"cur_fill_time\": \"Пока нет информации о времени заполнения\",\n    \"cur_takeout_wait_time\": \"Контейнер ещё не заполнен.\",\n    \"avg_fill_time\": \"Среднее время заполнения контейнера рассчитывается...\",\n    \"avg_takeout_wait_time\": \"Среднее время ожидания выноса контейнера рассчитывается...\"\n}"
+							"body": "{\n    \"id\": 25,\n    \"building\": 1,\n    \"building_part\": 3,\n    \"kind\": 1,\n    \"floor\": 2,\n    \"location\": \"аудитория 3205\",\n    \"is_full\": false,\n    \"status\": 2,\n    \"is_public\": false,\n    \"email\": \"\",\n    \"phone\": \"\"\n}"
 						}
 					]
 				},
@@ -1120,7 +1184,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Tue, 20 Jul 2021 12:09:58 GMT"
+									"value": "Sun, 08 Aug 2021 11:25:32 GMT"
 								},
 								{
 									"key": "Server",
@@ -1132,7 +1196,7 @@
 								},
 								{
 									"key": "Vary",
-									"value": "Accept, Accept-Language"
+									"value": "Accept, Accept-Language, Origin"
 								},
 								{
 									"key": "Allow",
@@ -1144,7 +1208,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "421"
+									"value": "444"
 								},
 								{
 									"key": "Content-Language",
@@ -1164,7 +1228,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"id\": 1,\n    \"building\": \"Кронверкский 49\",\n    \"building_part\": 2,\n    \"floor\": 4,\n    \"location\": \"asd\",\n    \"capacity\": 5,\n    \"is_full\": false,\n    \"status\": \"активный\",\n    \"is_public\": false,\n    \"created_at\": \"2021-07-16T17:36:25.961942+03:00\",\n    \"email\": \"\",\n    \"phone\": \"\",\n    \"cur_fill_time\": \"2:53:51.936465\",\n    \"cur_takeout_wait_time\": \"Контейнер ещё не заполнен.\",\n    \"avg_fill_time\": \"8:29:22.832386\",\n    \"avg_takeout_wait_time\": \"0:06:28.132844\"\n}"
+							"body": "{\n    \"id\": 1,\n    \"kind\": \"экобокс\",\n    \"mass\": 10,\n    \"building\": \"Кронверкский 49\",\n    \"building_part\": 1,\n    \"floor\": 4,\n    \"location\": \"asd\",\n    \"is_full\": true,\n    \"status\": \"активный\",\n    \"is_public\": false,\n    \"created_at\": \"2021-07-16T17:36:25.961942+03:00\",\n    \"email\": \"\",\n    \"phone\": \"\",\n    \"cur_fill_time\": \"Контейнер уже заполнен.\",\n    \"cur_takeout_wait_time\": \"0:30:16.427320\",\n    \"avg_fill_time\": \"1 day, 16:34:21.862497\",\n    \"avg_takeout_wait_time\": \"0:06:28.132844\"\n}"
 						}
 					]
 				},
@@ -1204,7 +1268,86 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "update",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "floor",
+											"value": "4",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/containers/1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"containers",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 08 Aug 2021 14:12:15 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language, Origin"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "126"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"building\": 1,\n    \"building_part\": 1,\n    \"kind\": 1,\n    \"floor\": 4,\n    \"location\": \"asd\",\n    \"status\": 2,\n    \"is_public\": false,\n    \"email\": \"\",\n    \"phone\": \"\"\n}"
+						}
+					]
 				},
 				{
 					"name": "получить стикер",
@@ -1319,6 +1462,103 @@
 							],
 							"cookie": [],
 							"body": "{\n    \"1\": \"ожидает подключения\",\n    \"2\": \"активный\",\n    \"3\": \"не активный\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Варианты видов",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/containers/kind-options",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"containers",
+								"kind-options"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Варианты видов",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/containers/kind-options",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"containers",
+										"kind-options"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 08 Aug 2021 11:29:56 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language, Origin"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "98"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"1\": \"экобокс\",\n    \"2\": \"офисная урна\",\n    \"3\": \"коробка из-под бумаги\"\n}"
 						}
 					]
 				}
