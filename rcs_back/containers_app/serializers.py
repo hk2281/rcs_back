@@ -37,16 +37,18 @@ class ContainerSerializer(serializers.ModelSerializer):
     """ Сериализатор контейнера"""
     building = serializers.StringRelatedField()
     status = serializers.CharField(source="get_status_display")
+    kind = serializers.CharField(source="get_kind_display")
 
     class Meta:
         model = Container
         fields = [
             "id",
+            "kind",
+            "mass",
             "building",
             "building_part",
             "floor",
             "location",
-            "capacity",
             "is_full",
             "status",
             "is_public",
@@ -61,7 +63,7 @@ class ContainerSerializer(serializers.ModelSerializer):
 
 
 class ChangeContainerSerializer(serializers.ModelSerializer):
-    """ Сериализатор контейнера с цифрой для статуса
+    """ Сериализатор контейнера с цифрой для статуса и вида
     и id у здания"""
 
     class Meta:
@@ -70,19 +72,14 @@ class ChangeContainerSerializer(serializers.ModelSerializer):
             "id",
             "building",
             "building_part",
+            "kind",
             "floor",
             "location",
-            "capacity",
             "is_full",
             "status",
             "is_public",
-            "created_at",
             "email",
             "phone",
-            "cur_fill_time",
-            "cur_takeout_wait_time",
-            "avg_fill_time",
-            "avg_takeout_wait_time"
         ]
 
 

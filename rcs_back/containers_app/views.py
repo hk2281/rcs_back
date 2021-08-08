@@ -100,6 +100,18 @@ class ContainerStatusOptionsView(views.APIView):
         return Response(self.statuses)
 
 
+class ContainerKindOptionsView(views.APIView):
+    """Виды контейнеров"""
+    statuses = {
+        1: "экобокс",
+        2: "офисная урна",
+        3: "коробка из-под бумаги"
+    }
+
+    def get(self, request, *args, **kwargs):
+        return Response(self.statuses)
+
+
 class ActivateContainerView(generics.UpdateAPIView):
     """ View для активации контейнера """
     permission_classes = [permissions.AllowAny]

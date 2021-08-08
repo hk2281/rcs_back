@@ -61,7 +61,7 @@ class ContainersTakeoutRequest(models.Model):
         mass = 0
         if self.emptied_containers.all():
             for container in self.emptied_containers.all():
-                mass += container.capacity
+                mass += container.mass()
         return mass
 
     def __str__(self) -> str:

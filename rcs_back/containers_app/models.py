@@ -16,7 +16,7 @@ class BaseBuilding(models.Model):
         current_mass = 0
         for container in self.containers.all():
             if container.is_reported_enough():
-                current_mass += container.capacity
+                current_mass += container.mass()
         return current_mass
 
     def meets_mass_takeout_condition(self) -> bool:
@@ -154,6 +154,20 @@ class Container(models.Model):
         (INACTIVE, "не активный")
     )
 
+    ECOBOX = 1
+    OFFICE_CAN = 2
+    OFFICE_BOX = 3
+    KIND_CHOICES = (
+        (ECOBOX, "экобокс"),
+        (OFFICE_CAN, "офисная урна"),
+        (OFFICE_BOX, "коробка из-под бумаги")
+    )
+
+    kind = models.PositiveSmallIntegerField(
+        choices=KIND_CHOICES,
+        verbose_name="вид контейнера"
+    )
+
     building = models.ForeignKey(
         to=Building,
         on_delete=models.PROTECT,
@@ -177,10 +191,6 @@ class Container(models.Model):
     location = models.CharField(
         max_length=1024,
         verbose_name="аудитория/описание"
-    )
-
-    capacity = models.PositiveSmallIntegerField(
-        verbose_name="объём"
     )
 
     is_full = models.BooleanField(
@@ -220,6 +230,15 @@ class Container(models.Model):
         verbose_name="номер телефона (для связи)",
         blank=True
     )
+
+    def mass(self) -> int:
+        """Возвращает массу контейнера по его виду"""
+        mass_dict = {
+            1: 10,
+            2: 15,
+            3: 20
+        }
+        return mass_dict[self.kind]
 
     def last_full_report(self):
         """Возвращает FullContainerReport
