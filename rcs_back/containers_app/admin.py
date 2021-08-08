@@ -5,6 +5,7 @@ from .models import *
 
 class ContainerAdmin(admin.ModelAdmin):
     readonly_fields = [
+        "is_full",
         "mass",
         "cur_fill_time",
         "cur_takeout_wait_time",

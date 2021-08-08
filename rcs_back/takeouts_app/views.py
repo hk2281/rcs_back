@@ -29,10 +29,6 @@ class ContainersTakeoutConfirmationView(generics.UpdateAPIView):
         serializer.save(confirmed_at=timezone.now())
         emptied_containers = serializer.validated_data["emptied_containers"]
         for container in emptied_containers:
-            """Меняем статус контейнера и
-            фиксируем время подтверждения выноса"""
-            container.is_full = False
-            container.save()
             handle_empty_container.delay(container.pk)
 
 

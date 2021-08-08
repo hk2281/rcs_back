@@ -1,21 +1,20 @@
 from rest_framework import serializers
 
-from .models import BuildingPart, Container, Building
+from .models import BuildingPart, Container, Building, FullContainerReport
 
 
-class FillContainerSerializer(serializers.ModelSerializer):
-    """ Сериализатор для заполнения контейнера """
+class FullContainerReportSerializer(serializers.ModelSerializer):
+    """Сериализатор для заполнения контейнера"""
+    container = serializers.PrimaryKeyRelatedField(
+        queryset=Container.objects.filter(status=Container.ACTIVE)
+    )
+
     class Meta:
-        model = Container
-        fields = ["id", "is_full"]
-
-    def validate_is_full(self, value):
-        """ Этот сериализатор используется только для того,
-        чтобы заполнить контейнер """
-        if not value:
-            msg = "is_full can be only true for this view"
-            raise serializers.ValidationError(msg)
-        return value
+        model = FullContainerReport
+        fields = [
+            "id",
+            "container"
+        ]
 
 
 class ActivateContainerSerializer(serializers.ModelSerializer):
@@ -75,7 +74,6 @@ class ChangeContainerSerializer(serializers.ModelSerializer):
             "kind",
             "floor",
             "location",
-            "is_full",
             "status",
             "is_public",
             "email",
@@ -132,7 +130,7 @@ class ContainerPublicAddSerializer(serializers.ModelSerializer):
             "building_part",
             "floor",
             "location",
-            "capacity"
+            "kind"
         ]
         extra_kwargs = {
             "email": {"required": True},

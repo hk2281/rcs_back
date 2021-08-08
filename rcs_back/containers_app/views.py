@@ -7,21 +7,20 @@ from .serializers import *
 from .tasks import *
 
 
-class FillContainerView(generics.UpdateAPIView):
-    """ View для заполнения контейнера """
+class FullContainerReportView(generics.CreateAPIView):
+    """View для заполнения контейнера"""
     permission_classes = [permissions.AllowAny]
-    serializer_class = FillContainerSerializer
-    queryset = Container.objects.filter(status=Container.ACTIVE)
+    serializer_class = FullContainerReportSerializer
 
-    def perform_update(self, serializer) -> None:
-        instance = self.get_object()
-        if instance.is_full:
-            # Повторное сообщение
-            handle_repeat_full_report.delay(instance.pk)
-        else:
-            # Заполнение контейнера через главную страницу
-            handle_first_full_report.delay(instance.pk)
-        serializer.save()
+    def perform_create(self, serializer) -> None:
+        if "container" in serializer.validated_data:
+            container = serializer.validated_data["container"]
+            if container.is_full():
+                # Повторное сообщение
+                handle_repeat_full_report.delay(container.pk)
+            else:
+                # Заполнение контейнера через главную страницу
+                handle_first_full_report.delay(container.pk)
 
 
 class ContainerDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -35,16 +34,6 @@ class ContainerDetailView(generics.RetrieveUpdateDestroyAPIView):
         else:
             return ChangeContainerSerializer
 
-    def perform_update(self, serializer):
-        instance = self.get_object()
-        """Изменение заполненности контейнера хоз отделом/эко"""
-        if "is_full" in serializer.validated_data:
-            if not instance.is_full and serializer.validated_data["is_full"]:
-                handle_first_full_report.delay(instance.pk)
-            if instance.is_full and not serializer.validated_data["is_full"]:
-                handle_empty_container.delay(instance.pk)
-        serializer.save()
-
 
 class ContainerListView(generics.ListCreateAPIView):
     """ View для CRUD-операций с контейнерами """
@@ -53,9 +42,23 @@ class ContainerListView(generics.ListCreateAPIView):
         "building",
         "building_part",
         "floor",
-        "is_full",
         "status"
     ]
+
+    def get_queryset(self):
+        if "is_full" in self.request.query_params:
+            #  Если такая фильтрация станет слишком медленной,
+            #  то надо будет добавить поле для модели и фильтровать
+            #  по нему
+            is_full = self.request.query_params.get("is_full")
+            val = True if is_full == "true" else False
+            ids = []
+            for container in Container.objects.all():
+                if container.is_full() == val:
+                    ids.append(container.id)
+            return Container.objects.filter(id__in=ids)
+        else:
+            return Container.objects.all()
 
     def get_serializer_class(self):
         if self.request.method == "GET":

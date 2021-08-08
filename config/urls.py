@@ -5,7 +5,8 @@ from django.urls import include, path, re_path
 
 from rcs_back.containers_app.views import (BuildingListView,
                                            PublicFeedbackView,
-                                           BuildingPartView)
+                                           BuildingPartView,
+                                           FullContainerReportView)
 from rcs_back.takeouts_app.views import *
 
 
@@ -27,4 +28,5 @@ urlpatterns = [
     path("takeout-conditions/<int:pk>", TakeoutConditionDetailView.as_view()),
     path("takeout-conditions/type-options",
          TakeoutConditionTypeOptionsView.as_view()),
+    path("full-container-reports", FullContainerReportView.as_view())
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

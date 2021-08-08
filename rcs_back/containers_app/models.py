@@ -193,11 +193,6 @@ class Container(models.Model):
         verbose_name="аудитория/описание"
     )
 
-    is_full = models.BooleanField(
-        default=False,
-        verbose_name="заполнен"
-    )
-
     status = models.PositiveSmallIntegerField(
         choices=STATUS_CHOICES,
         default=ACTIVE,
@@ -230,6 +225,17 @@ class Container(models.Model):
         verbose_name="номер телефона (для связи)",
         blank=True
     )
+
+    def is_full(self) -> bool:
+        """Заполнен ли контейнер?"""
+        report = FullContainerReport.objects.filter(
+            container=self).order_by(
+                "-reported_full_at"
+        ).first()
+        if report and not report.emptied_at:
+            return True
+        else:
+            return False
 
     def mass(self) -> int:
         """Возвращает массу контейнера по его виду"""
