@@ -962,6 +962,133 @@
 							"body": null
 						}
 					]
+				},
+				{
+					"name": "сменить email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "new_email",
+									"value": "test2@test.com",
+									"type": "text"
+								},
+								{
+									"key": "current_password",
+									"value": "TESTtest123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/auth/users/set_email/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"set_email",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "сменить email",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "new_email",
+											"value": "test2@test.com",
+											"type": "text"
+										},
+										{
+											"key": "current_password",
+											"value": "TESTtest123",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/auth/users/set_email/",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"auth",
+										"users",
+										"set_email",
+										""
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 09 Aug 2021 15:05:10 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language, Origin"
+								},
+								{
+									"key": "Allow",
+									"value": "POST, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "0"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
 				}
 			]
 		},
@@ -1656,14 +1783,7 @@
 					"name": "list",
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt}}",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
 						"header": [],
@@ -1699,7 +1819,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Wed, 21 Jul 2021 15:27:34 GMT"
+									"value": "Mon, 09 Aug 2021 15:13:14 GMT"
 								},
 								{
 									"key": "Server",
@@ -1711,7 +1831,7 @@
 								},
 								{
 									"key": "Vary",
-									"value": "Accept, Accept-Language"
+									"value": "Accept, Accept-Language, Origin"
 								},
 								{
 									"key": "Allow",
@@ -1723,7 +1843,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "144"
+									"value": "213"
 								},
 								{
 									"key": "Content-Language",
@@ -1743,7 +1863,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "[\n    {\n        \"id\": 1,\n        \"address\": \"Кронверкский 49\",\n        \"email\": \"test@test.com\",\n        \"building_parts\": [\n            {\n                \"id\": 1,\n                \"num\": 1\n            },\n            {\n                \"id\": 2,\n                \"num\": 2\n            },\n            {\n                \"id\": 3,\n                \"num\": 3\n            }\n        ]\n    }\n]"
+							"body": "[\n    {\n        \"id\": 1,\n        \"address\": \"Кронверкский 49\",\n        \"itmo_worker_email\": \"komendant@itmo.ru\",\n        \"containers_takeout_email\": \"takeout-company@com.com\",\n        \"building_parts\": [\n            {\n                \"id\": 1,\n                \"num\": 1\n            },\n            {\n                \"id\": 2,\n                \"num\": 2\n            },\n            {\n                \"id\": 3,\n                \"num\": 3\n            }\n        ]\n    }\n]"
 						}
 					]
 				}
@@ -1756,14 +1876,7 @@
 					"name": "List",
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt}}",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
 						"header": [],
@@ -1811,7 +1924,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Wed, 21 Jul 2021 15:27:27 GMT"
+									"value": "Mon, 09 Aug 2021 15:13:33 GMT"
 								},
 								{
 									"key": "Server",
@@ -1823,7 +1936,7 @@
 								},
 								{
 									"key": "Vary",
-									"value": "Accept, Accept-Language"
+									"value": "Accept, Accept-Language, Origin"
 								},
 								{
 									"key": "Allow",

@@ -71,6 +71,7 @@ class BuildingListView(generics.ListAPIView):
     """Списко зданий (для опций при создании контейнера)"""
     serializer_class = BuildingSerializer
     queryset = Building.objects.all()
+    permission_classes = [permissions.AllowAny]
 
 
 class GetStickerView(generics.RetrieveAPIView):
@@ -98,6 +99,7 @@ class ContainerStatusOptionsView(views.APIView):
         2: "активный",
         3: "не активный"
     }
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
         return Response(self.statuses)
@@ -110,6 +112,7 @@ class ContainerKindOptionsView(views.APIView):
         2: "офисная урна",
         3: "коробка из-под бумаги"
     }
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
         return Response(self.statuses)
@@ -147,3 +150,4 @@ class BuildingPartView(generics.ListAPIView):
     serializer_class = BuildingPartSerializer
     queryset = BuildingPart.objects.all()
     filterset_fields = ["building"]
+    permission_classes = [permissions.AllowAny]
