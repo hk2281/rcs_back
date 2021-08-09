@@ -74,20 +74,6 @@ class TakeoutConditionDetailView(generics.RetrieveUpdateDestroyAPIView):
             return AddTakeoutConditionSerializer
 
 
-class TakeoutConditionTypeOptionsView(views.APIView):
-    """Типы условий для сбора"""
-    types = {
-        1: "не больше N дней в офисе",
-        2: "не больше N дней в общественном месте",
-        3: "суммарная масса бумаги в корпусе не больше N кг",
-        4: ("игнорировать первые N сообщений "
-            "о заполненности контейнера в общественном месте")
-    }
-
-    def get(self, request, *args, **kwargs):
-        return Response(self.types)
-
-
 class CollectedMassView(views.APIView):
     """Статистика собранной массы макулатуры для главной страницы"""
     permission_classes = [permissions.AllowAny]

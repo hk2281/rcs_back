@@ -92,32 +92,6 @@ class ContainerPublicAddView(generics.CreateAPIView):
         public_container_add_notify.delay(instance.pk)
 
 
-class ContainerStatusOptionsView(views.APIView):
-    """Статусы для контейнеров"""
-    statuses = {
-        1: "ожидает подключения",
-        2: "активный",
-        3: "не активный"
-    }
-    permission_classes = [permissions.AllowAny]
-
-    def get(self, request, *args, **kwargs):
-        return Response(self.statuses)
-
-
-class ContainerKindOptionsView(views.APIView):
-    """Виды контейнеров"""
-    statuses = {
-        1: "экобокс",
-        2: "офисная урна",
-        3: "коробка из-под бумаги"
-    }
-    permission_classes = [permissions.AllowAny]
-
-    def get(self, request, *args, **kwargs):
-        return Response(self.statuses)
-
-
 class ActivateContainerView(generics.UpdateAPIView):
     """ View для активации контейнера """
     permission_classes = [permissions.AllowAny]

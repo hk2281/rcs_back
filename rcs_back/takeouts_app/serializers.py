@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
-from rcs_back.containers_app.models import Container, Building
+from rcs_back.containers_app.models import Container
+from rcs_back.containers_app.serializers import (
+    BuildingShortSerializer, BuildingPartSerializer)
 from rcs_back.takeouts_app.models import *
 
 
@@ -68,9 +70,6 @@ class ContainersTakeoutConfirmationSerializer(serializers.ModelSerializer):
 
 class TankTakeoutRequestSerializer(serializers.ModelSerializer):
     """Для создания заявки на вывоз бака"""
-    building = serializers.PrimaryKeyRelatedField(
-        queryset=Building.objects.all()
-    )
 
     class Meta:
         model = TankTakeoutRequest
@@ -93,9 +92,6 @@ class TankTakeoutRequestSerializer(serializers.ModelSerializer):
 
 class TankTakeoutConfirmationSerializer(serializers.ModelSerializer):
     """Для подтверждения вывоза бака"""
-    building = serializers.PrimaryKeyRelatedField(
-        read_only=True
-    )
 
     class Meta:
         model = TankTakeoutRequest
@@ -117,13 +113,8 @@ class TankTakeoutConfirmationSerializer(serializers.ModelSerializer):
 
 
 class TakeoutConditionSerializer(serializers.ModelSerializer):
-    type = serializers.CharField(source="get_type_display")
-    building = serializers.StringRelatedField(
-        read_only=True
-    )
-    building_part = serializers.StringRelatedField(
-        read_only=True
-    )
+    building = BuildingShortSerializer()
+    building_part = BuildingPartSerializer()
 
     class Meta:
         model = TakeoutCondition
@@ -137,7 +128,7 @@ class TakeoutConditionSerializer(serializers.ModelSerializer):
 
 
 class AddTakeoutConditionSerializer(serializers.ModelSerializer):
-    """Сериализатор с цифрой у типа и для id здания и корпуса"""
+    """Сериализатор с id здания и корпуса"""
 
     class Meta:
         model = TakeoutCondition

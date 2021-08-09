@@ -3,6 +3,42 @@ from rest_framework import serializers
 from .models import BuildingPart, Container, Building, FullContainerReport
 
 
+class BuildingPartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BuildingPart
+        fields = [
+            "id",
+            "num"
+        ]
+
+
+class BuildingSerializer(serializers.ModelSerializer):
+    """Сериализатор здания"""
+    building_parts = BuildingPartSerializer(
+        many=True, read_only=True
+    )
+
+    class Meta:
+        model = Building
+        fields = [
+            "id",
+            "address",
+            "itmo_worker_email",
+            "containers_takeout_email",
+            "building_parts"
+        ]
+
+
+class BuildingShortSerializer(serializers.ModelSerializer):
+    """Сериализатор здания только с адресом"""
+    class Meta:
+        model = Building
+        fields = [
+            "id",
+            "address"
+        ]
+
+
 class FullContainerReportSerializer(serializers.ModelSerializer):
     """Сериализатор для заполнения контейнера"""
     container = serializers.PrimaryKeyRelatedField(
@@ -34,9 +70,8 @@ class ActivateContainerSerializer(serializers.ModelSerializer):
 
 class ContainerSerializer(serializers.ModelSerializer):
     """ Сериализатор контейнера"""
-    building = serializers.StringRelatedField()
-    status = serializers.CharField(source="get_status_display")
-    kind = serializers.CharField(source="get_kind_display")
+    building = BuildingShortSerializer()
+    building_part = BuildingPartSerializer()
 
     class Meta:
         model = Container
@@ -62,8 +97,7 @@ class ContainerSerializer(serializers.ModelSerializer):
 
 
 class ChangeContainerSerializer(serializers.ModelSerializer):
-    """ Сериализатор контейнера с цифрой для статуса и вида
-    и id у здания"""
+    """ Сериализатор контейнера с id у здания и корпуса"""
 
     class Meta:
         model = Container
@@ -78,32 +112,6 @@ class ChangeContainerSerializer(serializers.ModelSerializer):
             "is_public",
             "email",
             "phone",
-        ]
-
-
-class BuildingPartSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BuildingPart
-        fields = [
-            "id",
-            "num"
-        ]
-
-
-class BuildingSerializer(serializers.ModelSerializer):
-    """Сериализатор здания"""
-    building_parts = BuildingPartSerializer(
-        many=True, read_only=True
-    )
-
-    class Meta:
-        model = Building
-        fields = [
-            "id",
-            "address",
-            "itmo_worker_email",
-            "containers_takeout_email",
-            "building_parts"
         ]
 
 
@@ -139,6 +147,7 @@ class ContainerPublicAddSerializer(serializers.ModelSerializer):
 
 
 class PublicFeedbackSerializer(serializers.Serializer):
+    """Сериализатор для оставления обратной связи"""
     email = serializers.EmailField()
     container_id = serializers.IntegerField(required=False)
     msg = serializers.CharField(max_length=4096)

@@ -1118,7 +1118,8 @@
 							"path": [
 								"containers"
 							]
-						}
+						},
+						"description": "Статусы (status):\n{\n    \"1\": \"ожидает подключения\",\n    \"2\": \"активный\",\n    \"3\": \"не активный\"\n}\nВиды (kind):\n{\n    \"1\": \"экобокс\",\n    \"2\": \"офисная урна\",\n    \"3\": \"коробка из-под бумаги\"\n}"
 					},
 					"response": [
 						{
@@ -1142,7 +1143,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sun, 08 Aug 2021 11:25:00 GMT"
+									"value": "Mon, 09 Aug 2021 16:34:56 GMT"
 								},
 								{
 									"key": "Server",
@@ -1166,7 +1167,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "1659"
+									"value": "2415"
 								},
 								{
 									"key": "Content-Language",
@@ -1186,7 +1187,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "[\n    {\n        \"id\": 2,\n        \"kind\": \"экобокс\",\n        \"mass\": 10,\n        \"building\": \"Кронверкский 49\",\n        \"building_part\": 1,\n        \"floor\": 3,\n        \"location\": \"аудитория 123456\",\n        \"is_full\": true,\n        \"status\": \"активный\",\n        \"is_public\": false,\n        \"created_at\": \"2021-07-16T17:36:25.961942+03:00\",\n        \"email\": \"\",\n        \"phone\": \"\",\n        \"cur_fill_time\": \"Контейнер уже заполнен.\",\n        \"cur_takeout_wait_time\": \"2 days, 16:21:25.600939\",\n        \"avg_fill_time\": \"1 day, 3:55:31.114448\",\n        \"avg_takeout_wait_time\": \"0:02:04.432859\"\n    },\n    {\n        \"id\": 7,\n        \"kind\": \"экобокс\",\n        \"mass\": 10,\n        \"building\": \"Кронверкский 49\",\n        \"building_part\": 1,\n        \"floor\": 3,\n        \"location\": \"тестовая аудитория\",\n        \"is_full\": true,\n        \"status\": \"активный\",\n        \"is_public\": false,\n        \"created_at\": \"2021-07-20T15:08:29.230303+03:00\",\n        \"email\": \"test@test.com\",\n        \"phone\": \"89999999999\",\n        \"cur_fill_time\": \"Пока нет информации о времени заполнения\",\n        \"cur_takeout_wait_time\": \"Контейнер ещё не заполнен.\",\n        \"avg_fill_time\": \"Среднее время заполнения контейнера рассчитывается...\",\n        \"avg_takeout_wait_time\": \"Среднее время ожидания выноса контейнера рассчитывается...\"\n    },\n    {\n        \"id\": 1,\n        \"kind\": \"экобокс\",\n        \"mass\": 10,\n        \"building\": \"Кронверкский 49\",\n        \"building_part\": 1,\n        \"floor\": 4,\n        \"location\": \"asd\",\n        \"is_full\": true,\n        \"status\": \"активный\",\n        \"is_public\": false,\n        \"created_at\": \"2021-07-16T17:36:25.961942+03:00\",\n        \"email\": \"\",\n        \"phone\": \"\",\n        \"cur_fill_time\": \"Контейнер уже заполнен.\",\n        \"cur_takeout_wait_time\": \"0:29:45.057166\",\n        \"avg_fill_time\": \"1 day, 16:34:21.862497\",\n        \"avg_takeout_wait_time\": \"0:06:28.132844\"\n    }\n]"
+							"body": "[\n    {\n        \"id\": 2,\n        \"kind\": 1,\n        \"mass\": 10,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        },\n        \"floor\": 3,\n        \"location\": \"аудитория 123456\",\n        \"is_full\": true,\n        \"status\": 2,\n        \"is_public\": false,\n        \"created_at\": \"2021-07-16T17:36:25.961942+03:00\",\n        \"email\": \"\",\n        \"phone\": \"\",\n        \"cur_fill_time\": \"Контейнер уже заполнен.\",\n        \"cur_takeout_wait_time\": \"3 days, 21:31:21.277060\",\n        \"avg_fill_time\": \"1 day, 3:55:31.114448\",\n        \"avg_takeout_wait_time\": \"0:02:04.432859\"\n    },\n    {\n        \"id\": 7,\n        \"kind\": 1,\n        \"mass\": 10,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        },\n        \"floor\": 3,\n        \"location\": \"тестовая аудитория\",\n        \"is_full\": false,\n        \"status\": 2,\n        \"is_public\": false,\n        \"created_at\": \"2021-07-20T15:08:29.230303+03:00\",\n        \"email\": \"test@test.com\",\n        \"phone\": \"89999999999\",\n        \"cur_fill_time\": \"Пока нет информации о времени заполнения\",\n        \"cur_takeout_wait_time\": \"Контейнер ещё не заполнен.\",\n        \"avg_fill_time\": \"Среднее время заполнения контейнера рассчитывается...\",\n        \"avg_takeout_wait_time\": \"Среднее время ожидания выноса контейнера рассчитывается...\"\n    },\n    {\n        \"id\": 26,\n        \"kind\": 2,\n        \"mass\": 15,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 2,\n            \"num\": 2\n        },\n        \"floor\": 3,\n        \"location\": \"тестовая аудитория\",\n        \"is_full\": false,\n        \"status\": 1,\n        \"is_public\": false,\n        \"created_at\": \"2021-08-08T16:50:37.943309+03:00\",\n        \"email\": \"test@test.com\",\n        \"phone\": \"89999999999\",\n        \"cur_fill_time\": \"Пока нет информации о времени заполнения\",\n        \"cur_takeout_wait_time\": \"Контейнер ещё не заполнен.\",\n        \"avg_fill_time\": \"Среднее время заполнения контейнера рассчитывается...\",\n        \"avg_takeout_wait_time\": \"Среднее время ожидания выноса контейнера рассчитывается...\"\n    },\n    {\n        \"id\": 1,\n        \"kind\": 1,\n        \"mass\": 10,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        },\n        \"floor\": 4,\n        \"location\": \"asd\",\n        \"is_full\": true,\n        \"status\": 2,\n        \"is_public\": false,\n        \"created_at\": \"2021-07-16T17:36:25.961942+03:00\",\n        \"email\": \"\",\n        \"phone\": \"\",\n        \"cur_fill_time\": \"Контейнер уже заполнен.\",\n        \"cur_takeout_wait_time\": \"1 day, 5:39:40.744330\",\n        \"avg_fill_time\": \"1 day, 16:34:21.862497\",\n        \"avg_takeout_wait_time\": \"0:06:28.132844\"\n    }\n]"
 						}
 					]
 				},
@@ -1396,7 +1397,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sun, 08 Aug 2021 11:25:32 GMT"
+									"value": "Mon, 09 Aug 2021 16:35:21 GMT"
 								},
 								{
 									"key": "Server",
@@ -1420,7 +1421,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "444"
+									"value": "453"
 								},
 								{
 									"key": "Content-Language",
@@ -1440,7 +1441,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"id\": 1,\n    \"kind\": \"экобокс\",\n    \"mass\": 10,\n    \"building\": \"Кронверкский 49\",\n    \"building_part\": 1,\n    \"floor\": 4,\n    \"location\": \"asd\",\n    \"is_full\": true,\n    \"status\": \"активный\",\n    \"is_public\": false,\n    \"created_at\": \"2021-07-16T17:36:25.961942+03:00\",\n    \"email\": \"\",\n    \"phone\": \"\",\n    \"cur_fill_time\": \"Контейнер уже заполнен.\",\n    \"cur_takeout_wait_time\": \"0:30:16.427320\",\n    \"avg_fill_time\": \"1 day, 16:34:21.862497\",\n    \"avg_takeout_wait_time\": \"0:06:28.132844\"\n}"
+							"body": "{\n    \"id\": 1,\n    \"kind\": 1,\n    \"mass\": 10,\n    \"building\": {\n        \"id\": 1,\n        \"address\": \"Кронверкский 49\"\n    },\n    \"building_part\": {\n        \"id\": 1,\n        \"num\": 1\n    },\n    \"floor\": 4,\n    \"location\": \"asd\",\n    \"is_full\": true,\n    \"status\": 2,\n    \"is_public\": false,\n    \"created_at\": \"2021-07-16T17:36:25.961942+03:00\",\n    \"email\": \"\",\n    \"phone\": \"\",\n    \"cur_fill_time\": \"Контейнер уже заполнен.\",\n    \"cur_takeout_wait_time\": \"1 day, 5:40:05.350742\",\n    \"avg_fill_time\": \"1 day, 16:34:21.862497\",\n    \"avg_takeout_wait_time\": \"0:06:28.132844\"\n}"
 						}
 					]
 				},
@@ -1589,190 +1590,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "Варианты статусов",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{host}}/containers/status-options",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"containers",
-								"status-options"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "Варианты статусов",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/containers/status-options",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"containers",
-										"status-options"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Tue, 20 Jul 2021 12:07:12 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "WSGIServer/0.2 CPython/3.9.5"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Vary",
-									"value": "Accept, Accept-Language"
-								},
-								{
-									"key": "Allow",
-									"value": "GET, HEAD, OPTIONS"
-								},
-								{
-									"key": "X-Frame-Options",
-									"value": "DENY"
-								},
-								{
-									"key": "Content-Length",
-									"value": "96"
-								},
-								{
-									"key": "Content-Language",
-									"value": "ru"
-								},
-								{
-									"key": "X-Content-Type-Options",
-									"value": "nosniff"
-								},
-								{
-									"key": "X-XSS-Protection",
-									"value": "1; mode=block"
-								},
-								{
-									"key": "Referrer-Policy",
-									"value": "same-origin"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"1\": \"ожидает подключения\",\n    \"2\": \"активный\",\n    \"3\": \"не активный\"\n}"
-						}
-					]
-				},
-				{
-					"name": "Варианты видов",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{host}}/containers/kind-options",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"containers",
-								"kind-options"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "Варианты видов",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/containers/kind-options",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"containers",
-										"kind-options"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Sun, 08 Aug 2021 11:29:56 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "WSGIServer/0.2 CPython/3.9.5"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Vary",
-									"value": "Accept, Accept-Language, Origin"
-								},
-								{
-									"key": "Allow",
-									"value": "GET, HEAD, OPTIONS"
-								},
-								{
-									"key": "X-Frame-Options",
-									"value": "DENY"
-								},
-								{
-									"key": "Content-Length",
-									"value": "98"
-								},
-								{
-									"key": "Content-Language",
-									"value": "ru"
-								},
-								{
-									"key": "X-Content-Type-Options",
-									"value": "nosniff"
-								},
-								{
-									"key": "X-XSS-Protection",
-									"value": "1; mode=block"
-								},
-								{
-									"key": "Referrer-Policy",
-									"value": "same-origin"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"1\": \"экобокс\",\n    \"2\": \"офисная урна\",\n    \"3\": \"коробка из-под бумаги\"\n}"
-						}
-					]
 				}
 			]
 		},
@@ -2821,7 +2638,8 @@
 									"value": "1"
 								}
 							]
-						}
+						},
+						"description": "Типы (types):\n{\n    \"1\": \"не больше N дней в офисе\",\n    \"2\": \"не больше N дней в общественном месте\",\n    \"3\": \"суммарная масса бумаги в корпусе не больше N кг\",\n    \"4\": \"игнорировать первые N сообщенийо заполненности контейнера в общественном месте\"\n}"
 					},
 					"response": [
 						{
@@ -2851,7 +2669,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sun, 25 Jul 2021 11:27:33 GMT"
+									"value": "Mon, 09 Aug 2021 16:39:52 GMT"
 								},
 								{
 									"key": "Server",
@@ -2863,7 +2681,7 @@
 								},
 								{
 									"key": "Vary",
-									"value": "Accept, Accept-Language"
+									"value": "Accept, Accept-Language, Origin"
 								},
 								{
 									"key": "Allow",
@@ -2875,7 +2693,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "758"
+									"value": "490"
 								},
 								{
 									"key": "Content-Language",
@@ -2895,7 +2713,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "[\n    {\n        \"id\": 1,\n        \"type\": \"не больше N дней в офисе\",\n        \"number\": 3,\n        \"building\": \"Кронверкский 49\",\n        \"building_part\": \"корпус 1\"\n    },\n    {\n        \"id\": 3,\n        \"type\": \"не больше N дней в общественном месте\",\n        \"number\": 4,\n        \"building\": \"Кронверкский 49\",\n        \"building_part\": \"корпус 1\"\n    },\n    {\n        \"id\": 4,\n        \"type\": \"суммарная масса бумаги в корпусе не больше N кг\",\n        \"number\": 4,\n        \"building\": \"Кронверкский 49\",\n        \"building_part\": \"корпус 1\"\n    },\n    {\n        \"id\": 5,\n        \"type\": \"игнорировать первые N сообщенийо заполненности контейнера в общественном месте\",\n        \"number\": 4,\n        \"building\": \"Кронверкский 49\",\n        \"building_part\": \"корпус 1\"\n    }\n]"
+							"body": "[\n    {\n        \"id\": 3,\n        \"type\": 2,\n        \"number\": 3,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        }\n    },\n    {\n        \"id\": 4,\n        \"type\": 3,\n        \"number\": 14,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        }\n    },\n    {\n        \"id\": 5,\n        \"type\": 4,\n        \"number\": 1,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        }\n    },\n    {\n        \"id\": 6,\n        \"type\": 1,\n        \"number\": 3,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        }\n    }\n]"
 						}
 					]
 				},
