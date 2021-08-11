@@ -46,6 +46,7 @@ class ContainersTakeoutRequest(models.Model):
 
     emptied_containers = models.ManyToManyField(
         to=Container,
+        blank=True,
         related_name="takeout_confirmations",
         verbose_name="контейнеры подтверждённые пустыми"
     )

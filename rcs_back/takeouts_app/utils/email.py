@@ -1,7 +1,8 @@
 from typing import List
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.template.loader import render_to_string
 
 from rcs_back.containers_app.models import Building, BuildingPart
 from rcs_back.takeouts_app.models import (ContainersTakeoutRequest,
@@ -20,78 +21,84 @@ def get_hoz_emails() -> List[str]:
 
 
 def takeout_condition_met_notify(short_condition: str,
-                                 building: Building = None,
+                                 building: Building,
                                  building_part: BuildingPart = None) -> None:
     """Оповещение о необходимости сбора"""
-    if (building and building.itmo_worker_email or
-            building_part and building_part.building.itmo_worker_email):
+    if building.itmo_worker_email:
 
-        if building:
-            msg = f"По адресу {building.address} "
+        address = building.address
+        email = building.itmo_worker_email
+
+        if building_part:
+            address += ", "
+            address += str(building_part)
+
+            containers = building_part.containers_for_takeout()
+        else:
             containers = building.containers_for_takeout()
 
-        elif building_part:
-            msg = f"По адресу {building_part.building.address}, {building_part} "
-            containers = building_part.containers_for_takeout()
-
-        msg += "нужно провести сбор макулатуры, так как "
-
         if short_condition == "mass":
-            condition = "собранная маса превышает заданную правилом."
+            condition = ("масса собранной макулатуры "
+                         "превышает заданную правилом")
         else:
-            condition = "время, прошедшее после очищения контейнеров, превышает заданное правилом."
-        msg += condition
-        msg += "\n\n"
+            condition = (
+                "время, прошедшее после очищения контейнеров,"
+                " превышает заданное правилом"
+            )
 
-        msg += "Cписок контейнеров для сбора:\n"
-        for container in containers:
-            msg += f"Этаж {container.floor}"
-            msg += ", "
-            msg += container.location
-            msg += ".\n"
+        msg = render_to_string("takeout_condition_met.html", {
+            "address": address,
+            "condition": condition,
+            "containers": containers
+        }
+        )
 
-        if building:
-            email = building.itmo_worker_email
-        elif building_part:
-            email = building_part.building.itmo_worker_email
-        send_mail(
+        email = EmailMessage(
             "Оповещание от сервиса RCS",
             msg,
             "noreply@rcs-itmo.ru",
             [email]
         )
+        email.content_subtype = "html"
+        email.send()
 
 
 def containers_takeout_notify(request: ContainersTakeoutRequest) -> None:
     """Отправляет запрос на сбор контейнеров"""
     if request.building.containers_takeout_email:
-        msg = (f"По адресу {request.building} ")
-        if request.building_part:
-            msg += f", {request.building_part} "
-        msg += ("заполнилось достаточно контейнеров для выноса. "
-                "Расположение заполненных контейнеров:\n\n")
-        for container in request.containers.all():
-            msg += f"Этаж {container.floor}"
-            msg += ", "
-            msg += container.location
-            msg += ".\n"
 
-        send_mail(
+        msg = render_to_string("containers_takeout.html", {
+            "building": request.building,
+            "containers": request.containers.all(),
+            "building_part": request.building_part
+        }
+        )
+
+        email = EmailMessage(
             "Оповещание от сервиса RCS",
             msg,
             "noreply@rcs-itmo.ru",
             [request.building.containers_takeout_email]
         )
+        email.content_subtype = "html"
+        email.send()
 
 
 def tank_takeout_notify(building: Building) -> None:
     """Отправляет запрос на вывоз накопительного бака"""
     tank_takeout_email = TankTakeoutCompany.objects.first().email
-    msg = (f"В накопительном баке по адресу {building} "
-           "накопилось достаточно макулатуры для вывоза.")
-    send_mail(
-        "Оповещание от сервиса RCS",
-        msg,
-        "noreply@rcs-itmo.ru",
-        [tank_takeout_email]
-    )
+    if tank_takeout_email:
+
+        msg = render_to_string("tank_takeout.html", {
+            "address": building.address,
+        }
+        )
+
+        email = EmailMessage(
+            "Оповещание от сервиса RCS",
+            msg,
+            "noreply@rcs-itmo.ru",
+            [tank_takeout_email]
+        )
+        email.content_subtype = "html"
+        email.send()

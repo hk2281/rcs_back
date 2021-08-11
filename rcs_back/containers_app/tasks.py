@@ -2,13 +2,13 @@ import datetime
 import time
 
 from django.core.cache import cache
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 from django.utils import timezone
 from celery import shared_task
 
 from rcs_back.containers_app.models import (
     FullContainerReport, Container, Building, BuildingPart)
-from rcs_back.containers_app.utils.email import get_public_container_add_msg
 from rcs_back.takeouts_app.utils.email import takeout_condition_met_notify
 from rcs_back.takeouts_app.models import MassTakeoutConditionCommit
 
@@ -58,13 +58,20 @@ def public_container_add_notify(container_id: int) -> None:
     добавленного контейнера"""
     time.sleep(10)  # Ждём сохранения в БД и генерации стикера
     container = Container.objects.get(pk=container_id)
-    msg = get_public_container_add_msg(container)
-    send_mail(
+
+    msg = render_to_string("public_container_add.html", {
+        "container": container
+    }
+    )
+
+    email = EmailMessage(
         "Добавление контейнера в сервисе RCS",
         msg,
         "noreply@rcs-itmo.ru",
         [container.email]
     )
+    email.content_subtype = "html"
+    email.send()
 
 
 def check_mass_condition_to_notify(container: Container) -> None:
@@ -75,7 +82,9 @@ def check_mass_condition_to_notify(container: Container) -> None:
         if isinstance(trigger, BuildingPart):
             takeout_condition_met_notify(
                 "mass",
-                building_part=container.building_part)
+                trigger.building,
+                building_part=container.building_part
+            )
             if not trigger.is_mass_condition_commited():
                 MassTakeoutConditionCommit.objects.create(
                     building=container.building,
@@ -84,7 +93,8 @@ def check_mass_condition_to_notify(container: Container) -> None:
         if isinstance(trigger, Building):
             takeout_condition_met_notify(
                 "mass",
-                building_part=container.building)
+                trigger
+            )
             if not trigger.is_mass_condition_commited():
                 MassTakeoutConditionCommit.objects.create(
                     building=container.building

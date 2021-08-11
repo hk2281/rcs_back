@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+{% autoescape on %}
+<div>Вы получили это сообщение, потому что зарегистрировали контейнер в сервисе RCS.</div>
+<div>ID вашего контейнера: {{ container.pk }}.</div>
+<div>Электронная версия стикера: https://rcs-itmo.ru{{ container.sticker.url }}.</div>
+<div>Для того чтобы активировать контейнер, вам необходимо получить физический стикер и контейнер.</div>
+{% endautoescape %}
+{% endblock %}
