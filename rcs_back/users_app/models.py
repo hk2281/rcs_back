@@ -45,4 +45,9 @@ class User(AbstractUser):
     first_name = None
     last_name = None
     email = models.EmailField(unique=True, verbose_name="почта")
+    is_confirmed = models.BooleanField(
+        default=False,
+        verbose_name="подтверждён сотрудником"
+    )
+
     objects = UserManager()

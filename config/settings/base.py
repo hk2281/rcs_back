@@ -76,6 +76,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 # ------------------------------------------------------------------------------
 DJANGO_APPS = [
     "jazzmin",  # Needs to go before django.contrib.admin
+    "rcs_back.users_app",  # Needs to go before something for template
 
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -97,7 +98,6 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "rcs_back.containers_app",
-    "rcs_back.users_app",
     "rcs_back.takeouts_app"
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -107,7 +107,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
 AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend",
+    "django.contrib.auth.backends.AllowAllUsersModelBackend",
 ]
 
 AUTH_USER_MODEL = "users_app.User"
@@ -310,14 +310,21 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ROTATE_REFRESH_TOKENS': True,
+    "ROTATE_REFRESH_TOKENS": True
 }
 
 # Djoser
 
 DJOSER = {
     "TOKEN_MODEL": None,  # We use only JWT
-    "HIDE_USERS": True
+    "HIDE_USERS": True,
+    # FIXME
+    "PASSWORD_RESET_CONFIRM_URL": "password-reset/{uid}/{token}",
+    "SEND_ACTIVATION_EMAIL": True,
+    "ACTIVATION_URL": "activate/{uid}/{token}",
+    "EMAIL": {
+        "activation": "rcs_back.users_app.email.EmailConfirmation"
+    }
 }
 
 # Constants
