@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions, views
+from rest_framework import generics, permissions, views, status
 from rest_framework.response import Response
 
 from rcs_back.containers_app.models import BuildingPart, Container
@@ -15,12 +15,19 @@ class FullContainerReportView(generics.CreateAPIView):
     def perform_create(self, serializer) -> None:
         if "container" in serializer.validated_data:
             container = serializer.validated_data["container"]
+            by_staff = self.request.user.is_authenticated
             if container.is_reported():
                 # Повторное сообщение
-                handle_repeat_full_report.delay(container.pk)
+                handle_repeat_full_report.delay(
+                    container.pk,
+                    by_staff
+                )
             else:
                 # Заполнение контейнера через главную страницу
-                handle_first_full_report.delay(container.pk)
+                handle_first_full_report.delay(
+                    container.pk,
+                    by_staff
+                )
 
 
 class ContainerDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -51,32 +58,36 @@ class ContainerListView(generics.ListCreateAPIView):
         "building",
         "building_part",
         "floor",
-        "status",
-        "is_full"
+        "status"
     ]
 
     def get_queryset(self):
         """Сортировка"""
+        queryset = Container.objects.all()
+        if "is_full" in self.request.query_params:
+            is_full_param = self.request.query_params.get("is_full")
+            is_full = False if is_full_param == "false" else True
+            queryset = Container.objects.filter(
+                _is_full=is_full
+            )
+
         if "sort_by" in self.request.query_params:
             sort = self.request.query_params.get("sort_by")
 
             if sort not in self.allowed_sorts:
-                return Container.objects.all()
+                return queryset
 
             if sort == "is_full":
                 sort = "_is_full"  # Чтобы не путать фронт
 
             if "order_by" in self.request.query_params:
                 order_by = self.request.query_params.get("order_by")
-                print(order_by)
                 if order_by == "desc":
                     sort = "-" + sort
-            print(sort)
 
-            return Container.objects.order_by(sort)
+            return queryset.order_by(sort)
 
-        else:
-            return Container.objects.all()
+        return queryset
 
     def get_serializer_class(self):
         if self.request.method == "GET":
@@ -143,3 +154,24 @@ class BuildingPartView(generics.ListAPIView):
     queryset = BuildingPart.objects.all()
     filterset_fields = ["building"]
     permission_classes = [permissions.AllowAny]
+
+
+class EmptyContainerView(views.APIView):
+    """View для отметки контейнера пустым
+    экоотделом"""
+
+    def post(self, request, *args, **kwargs):
+        container = Container.objects.filter(
+            pk=self.kwargs["pk"]
+        ).first()
+        if container:
+            last_report = container.last_full_report()
+            if last_report:
+                """Этот view используется для корректировки
+                ошибок, поэтому не вызываем handle_empty_container
+                (там устанавливается время опустошения)"""
+                last_report.delete()
+                container._is_full = False  # Для сортировки
+                container.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)

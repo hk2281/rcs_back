@@ -102,39 +102,46 @@ def check_mass_condition_to_notify(container: Container) -> None:
 
 
 @shared_task
-def handle_first_full_report(container_id: int) -> None:
+def handle_first_full_report(container_id: int, by_staff: bool) -> None:
     """При заполнении контейнера нужно запомнить время
     и пересчитать среднее время заполнения"""
     container = Container.objects.get(pk=container_id)
     FullContainerReport.objects.create(
-        container=container
+        container=container,
+        by_staff=by_staff
     )
-    container._is_full = True  # Для сортировки
-    container.save()
 
     time.sleep(10)  # Ждём сохранения в БД
+
     calc_avg_fill_time(container)
 
     """Если выполняются условия для вывоза по
     кол-ву бумаги, сообщаем"""
-    if container.is_reported_just_enough():
+    if by_staff or container.is_reported_just_enough():
+        container._is_full = True  # Для сортировки
+        container.save()
         check_mass_condition_to_notify(container)
 
 
 @shared_task
-def handle_repeat_full_report(container_id: int) -> None:
+def handle_repeat_full_report(container_id: int, by_staff: bool) -> None:
     """При повторном сообщении о заполнении нужно
     увеличить кол-во сообщений"""
     container = Container.objects.get(pk=container_id)
     report = container.last_full_report()
-    report.count += 1
+    if by_staff:
+        report.by_staff = True
+    else:
+        report.count += 1
     report.save()
 
     time.sleep(10)  # Ждём сохранения в БД
 
     """Если выполняются условия для вывоза по
     кол-ву бумаги, сообщаем"""
-    if container.is_reported_just_enough():
+    if by_staff or container.is_reported_just_enough():
+        container._is_full = True  # Для сортировки
+        container.save()
         check_mass_condition_to_notify(container)
 
 

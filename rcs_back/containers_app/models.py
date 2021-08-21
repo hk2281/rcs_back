@@ -315,10 +315,16 @@ class Container(models.Model):
         """Полный ли контейнер?
         Учитывается количество сообщений, которые надо игнорировать."""
         if self.last_full_report():
+
             if not self.is_public:
                 return True
+
+            if self.last_full_report().by_staff:
+                return True
+
             ignore_count = self.ignore_reports_count()
             return self.last_full_report().count > ignore_count
+
         else:
             return False
 
@@ -444,6 +450,11 @@ class FullContainerReport(models.Model):
         verbose_name="контейнер вынесен",
         blank=True,
         null=True
+    )
+
+    by_staff = models.BooleanField(
+        default=False,
+        verbose_name="сотрудником"
     )
 
     def __str__(self) -> str:
