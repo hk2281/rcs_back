@@ -2,7 +2,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
-from rest_framework.fields import CurrentUserDefault
 
 from rcs_back.containers_app.views import (BuildingListView,
                                            PublicFeedbackView,
@@ -34,4 +33,8 @@ urlpatterns = [
     path("takeout-conditions/<int:pk>", TakeoutConditionDetailView.as_view()),
     path("full-container-reports", FullContainerReportView.as_view()),
     path("collected-mass", CollectedMassView.as_view())
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+if bool(settings.DEBUG):
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
