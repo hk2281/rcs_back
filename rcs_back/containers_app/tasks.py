@@ -109,6 +109,8 @@ def handle_first_full_report(container_id: int) -> None:
     FullContainerReport.objects.create(
         container=container
     )
+    container._is_full = True  # Для сортировки
+    container.save()
 
     time.sleep(10)  # Ждём сохранения в БД
     calc_avg_fill_time(container)
@@ -141,6 +143,8 @@ def handle_empty_container(container_id: int) -> None:
     """При опустошении контейнера нужно запомнить время
     и перечитать среднее время выноса"""
     container = Container.objects.get(pk=container_id)
+    container._is_full = False  # Для сортировки
+    container.save()
     last_full_report = container.last_full_report()
     if last_full_report:
         last_full_report.emptied_at = timezone.now()

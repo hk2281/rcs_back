@@ -242,6 +242,11 @@ class Container(models.Model):
         blank=True
     )
 
+    _full = models.BooleanField(
+        default=False,
+        verbose_name="полный (для сортировки)"
+    )
+
     def is_reported(self) -> bool:
         """Есть ли активное сообщение о заполненности
         этого контейнера?"""
