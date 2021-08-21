@@ -242,7 +242,7 @@ class Container(models.Model):
         blank=True
     )
 
-    _full = models.BooleanField(
+    _is_full = models.BooleanField(
         default=False,
         verbose_name="полный (для сортировки)"
     )

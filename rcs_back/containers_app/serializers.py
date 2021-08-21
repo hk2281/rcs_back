@@ -82,7 +82,8 @@ class ContainerSerializer(serializers.ModelSerializer):
             "building",
             "building_part",
             "floor",
-            "location",
+            "room",
+            "description",
             "is_full",
             "status",
             "is_public",
@@ -107,7 +108,8 @@ class ChangeContainerSerializer(serializers.ModelSerializer):
             "building_part",
             "kind",
             "floor",
-            "location",
+            "room",
+            "description",
             "status",
             "is_public",
             "email",
@@ -137,7 +139,8 @@ class ContainerPublicAddSerializer(serializers.ModelSerializer):
             "building",
             "building_part",
             "floor",
-            "location",
+            "room",
+            "description",
             "kind"
         ]
         extra_kwargs = {

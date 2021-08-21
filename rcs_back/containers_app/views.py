@@ -37,7 +37,9 @@ class ContainerDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class ContainerListView(generics.ListCreateAPIView):
     """ View для CRUD-операций с контейнерами """
+
     queryset = Container.objects.all()
+
     filterset_fields = [
         "building",
         "building_part",
@@ -45,18 +47,34 @@ class ContainerListView(generics.ListCreateAPIView):
         "status"
     ]
 
+    allowed_sorts = [
+        "building",
+        "building_part",
+        "floor",
+        "status",
+        "is_full"
+    ]
+
     def get_queryset(self):
-        if "is_full" in self.request.query_params:
-            #  Если такая фильтрация станет слишком медленной,
-            #  то надо будет добавить поле для модели и фильтровать
-            #  по нему
-            is_full = self.request.query_params.get("is_full")
-            val = True if is_full == "true" else False
-            ids = []
-            for container in Container.objects.all():
-                if container.is_full() == val:
-                    ids.append(container.id)
-            return Container.objects.filter(id__in=ids)
+        """Сортировка"""
+        if "sort_by" in self.request.query_params:
+            sort = self.request.query_params.get("sort_by")
+
+            if sort not in self.allowed_sorts:
+                return Container.objects.all()
+
+            if sort == "is_full":
+                sort = "_is_full"  # Чтобы не путать фронт
+
+            if "order_by" in self.request.query_params:
+                order_by = self.request.query_params.get("order_by")
+                print(order_by)
+                if order_by == "desc":
+                    sort = "-" + sort
+            print(sort)
+
+            return Container.objects.order_by(sort)
+
         else:
             return Container.objects.all()
 
