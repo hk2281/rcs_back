@@ -86,8 +86,8 @@ def containers_takeout_notify(request: ContainersTakeoutRequest) -> None:
 
 def tank_takeout_notify(building: Building) -> None:
     """Отправляет запрос на вывоз накопительного бака"""
-    tank_takeout_email = TankTakeoutCompany.objects.first().email
-    if tank_takeout_email:
+    tank_takeout_company = TankTakeoutCompany.objects.first()
+    if tank_takeout_company and tank_takeout_company.email:
 
         msg = render_to_string("tank_takeout.html", {
             "address": building.address,
@@ -98,7 +98,7 @@ def tank_takeout_notify(building: Building) -> None:
             "Оповещание от сервиса RCS",
             msg,
             "noreply@rcs-itmo.ru",
-            [tank_takeout_email]
+            [tank_takeout_company.email]
         )
         email.content_subtype = "html"
         email.send()
