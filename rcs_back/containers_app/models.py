@@ -15,7 +15,7 @@ class BaseBuilding(models.Model):
         по зданию/корпусу"""
         current_mass = 0
         for container in self.containers.all():
-            if container.is_reported_enough():
+            if container.is_full():
                 current_mass += container.mass()
         return current_mass
 
@@ -197,9 +197,16 @@ class Container(models.Model):
         verbose_name="этаж"
     )
 
-    location = models.CharField(
+    room = models.CharField(
+        max_length=16,
+        blank=True,
+        verbose_name="аудитория"
+    )
+
+    description = models.CharField(
         max_length=1024,
-        verbose_name="аудитория/описание"
+        verbose_name="описание",
+        blank=True
     )
 
     status = models.PositiveSmallIntegerField(
@@ -235,8 +242,9 @@ class Container(models.Model):
         blank=True
     )
 
-    def is_full(self) -> bool:
-        """Заполнен ли контейнер?"""
+    def is_reported(self) -> bool:
+        """Есть ли активное сообщение о заполненности
+        этого контейнера?"""
         report = FullContainerReport.objects.filter(
             container=self).order_by(
                 "-reported_full_at"
@@ -248,12 +256,20 @@ class Container(models.Model):
 
     def mass(self) -> int:
         """Возвращает массу контейнера по его виду"""
+        ECOBOX_MASS = 10
+        OFFICE_CAN_MASS = 15
+        OFFICE_BOX_MASS = 20
+
         mass_dict = {
-            1: 10,
-            2: 15,
-            3: 20
+            self.ECOBOX: ECOBOX_MASS,
+            self.OFFICE_CAN: OFFICE_CAN_MASS,
+            self.OFFICE_BOX: OFFICE_BOX_MASS
         }
-        return mass_dict[self.kind]
+
+        if self.kind in mass_dict:
+            return mass_dict[self.kind]
+        else:
+            return 0
 
     def last_full_report(self):
         """Возвращает FullContainerReport
@@ -290,9 +306,9 @@ class Container(models.Model):
         else:
             return 0
 
-    def is_reported_enough(self) -> bool:
-        """Достаточно ли сообщений о заполненности поступило.
-        Количество учиытвается только для общественных контейнеров."""
+    def is_full(self) -> bool:
+        """Полный ли контейнер?
+        Учитывается количество сообщений, которые надо игнорировать."""
         if self.last_full_report():
             if not self.is_public:
                 return True
@@ -340,7 +356,7 @@ class Container(models.Model):
 
     def needs_takeout(self) -> bool:
         """Нужно ли вынести контейнер"""
-        return self.is_reported_enough() or self.check_time_conditions()
+        return self.is_full() or self.check_time_conditions()
 
     def get_mass_rule_trigger(self):
         """Проверяет, выполняется ли правило по массе.

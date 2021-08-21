@@ -5,7 +5,7 @@ from .models import *
 
 class ContainerAdmin(admin.ModelAdmin):
     readonly_fields = [
-        "is_full",
+        "is_reported",
         "mass",
         "cur_fill_time",
         "cur_takeout_wait_time",
@@ -13,7 +13,7 @@ class ContainerAdmin(admin.ModelAdmin):
         "avg_takeout_wait_time",
         "last_full_report",
         "ignore_reports_count",
-        "is_reported_enough",
+        "is_full",
         "is_reported_just_enough",
         "check_time_conditions",
         "needs_takeout",

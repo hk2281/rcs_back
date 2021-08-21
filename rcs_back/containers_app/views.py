@@ -15,7 +15,7 @@ class FullContainerReportView(generics.CreateAPIView):
     def perform_create(self, serializer) -> None:
         if "container" in serializer.validated_data:
             container = serializer.validated_data["container"]
-            if container.is_full():
+            if container.is_reported():
                 # Повторное сообщение
                 handle_repeat_full_report.delay(container.pk)
             else:
