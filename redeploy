@@ -1,4 +1,7 @@
 #!/bin/bash
+cd restarter
+git pull
+cd ..
 git pull
 docker-compose -f production.yml down
 docker-compose -f production.yml build

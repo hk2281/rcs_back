@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path, re_path
+from django.urls import include, path
 
 from rcs_back.containers_app.views import (BuildingListView,
                                            PublicFeedbackView,
@@ -12,26 +12,27 @@ from rcs_back.users_app.views import *
 
 
 urlpatterns = [
-    path(settings.ADMIN_URL, admin.site.urls),
-    path("auth/users/me/", RetrieveCurrentUserView.as_view()),
-    path("auth/registration-token", ObtainRegistrationTokenView.as_view()),
-    path("auth/users/", CreateUserWithTokenView.as_view()),
-    re_path(r"auth/", include("djoser.urls")),
-    re_path(r"^auth/", include("djoser.urls.jwt")),
-    path("containers", include("rcs_back.containers_app.urls")),
-    path("buildings", BuildingListView.as_view()),
-    path("container-takeout-requests/<int:pk>",
+    path(f"api/{settings.ADMIN_URL}", admin.site.urls),
+    path("api/auth/users/me/", RetrieveCurrentUserView.as_view()),
+    path("api/auth/registration-token", ObtainRegistrationTokenView.as_view()),
+    path("api/auth/users/", CreateUserWithTokenView.as_view()),
+    path("api/auth/", include("djoser.urls")),
+    path("api/auth/", include("djoser.urls.jwt")),
+    path("api/containers", include("rcs_back.containers_app.urls")),
+    path("api/buildings", BuildingListView.as_view()),
+    path("api/container-takeout-requests/<int:pk>",
          ContainersTakeoutConfirmationView.as_view()),
-    path("tank-takeout-requests", TankTakeoutRequestListView.as_view()),
-    path("tank-takeout-requests/<int:pk>",
+    path("api/tank-takeout-requests", TankTakeoutRequestListView.as_view()),
+    path("api/tank-takeout-requests/<int:pk>",
          TankTakeoutConfirmationView.as_view()),
-    path("container-takeout-requests", ContainersTakeoutListView.as_view()),
-    path("public-feedback", PublicFeedbackView.as_view()),
-    path("building-parts", BuildingPartView.as_view()),
-    path("takeout-conditions", TakeoutConditionListView.as_view()),
-    path("takeout-conditions/<int:pk>", TakeoutConditionDetailView.as_view()),
-    path("full-container-reports", FullContainerReportView.as_view()),
-    path("collected-mass", CollectedMassView.as_view())
+    path("api/container-takeout-requests", ContainersTakeoutListView.as_view()),
+    path("api/public-feedback", PublicFeedbackView.as_view()),
+    path("api/building-parts", BuildingPartView.as_view()),
+    path("api/takeout-conditions", TakeoutConditionListView.as_view()),
+    path("api/takeout-conditions/<int:pk>",
+         TakeoutConditionDetailView.as_view()),
+    path("api/full-container-reports", FullContainerReportView.as_view()),
+    path("api/collected-mass", CollectedMassView.as_view())
 ]
 
 if bool(settings.DEBUG):

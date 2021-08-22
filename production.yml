@@ -4,6 +4,7 @@ volumes:
   production_postgres_data: {}
   production_postgres_data_backups: {}
   production_redis_data: {}
+  next-build: {}
 
 services:
   django: &django
@@ -72,3 +73,11 @@ services:
     command: /start-flower
     expose:
       - 5555
+  
+  next:
+    build: ./restarter
+    command: sh -c "yarn build && yarn start"
+    volumes:
+      - next-build:/home/next/build
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL=/api
