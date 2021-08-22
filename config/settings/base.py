@@ -107,7 +107,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
 AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.AllowAllUsersModelBackend",
+    "django.contrib.auth.backends.ModelBackend",
 ]
 
 AUTH_USER_MODEL = "users_app.User"
@@ -320,10 +320,7 @@ DJOSER = {
     # FIXME
     "PASSWORD_RESET_CONFIRM_URL": "password-reset/{uid}/{token}",
     "SEND_ACTIVATION_EMAIL": True,
-    "ACTIVATION_URL": "activate/{uid}/{token}",
-    "EMAIL": {
-        "activation": "rcs_back.users_app.email.EmailConfirmation"
-    }
+    "ACTIVATION_URL": "activate/{uid}/{token}"
 }
 
 # Constants
