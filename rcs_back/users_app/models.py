@@ -1,5 +1,8 @@
+from secrets import choice
+from string import ascii_letters, digits
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+from django.utils import timezone
 
 
 class UserManager(BaseUserManager):
@@ -47,3 +50,56 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, verbose_name="почта")
 
     objects = UserManager()
+
+
+class RegistrationToken(models.Model):
+    """Модель токена для регистрации"""
+
+    TOKEN_LENGTH = 32
+    EXPIRATION_DAYS = 7
+
+    token = models.CharField(
+        max_length=32,
+        blank=True,
+        verbose_name="токен"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="время генерации"
+    )
+
+    is_claimed = models.BooleanField(
+        default=False,
+        verbose_name="использован"
+    )
+
+    def generate_token(self) -> str:
+        """Генерирует рандомный токен"""
+        token = ''.join(choice(
+            ascii_letters + digits
+        ) for _ in range(self.TOKEN_LENGTH))
+        return token
+
+    def set_token(self) -> None:
+        """Задать значение поля token"""
+        while True:
+            token = self.generate_token()
+            """Проверка на уникальность"""
+            if not self.objects.filter(
+                token=token
+            ).first():
+                break
+        self.token = token
+
+    def has_expired(self) -> bool:
+        """Исткекло ли время действия токена?"""
+        today = timezone.now().day
+        return today - self.created_at.day > self.EXPIRATION_DAYS
+
+    def __str__(self) -> str:
+        return f"токен №{self.pk}"
+
+    class Meta:
+        verbose_name = "токен для регистрации"
+        verbose_name_plural = "токены для регистрации"

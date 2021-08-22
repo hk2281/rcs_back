@@ -1476,7 +1476,7 @@
 							"formdata": [
 								{
 									"key": "email",
-									"value": "test5@test.com",
+									"value": "testasd@test.com",
 									"type": "text"
 								},
 								{
@@ -1487,7 +1487,7 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}/auth/users/",
+							"raw": "{{host}}/auth/users/?token=UmBt3d3zSpy6Ik5LCxvS34ysW8YapnFL",
 							"host": [
 								"{{host}}"
 							],
@@ -1495,6 +1495,12 @@
 								"auth",
 								"users",
 								""
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "UmBt3d3zSpy6Ik5LCxvS34ysW8YapnFL"
+								}
 							]
 						}
 					},
@@ -1509,7 +1515,7 @@
 									"formdata": [
 										{
 											"key": "email",
-											"value": "test5@test.com",
+											"value": "testasd@test.com",
 											"type": "text"
 										},
 										{
@@ -1520,7 +1526,7 @@
 									]
 								},
 								"url": {
-									"raw": "{{host}}/auth/users/",
+									"raw": "{{host}}/auth/users/?token=UmBt3d3zSpy6Ik5LCxvS34ysW8YapnFL",
 									"host": [
 										"{{host}}"
 									],
@@ -1528,6 +1534,12 @@
 										"auth",
 										"users",
 										""
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "UmBt3d3zSpy6Ik5LCxvS34ysW8YapnFL"
+										}
 									]
 								}
 							},
@@ -1537,7 +1549,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Thu, 12 Aug 2021 10:13:57 GMT"
+									"value": "Sun, 22 Aug 2021 09:38:49 GMT"
 								},
 								{
 									"key": "Server",
@@ -1553,7 +1565,7 @@
 								},
 								{
 									"key": "Allow",
-									"value": "GET, POST, HEAD, OPTIONS"
+									"value": "POST, OPTIONS"
 								},
 								{
 									"key": "X-Frame-Options",
@@ -1561,7 +1573,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "33"
+									"value": "36"
 								},
 								{
 									"key": "Content-Language",
@@ -1581,7 +1593,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"email\": \"test5@test.com\",\n    \"id\": 5\n}"
+							"body": "{\n    \"email\": \"testasd@test.com\",\n    \"id\": 12\n}"
 						}
 					]
 				},
@@ -1704,7 +1716,7 @@
 					]
 				},
 				{
-					"name": "список неподтерждённых пользователей",
+					"name": "Получть токен для регистрации",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -1719,42 +1731,30 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/auth/users?is_confirmed=false",
+							"raw": "{{host}}/auth/registration-token",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"auth",
-								"users"
-							],
-							"query": [
-								{
-									"key": "is_confirmed",
-									"value": "false"
-								}
+								"registration-token"
 							]
 						}
 					},
 					"response": [
 						{
-							"name": "список неподтерждённых пользователей",
+							"name": "Получть токен для регистрации",
 							"originalRequest": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/auth/users?is_confirmed=false",
+									"raw": "{{host}}/auth/registration-token",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
 										"auth",
-										"users"
-									],
-									"query": [
-										{
-											"key": "is_confirmed",
-											"value": "false"
-										}
+										"registration-token"
 									]
 								}
 							},
@@ -1764,7 +1764,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Thu, 12 Aug 2021 11:31:16 GMT"
+									"value": "Sun, 22 Aug 2021 08:26:55 GMT"
 								},
 								{
 									"key": "Server",
@@ -1788,7 +1788,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "339"
+									"value": "44"
 								},
 								{
 									"key": "Content-Language",
@@ -1808,126 +1808,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "[\n    {\n        \"id\": 2,\n        \"email\": \"test@test.com\",\n        \"is_confirmed\": false\n    },\n    {\n        \"id\": 1,\n        \"email\": \"e.kondr01@gmail.com\",\n        \"is_confirmed\": false\n    },\n    {\n        \"id\": 4,\n        \"email\": \"test2@test.com\",\n        \"is_confirmed\": false\n    },\n    {\n        \"id\": 5,\n        \"email\": \"test5@test.com\",\n        \"is_confirmed\": false\n    },\n    {\n        \"id\": 11,\n        \"email\": \"test6@test.com\",\n        \"is_confirmed\": false\n    },\n    {\n        \"id\": 3,\n        \"email\": \"test_eco@test.com\",\n        \"is_confirmed\": false\n    }\n]"
-						}
-					]
-				},
-				{
-					"name": "подтвердить пользователя",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "is_confirmed",
-									"value": "true",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{host}}/auth/users/11",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"auth",
-								"users",
-								"11"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "подтвердить пользователя",
-							"originalRequest": {
-								"method": "PATCH",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "is_confirmed",
-											"value": "true",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/auth/users/11",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"auth",
-										"users",
-										"11"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Thu, 12 Aug 2021 11:34:13 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "WSGIServer/0.2 CPython/3.9.5"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Vary",
-									"value": "Accept, Accept-Language, Origin"
-								},
-								{
-									"key": "Allow",
-									"value": "PUT, PATCH, OPTIONS"
-								},
-								{
-									"key": "X-Frame-Options",
-									"value": "DENY"
-								},
-								{
-									"key": "Content-Length",
-									"value": "54"
-								},
-								{
-									"key": "Content-Language",
-									"value": "ru"
-								},
-								{
-									"key": "X-Content-Type-Options",
-									"value": "nosniff"
-								},
-								{
-									"key": "X-XSS-Protection",
-									"value": "1; mode=block"
-								},
-								{
-									"key": "Referrer-Policy",
-									"value": "same-origin"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"id\": 11,\n    \"email\": \"test6@test.com\",\n    \"is_confirmed\": true\n}"
+							"body": "{\n    \"token\": \"UmBt3d3zSpy6Ik5LCxvS34ysW8YapnFL\"\n}"
 						}
 					]
 				}

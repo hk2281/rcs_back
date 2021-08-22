@@ -14,6 +14,8 @@ from rcs_back.users_app.views import *
 urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
     path("auth/users/me/", RetrieveCurrentUserView.as_view()),
+    path("auth/registration-token", ObtainRegistrationTokenView.as_view()),
+    path("auth/users/", CreateUserWithTokenView.as_view()),
     re_path(r"auth/", include("djoser.urls")),
     re_path(r"^auth/", include("djoser.urls.jwt")),
     path("containers", include("rcs_back.containers_app.urls")),
