@@ -1,6 +1,7 @@
 from rest_framework import generics, permissions, views, status
 from rest_framework.response import Response
 
+from rcs_back.utils.mixins import UpdateThenRetrieveModelMixin
 from rcs_back.containers_app.models import BuildingPart, Container
 from .utils.email import *
 from .serializers import *
@@ -30,16 +31,19 @@ class FullContainerReportView(generics.CreateAPIView):
                 )
 
 
-class ContainerDetailView(generics.RetrieveUpdateDestroyAPIView):
+class ContainerDetailView(UpdateThenRetrieveModelMixin,
+                          generics.RetrieveUpdateDestroyAPIView):
     """ View для CRUD-операций с контейнерами """
     queryset = Container.objects.all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    retrieve_serializer = ContainerSerializer
+    update_serializer = ChangeContainerSerializer
 
     def get_serializer_class(self):
         if self.request.method == "GET":
-            return ContainerSerializer
+            return self.retrieve_serializer
         else:
-            return ChangeContainerSerializer
+            return self.update_serializer
 
 
 class ContainerListView(generics.ListCreateAPIView):

@@ -2335,7 +2335,7 @@
 							"formdata": [
 								{
 									"key": "floor",
-									"value": "4",
+									"value": "6",
 									"type": "text"
 								}
 							]
@@ -2362,7 +2362,7 @@
 									"formdata": [
 										{
 											"key": "floor",
-											"value": "4",
+											"value": "6",
 											"type": "text"
 										}
 									]
@@ -2384,7 +2384,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sat, 21 Aug 2021 14:50:54 GMT"
+									"value": "Sun, 22 Aug 2021 11:18:46 GMT"
 								},
 								{
 									"key": "Server",
@@ -2408,7 +2408,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "136"
+									"value": "523"
 								},
 								{
 									"key": "Content-Language",
@@ -2428,7 +2428,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"id\": 1,\n    \"building\": 1,\n    \"building_part\": 1,\n    \"kind\": 1,\n    \"floor\": 4,\n    \"room\": \"\",\n    \"description\": \"\",\n    \"status\": 2,\n    \"is_public\": false,\n    \"email\": \"\",\n    \"phone\": \"\"\n}"
+							"body": "{\n    \"id\": 1,\n    \"kind\": 1,\n    \"mass\": 10,\n    \"building\": {\n        \"id\": 1,\n        \"address\": \"Кронверкский 49\"\n    },\n    \"building_part\": {\n        \"id\": 1,\n        \"num\": 1\n    },\n    \"floor\": 6,\n    \"room\": \"\",\n    \"description\": \"\",\n    \"is_full\": false,\n    \"status\": 2,\n    \"is_public\": false,\n    \"created_at\": \"2021-07-16T17:36:25.961942+03:00\",\n    \"email\": \"\",\n    \"phone\": \"\",\n    \"cur_fill_time\": \"Пока нет информации о времени заполнения\",\n    \"cur_takeout_wait_time\": \"Контейнер ещё не заполнен.\",\n    \"avg_fill_time\": \"1 day, 16:34:21.862497\",\n    \"avg_takeout_wait_time\": \"0:06:28.132844\"\n}"
 						}
 					]
 				},
@@ -3780,19 +3780,19 @@
 							"formdata": [
 								{
 									"key": "number",
-									"value": "5",
+									"value": "4",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{host}}/takeout-conditions/1",
+							"raw": "{{host}}/takeout-conditions/6",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"takeout-conditions",
-								"1"
+								"6"
 							]
 						}
 					},
@@ -3807,19 +3807,19 @@
 									"formdata": [
 										{
 											"key": "number",
-											"value": "5",
+											"value": "4",
 											"type": "text"
 										}
 									]
 								},
 								"url": {
-									"raw": "{{host}}/takeout-conditions/1",
+									"raw": "{{host}}/takeout-conditions/6",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
 										"takeout-conditions",
-										"1"
+										"6"
 									]
 								}
 							},
@@ -3829,7 +3829,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sun, 25 Jul 2021 11:28:23 GMT"
+									"value": "Sun, 22 Aug 2021 11:23:30 GMT"
 								},
 								{
 									"key": "Server",
@@ -3841,7 +3841,7 @@
 								},
 								{
 									"key": "Vary",
-									"value": "Accept, Accept-Language"
+									"value": "Accept, Accept-Language, Origin"
 								},
 								{
 									"key": "Allow",
@@ -3853,7 +3853,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "59"
+									"value": "121"
 								},
 								{
 									"key": "Content-Language",
@@ -3873,7 +3873,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"id\": 1,\n    \"type\": 1,\n    \"number\": 5,\n    \"building\": 1,\n    \"building_part\": 1\n}"
+							"body": "{\n    \"id\": 6,\n    \"type\": 1,\n    \"number\": 4,\n    \"building\": {\n        \"id\": 1,\n        \"address\": \"Кронверкский 49\"\n    },\n    \"building_part\": {\n        \"id\": 1,\n        \"num\": 1\n    }\n}"
 						}
 					]
 				},

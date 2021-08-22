@@ -2,6 +2,7 @@ from django.utils import timezone
 from rest_framework import generics, views, permissions
 from rest_framework.response import Response
 
+from rcs_back.utils.mixins import UpdateThenRetrieveModelMixin
 from rcs_back.takeouts_app.models import *
 from rcs_back.takeouts_app.serializers import *
 from rcs_back.takeouts_app.utils import *
@@ -64,14 +65,17 @@ class TakeoutConditionListView(generics.ListCreateAPIView):
             return TakeoutConditionSerializer
 
 
-class TakeoutConditionDetailView(generics.RetrieveUpdateDestroyAPIView):
+class TakeoutConditionDetailView(UpdateThenRetrieveModelMixin,
+                                 generics.RetrieveUpdateDestroyAPIView):
     queryset = TakeoutCondition.objects.all()
+    retrieve_serializer = TakeoutConditionSerializer
+    update_serializer = AddTakeoutConditionSerializer
 
     def get_serializer_class(self):
         if self.request.method == "GET":
-            return TakeoutConditionSerializer
+            return self.retrieve_serializer
         else:
-            return AddTakeoutConditionSerializer
+            return self.update_serializer
 
 
 class CollectedMassView(views.APIView):
