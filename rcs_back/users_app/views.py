@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.sites.shortcuts import get_current_site
 from djoser import signals
 from djoser.conf import settings as djoser_settings
 from djoser.compat import get_user_email
@@ -42,8 +43,9 @@ class ObtainRegistrationTokenView(APIView):
         token.set_token()
         token.save()
 
+        domain = get_current_site(request).domain
         resp = {}
-        resp["token"] = token.token
+        resp["signup_url"] = f"{domain}/signup?token={token.token}"
         return Response(resp)
 
 

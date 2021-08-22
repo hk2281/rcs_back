@@ -1764,7 +1764,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sun, 22 Aug 2021 08:26:55 GMT"
+									"value": "Sun, 22 Aug 2021 12:42:11 GMT"
 								},
 								{
 									"key": "Server",
@@ -1788,7 +1788,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "44"
+									"value": "75"
 								},
 								{
 									"key": "Content-Language",
@@ -1808,7 +1808,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"token\": \"UmBt3d3zSpy6Ik5LCxvS34ysW8YapnFL\"\n}"
+							"body": "{\n    \"signup_url\": \"e-kondr01.ru/signup?token=JryG8NpIBU0qX6Qdy4hEFttKfiANaveL\"\n}"
 						}
 					]
 				}

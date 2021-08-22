@@ -86,7 +86,7 @@ class RegistrationToken(models.Model):
         while True:
             token = self.generate_token()
             """Проверка на уникальность"""
-            if not self.objects.filter(
+            if not RegistrationToken.objects.filter(
                 token=token
             ).first():
                 break
