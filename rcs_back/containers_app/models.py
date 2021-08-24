@@ -116,10 +116,32 @@ class Building(BaseBuilding):
         blank=True
     )
 
-    containers_takeout_email = models.EmailField(
-        verbose_name="email компании, выносящей баки",
+    itmo_worker_name = models.CharField(
+        max_length=128,
+        verbose_name="ФИО коменданта здания",
         blank=True
     )
+
+    itmo_worker_phone = models.CharField(
+        max_length=16,
+        verbose_name="номер коменданта здания",
+        blank=True
+    )
+
+    get_container_room = models.CharField(
+        max_length=64,
+        verbose_name="аудитория, в которой можно получить контейнер",
+        blank=True
+    )
+
+    get_sticker_room = models.CharField(
+        max_length=64,
+        verbose_name="аудитория, в которой можно получить стикер",
+        blank=True
+    )
+
+    def get_building(self) -> "Building":
+        return self
 
     def __str__(self) -> str:
         return self.address
@@ -142,6 +164,9 @@ class BuildingPart(BaseBuilding):
         related_name="building_parts",
         verbose_name="здание"
     )
+
+    def get_building(self) -> Building:
+        return self.building
 
     def __str__(self) -> str:
         return f"корпус {self.num}"

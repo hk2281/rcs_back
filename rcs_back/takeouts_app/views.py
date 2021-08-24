@@ -15,10 +15,6 @@ class ContainersTakeoutListView(generics.ListCreateAPIView):
     serializer_class = ContainersTakeoutRequestSerializer
     queryset = ContainersTakeoutRequest.objects.all()
 
-    def perform_create(self, serializer):
-        instance = serializer.save()
-        containers_takeout_notify(request=instance)
-
 
 class ContainersTakeoutConfirmationView(generics.UpdateAPIView):
     """View для создания подтверждения выноса контейнеров"""

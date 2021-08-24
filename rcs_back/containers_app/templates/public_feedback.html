@@ -2,12 +2,12 @@
 {% block content %}
 {% autoescape on %}
 <div>
-    Посетитель сайта RCS оставил обратную связь{% if container_id %} по поводу контейнера №{{ container_id }}{%endif%}.
+    Посетитель контейнера{% if container_id %} с ID {{ container_id }}{%endif%}
 </div>
-<div>Оригинальный текст обращения:</div>
+<div>И контактным email: <a href="mailto:{{ email }}">{{ email }}</a></div>
+<div>Оставил сообщение:</div>
 <br>
 <div>{{ msg }}</div>
 <br>
-<div>Email, указанный пользователем: {{ email }}</div>
 {% endautoescape %}
 {% endblock %}

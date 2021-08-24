@@ -58,9 +58,12 @@ def public_container_add_notify(container_id: int) -> None:
     добавленного контейнера"""
     time.sleep(10)  # Ждём сохранения в БД и генерации стикера
     container = Container.objects.get(pk=container_id)
+    is_ecobox = container.kind == Container.ECOBOX
 
     msg = render_to_string("public_container_add.html", {
-        "container": container
+        "is_ecobox": is_ecobox,
+        "container_room": container.building.get_container_room,
+        "sticker_room": container.building.get_sticker_room
     }
     )
 
@@ -71,6 +74,7 @@ def public_container_add_notify(container_id: int) -> None:
         [container.email]
     )
     email.content_subtype = "html"
+    email.attach_file(container.sticker.path)
     email.send()
 
 
@@ -80,25 +84,21 @@ def check_mass_condition_to_notify(container: Container) -> None:
     trigger = container.get_mass_rule_trigger()
     if trigger:
         if isinstance(trigger, BuildingPart):
-            takeout_condition_met_notify(
-                "mass",
-                trigger.building,
-                building_part=container.building_part
-            )
             if not trigger.is_mass_condition_commited():
                 MassTakeoutConditionCommit.objects.create(
                     building=container.building,
                     building_part=container.building_part
                 )
         if isinstance(trigger, Building):
-            takeout_condition_met_notify(
-                "mass",
-                trigger
-            )
             if not trigger.is_mass_condition_commited():
                 MassTakeoutConditionCommit.objects.create(
                     building=container.building
                 )
+
+        takeout_condition_met_notify(
+            trigger.get_building(),
+            trigger.containers_for_takeout()
+        )
 
 
 @shared_task
