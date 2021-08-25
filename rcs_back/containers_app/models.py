@@ -1,6 +1,9 @@
+import datetime
+
 from django.db import models
 from django.core.cache import cache
 from django.utils import timezone
+from typing import Union
 
 
 tz = timezone.get_default_timezone()
@@ -31,8 +34,8 @@ class BaseBuilding(models.Model):
             return False
 
     def meets_time_takeout_condition(self) -> bool:
-        '''Выполняются ли в здании/корпусе условия для сбора
-        по времени.'''
+        """Выполняются ли в здании/корпусе условия для сбора
+        по времени."""
         for container in self.containers.all():
             if container.check_time_conditions():
                 return True
@@ -179,6 +182,7 @@ class BuildingPart(BaseBuilding):
 class Container(models.Model):
     """ Модель контейнера """
 
+    """Варианты статуса"""
     WAITING = 1
     ACTIVE = 2
     INACTIVE = 3
@@ -188,6 +192,7 @@ class Container(models.Model):
         (INACTIVE, "не активный")
     )
 
+    """Варианты вида"""
     ECOBOX = 1
     OFFICE_CAN = 2
     OFFICE_BOX = 3
@@ -196,6 +201,11 @@ class Container(models.Model):
         (OFFICE_CAN, "офисная урна"),
         (OFFICE_BOX, "коробка из-под бумаги")
     )
+
+    """Масса вида"""
+    ECOBOX_MASS = 10
+    OFFICE_CAN_MASS = 15
+    OFFICE_BOX_MASS = 20
 
     kind = models.PositiveSmallIntegerField(
         choices=KIND_CHOICES,
@@ -251,9 +261,10 @@ class Container(models.Model):
         blank=True
     )
 
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name="время добавления в систему"
+    activated_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name="время активации"
     )
 
     email = models.EmailField(
@@ -272,28 +283,12 @@ class Container(models.Model):
         verbose_name="полный (для сортировки)"
     )
 
-    def is_reported(self) -> bool:
-        """Есть ли активное сообщение о заполненности
-        этого контейнера?"""
-        report = FullContainerReport.objects.filter(
-            container=self).order_by(
-                "-reported_full_at"
-        ).first()
-        if report and not report.emptied_at:
-            return True
-        else:
-            return False
-
     def mass(self) -> int:
         """Возвращает массу контейнера по его виду"""
-        ECOBOX_MASS = 10
-        OFFICE_CAN_MASS = 15
-        OFFICE_BOX_MASS = 20
-
         mass_dict = {
-            self.ECOBOX: ECOBOX_MASS,
-            self.OFFICE_CAN: OFFICE_CAN_MASS,
-            self.OFFICE_BOX: OFFICE_BOX_MASS
+            self.ECOBOX: self.ECOBOX_MASS,
+            self.OFFICE_CAN: self.OFFICE_CAN_MASS,
+            self.OFFICE_BOX: self.OFFICE_BOX_MASS
         }
 
         if self.kind in mass_dict:
@@ -301,19 +296,39 @@ class Container(models.Model):
         else:
             return 0
 
-    def last_full_report(self):
-        """Возвращает FullContainerReport
-        для этого контейнера, который ещё не
-        отметили как опустошённый (то есть последний
-        незакрытый), либо None.
-        Этот FullContainerReport также должен быть
-        последним (актуальным)"""
-        report = FullContainerReport.objects.filter(
-            container=self).order_by(
-                "-reported_full_at"
+    def last_full_report(self) -> Union["FullContainerReport", None]:
+        """Возвращает самый новый и
+        незакрытый FullContainerReport
+        для этого контейнера"""
+        report = self.full_reports.order_by(
+            "-reported_full_at"
         ).first()
         if report and not report.emptied_at:
             return report
+        else:
+            return None
+
+    def last_emptied_report(self) -> Union["FullContainerReport", None]:
+        """Возвращает последний закрытый FullContainerReport
+        для этого контейнера"""
+        reports = self.full_reports.order_by(
+            "-reported_full_at"
+        )
+        if reports:
+            if reports[0].emptied_at:
+                return reports[0]
+            if len(reports) > 1 and reports[1].emptied_at:
+                return reports[1]
+        else:
+            return None
+
+    def empty_from(self) -> Union[datetime.datetime, None]:
+        """Возвращает, с какого момента контейнер является пустым"""
+        if not self.is_full():
+            if self.last_emptied_report():
+                return self.last_emptied_report().emptied_at
+            else:
+                return self.activated_at
         else:
             return None
 
@@ -364,40 +379,42 @@ class Container(models.Model):
         else:
             return False
 
+    def get_time_condition_days(self) -> int:
+        """Возвращает максимальное кол-во дней, которое
+        этот контейнер может быть заполнен по условию"""
+        if self.is_public:
+            if (self.building_part and
+                    self.building_part.public_days_condition()):
+                return self.building_part.public_days_condition()
+            else:
+                return self.building.public_days_condition()
+        else:
+            if (self.building_part and
+                    self.building_part.office_days_condition()):
+                return self.building_part.office_days_condition()
+            else:
+                return self.building.office_days_condition()
+
     def check_time_conditions(self) -> bool:
         '''Выполнены ли условия "не больше N дней"'''
-        if self.last_full_report():
-            return True
-        previous_reports = self.full_reports.order_by("-emptied_at")
-        if not previous_reports:
-            return False
+        if self.get_time_condition_days():
 
-        days = (timezone.now() - previous_reports[0].emptied_at).days
-        if self.is_public:
-            if (self.building_part.public_days_condition() and
-                    days > self.building_part.public_days_condition()):
+            if self.is_full():
                 return True
-            if (self.building.public_days_condition() and
-                    days > self.building.public_days_condition()):
-                return True
-            return False
+
+            days = (timezone.now() - self.empty_from()).days
+            return days > self.get_time_condition_days()
         else:
-            if (self.building_part.office_days_condition() and
-                    days > self.building_part.office_days_condition()):
-                return True
-            if (self.building.office_days_condition() and
-                    days > self.building.office_days_condition()):
-                return True
+            """Если такого условия нет, то False"""
             return False
 
     def needs_takeout(self) -> bool:
         """Нужно ли вынести контейнер"""
         return self.is_full() or self.check_time_conditions()
 
-    def get_mass_rule_trigger(self):
-        """Проверяет, выполняется ли правило по массе.
-        Если да, то возвращает корпус контейнера или здание контейнера.
-        Если нет, то возвращает None"""
+    def get_mass_rule_trigger(self) -> Union[Building, BuildingPart, None]:
+        """Проверяет, выполняется ли условие по массе, и если да,
+        то возвращает, чьё это условие"""
         if (self.building_part and
                 self.building_part.meets_mass_takeout_condition()):
             return self.building_part
@@ -410,9 +427,8 @@ class Container(models.Model):
         if self.last_full_report():
             return "Контейнер уже заполнен."
         else:
-            previous_reports = self.full_reports.order_by("-emptied_at")
-            if previous_reports:
-                fill_time = timezone.now() - previous_reports[0].emptied_at
+            if self.empty_from():
+                fill_time = timezone.now() - self.empty_from()
                 return str(fill_time)
             else:
                 return "Пока нет информации о времени заполнения"
@@ -434,6 +450,32 @@ class Container(models.Model):
         else:
             return avg_fill_time
 
+    def calc_avg_fill_time(self) -> Union[datetime.timedelta, None]:
+        """Считает среднее время заполнения контейнера
+        (точнее, среднее время до первого сообщения о заполненности)"""
+        reports = self.full_reports.order_by("reported_full_at")
+        if len(reports) > 1:
+            sum_time = datetime.timedelta(seconds=0)
+            count = 0
+            for i in range(len(reports) - 1):
+                if reports[i].emptied_at:
+                    fill_time = reports[i+1].reported_full_at - \
+                        reports[i].emptied_at
+                    sum_time += fill_time
+                    count += 1
+            avg_fill_time = sum_time / count
+            return avg_fill_time
+        else:
+            return None
+
+    def cache_avg_fill_time(self) -> None:
+        """Сохраняем в кэш среднее время заполнения контейнера"""
+        cache.set(
+            f"{self.pk}_avg_fill_time",
+            str(self.calc_avg_fill_time()),
+            None
+        )
+
     def avg_takeout_wait_time(self) -> str:
         """Среднее время ожидания выноса этого контейнера"""
         avg_takeout_wat_time = cache.get(f"{self.pk}_avg_takeout_wait_time")
@@ -441,6 +483,29 @@ class Container(models.Model):
             return "Среднее время ожидания выноса контейнера рассчитывается..."
         else:
             return avg_takeout_wat_time
+
+    def calc_avg_takeout_wait_time(self) -> Union[datetime.timedelta, None]:
+        """Считает среднее время ожидания выноса контейнера"""
+        reports = self.full_reports.all()
+        if not reports or (len(reports) == 1 and not reports[0].emptied_at):
+            return None
+        else:
+            sum_time = datetime.timedelta(seconds=0)
+            count = 0
+            for report in reports:
+                if report.takeout_wait_time():
+                    sum_time += report.takeout_wait_time()
+                    count += 1
+            avg_takeout_wait_time = sum_time / count
+            return avg_takeout_wait_time
+
+    def cache_avg_takeout_wait_time(self) -> None:
+        """Сохраняем в кэш среднее время ожидания выноса контейнера"""
+        cache.set(
+            f"{self.pk}_avg_takeout_wait_time",
+            str(self.calc_avg_takeout_wait_time()),
+            None
+        )
 
     def __str__(self) -> str:
         return f"Контейнер №{self.pk}"
@@ -481,6 +546,13 @@ class FullContainerReport(models.Model):
         default=False,
         verbose_name="сотрудником"
     )
+
+    def takeout_wait_time(self) -> Union[datetime.timedelta, None]:
+        """Возвращает время ожидания выноса"""
+        if self.emptied_at:
+            return self.emptied_at - self.reported_full_at
+        else:
+            return None
 
     def __str__(self) -> str:
         return (f"Контейнер №{self.container.pk} заполнен, "

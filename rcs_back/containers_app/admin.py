@@ -5,8 +5,8 @@ from .models import *
 
 class ContainerAdmin(admin.ModelAdmin):
     readonly_fields = [
-        "is_reported",
         "mass",
+        "activated_at",
         "cur_fill_time",
         "cur_takeout_wait_time",
         "avg_fill_time",
@@ -35,7 +35,13 @@ class BuildingAdmin(admin.ModelAdmin):
     ]
 
 
+class FullContainerReportAdmin(admin.ModelAdmin):
+    readonly_fields = [
+        "takeout_wait_time"
+    ]
+
+
 admin.site.register(Container, ContainerAdmin)
 admin.site.register(Building, BuildingAdmin)
 admin.site.register(BuildingPart, BuildingAdmin)
-admin.site.register(FullContainerReport)
+admin.site.register(FullContainerReport, FullContainerReportAdmin)

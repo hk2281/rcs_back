@@ -8,48 +8,9 @@ from django.utils import timezone
 from celery import shared_task
 
 from rcs_back.containers_app.models import (
-    FullContainerReport, Container, Building, BuildingPart)
+    FullContainerReport, Container, BuildingPart)
 from rcs_back.takeouts_app.utils.email import takeout_condition_met_notify
 from rcs_back.takeouts_app.models import MassTakeoutConditionCommit
-
-
-def calc_avg_fill_time(container: Container) -> str:
-    """Считаем среднее время заполнения контейнера"""
-    reports = FullContainerReport.objects.filter(
-        container=container
-    ).order_by(
-        "reported_full_at"
-    )
-    if len(reports) > 1:
-        sum_time = datetime.timedelta(seconds=0)
-        for i in range(len(reports) - 1):
-            fill_time = reports[i+1].reported_full_at - reports[i].emptied_at
-            sum_time += fill_time
-        avg_fill_time = str(sum_time / (len(reports) - 1))
-        # Сохраняем в кэш
-        cache.set(f"{container.pk}_avg_fill_time", avg_fill_time, None)
-        return f"container {container.pk}: {avg_fill_time}"
-    else:
-        return "Контейнер заполнился только первый раз"
-
-
-def calc_avg_takeout_wait_time(container: Container) -> str:
-    """Считаем среднее время ожидания выноса контейнера"""
-    reports = FullContainerReport.objects.filter(
-        container=container
-    )
-    if not len(reports) or (len(reports) == 1 and not reports[0].emptied_at):
-        return "Недостаточно данных"
-    else:
-        sum_time = datetime.timedelta(seconds=0)
-        for report in reports:
-            takeout_wait_time = report.emptied_at - report.reported_full_at
-            sum_time += takeout_wait_time
-        avg_takeout_wait_time = str(sum_time / len(reports))
-        # Сохраняем в кэш
-        cache.set(f"{container.pk}_avg_takeout_wait_time",
-                  avg_takeout_wait_time, None)
-        return f"container {container.pk}: {avg_takeout_wait_time}"
 
 
 @shared_task
@@ -80,20 +41,18 @@ def public_container_add_notify(container_id: int) -> None:
 
 def check_mass_condition_to_notify(container: Container) -> None:
     """Проверяем, нужно ли отправить оповещение для сбора контейнеров.
-    Если правило по массе выполняется, то оповещаем и фиксируем выполнение."""
+    Если условие по массе выполняется, то оповещаем и фиксируем выполнение."""
     trigger = container.get_mass_rule_trigger()
     if trigger:
-        if isinstance(trigger, BuildingPart):
-            if not trigger.is_mass_condition_commited():
-                MassTakeoutConditionCommit.objects.create(
-                    building=container.building,
-                    building_part=container.building_part
-                )
-        if isinstance(trigger, Building):
-            if not trigger.is_mass_condition_commited():
-                MassTakeoutConditionCommit.objects.create(
-                    building=container.building
-                )
+        """Выполняется условие по массе"""
+        if not trigger.is_mass_condition_commited():
+            """Нет коммита выполнения"""
+            building_part = container.building_part if isinstance(
+                trigger, BuildingPart) else None
+            MassTakeoutConditionCommit.objects.create(
+                building=container.building,
+                building_part=building_part
+            )
 
         takeout_condition_met_notify(
             trigger.get_building(),
@@ -113,7 +72,7 @@ def handle_first_full_report(container_id: int, by_staff: bool) -> None:
 
     time.sleep(10)  # Ждём сохранения в БД
 
-    calc_avg_fill_time(container)
+    container.cache_avg_fill_time()
 
     """Если выполняются условия для вывоза по
     кол-ву бумаги, сообщаем"""
@@ -148,7 +107,7 @@ def handle_repeat_full_report(container_id: int, by_staff: bool) -> None:
 @shared_task
 def handle_empty_container(container_id: int) -> None:
     """При опустошении контейнера нужно запомнить время
-    и перечитать среднее время выноса"""
+    и пересчитать среднее время выноса"""
     container = Container.objects.get(pk=container_id)
     container._is_full = False  # Для сортировки
     container.save()
@@ -157,4 +116,4 @@ def handle_empty_container(container_id: int) -> None:
         last_full_report.emptied_at = timezone.now()
         last_full_report.save()
         time.sleep(10)  # Ждём сохранения в БД
-        calc_avg_takeout_wait_time(container)
+        container.cache_avg_takeout_wait_time()

@@ -17,14 +17,14 @@ class FullContainerReportView(generics.CreateAPIView):
         if "container" in serializer.validated_data:
             container = serializer.validated_data["container"]
             by_staff = self.request.user.is_authenticated
-            if container.is_reported():
-                # Повторное сообщение
+            if container.last_full_report():
+                # Повторное сообщение о заполнении
                 handle_repeat_full_report.delay(
                     container.pk,
                     by_staff
                 )
             else:
-                # Заполнение контейнера через главную страницу
+                # Первое сообщение
                 handle_first_full_report.delay(
                     container.pk,
                     by_staff
@@ -107,12 +107,6 @@ class BuildingListView(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
 
 
-class GetStickerView(generics.RetrieveAPIView):
-    """View для получения стикера контейнера"""
-    queryset = Container.objects.all()
-    serializer_class = ContainerStickerSerializer
-
-
 class ContainerPublicAddView(generics.CreateAPIView):
     """Добавление своего контейнера с главной страницы"""
     queryset = Container.objects.all()
@@ -121,7 +115,6 @@ class ContainerPublicAddView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         instance = serializer.save(status=Container.WAITING)
-        print(instance.pk)
         public_container_add_notify.delay(instance.pk)
 
 
@@ -165,17 +158,18 @@ class EmptyContainerView(views.APIView):
     экоотделом"""
 
     def post(self, request, *args, **kwargs):
-        container = Container.objects.filter(
-            pk=self.kwargs["pk"]
-        ).first()
-        if container:
-            last_report = container.last_full_report()
-            if last_report:
-                """Этот view используется для корректировки
-                ошибок, поэтому не вызываем handle_empty_container
-                (там устанавливается время опустошения)"""
-                last_report.delete()
-                container._is_full = False  # Для сортировки
-                container.save()
+        if "pk" in self.kwargs:
+            container = Container.objects.filter(
+                pk=self.kwargs["pk"]
+            ).first()
+            if container:
+                last_report = container.last_full_report()
+                if last_report:
+                    """Этот view используется для корректировки
+                    ошибок, поэтому не вызываем handle_empty_container
+                    (там устанавливается время опустошения)"""
+                    last_report.delete()
+                    container._is_full = False  # Для сортировки
+                    container.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)

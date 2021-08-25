@@ -87,7 +87,7 @@ class ContainerSerializer(serializers.ModelSerializer):
             "is_full",
             "status",
             "is_public",
-            "created_at",
+            "sticker",
             "email",
             "phone",
             "cur_fill_time",
@@ -114,16 +114,6 @@ class ChangeContainerSerializer(serializers.ModelSerializer):
             "is_public",
             "email",
             "phone",
-        ]
-
-
-class ContainerStickerSerializer(serializers.ModelSerializer):
-    """Сериализатор стикера контейнера"""
-    class Meta:
-        model = Container
-        fields = [
-            "id",
-            "sticker"
         ]
 
 
