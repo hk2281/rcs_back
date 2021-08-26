@@ -296,6 +296,10 @@ class Container(models.Model):
         else:
             return 0
 
+    def is_active(self) -> bool:
+        """Активен ли контейнер?"""
+        return self.status == self.ACTIVE
+
     def last_full_report(self) -> Union["FullContainerReport", None]:
         """Возвращает самый новый и
         незакрытый FullContainerReport
@@ -354,7 +358,7 @@ class Container(models.Model):
     def is_full(self) -> bool:
         """Полный ли контейнер?
         Учитывается количество сообщений, которые надо игнорировать."""
-        if self.last_full_report():
+        if self.is_active() and self.last_full_report():
 
             if not self.is_public:
                 return True
@@ -371,7 +375,7 @@ class Container(models.Model):
     def is_reported_just_enough(self) -> bool:
         """Ровно ли достаточно сообщений о заполненности поступило,
         чтобы считать контейнер полным?"""
-        if self.last_full_report():
+        if self.is_active() and self.last_full_report():
             if not self.is_public:
                 return self.last_full_report().count == 1
             ignore_count = self.ignore_reports_count()
@@ -397,7 +401,7 @@ class Container(models.Model):
 
     def check_time_conditions(self) -> bool:
         '''Выполнены ли условия "не больше N дней"'''
-        if self.get_time_condition_days():
+        if self.is_active() and self.get_time_condition_days():
 
             if self.is_full():
                 return True
@@ -422,25 +426,26 @@ class Container(models.Model):
             return self.building
         return None
 
-    def cur_fill_time(self) -> str:
-        """Текущее время заполнения контейнера"""
-        if self.last_full_report():
-            return "Контейнер уже заполнен."
-        else:
-            if self.empty_from():
-                fill_time = timezone.now() - self.empty_from()
-                return str(fill_time)
+    def cur_fill_time(self) -> Union[datetime.timedelta, None]:
+        """Текущее время заполнения контейнера.
+        Если None - то уже заполнен (либо не активен)"""
+        if self.is_active():
+            if self.last_full_report():
+                return None
             else:
-                return "Пока нет информации о времени заполнения"
+                fill_time = timezone.now() - self.empty_from()
+                return fill_time
+        else:
+            return None
 
-    def cur_takeout_wait_time(self) -> str:
+    def cur_takeout_wait_time(self) -> Union[datetime.timedelta, None]:
         """Текущее время ожидания выноса контейнера"""
-        if self.last_full_report():
+        if self.is_active() and self.last_full_report():
             wait_time = (timezone.now() -
                          self.last_full_report().reported_full_at)
-            return str(wait_time)
+            return wait_time
         else:
-            return "Контейнер ещё не заполнен."
+            return None
 
     def avg_fill_time(self) -> str:
         """Среднее время заполнения этого контейнера"""

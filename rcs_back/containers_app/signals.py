@@ -21,6 +21,6 @@ def check_container_state(sender, instance: Container,
         instance.save()
 
     """Записываем время активации"""
-    if instance.status == Container.ACTIVE and not instance.activated_at:
+    if instance.is_active() and not instance.activated_at:
         instance.activated_at = timezone.now()
         instance.save()
