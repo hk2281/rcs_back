@@ -1,7 +1,6 @@
 import datetime
 
 from django.db import models
-from django.core.cache import cache
 from django.utils import timezone
 from typing import Union
 
@@ -283,6 +282,18 @@ class Container(models.Model):
         verbose_name="полный (для сортировки)"
     )
 
+    avg_takeout_wait_time = models.DurationField(
+        blank=True,
+        null=True,
+        verbose_name="среднее время ожидания выноса контейнера"
+    )
+
+    avg_fill_time = models.DurationField(
+        blank=True,
+        null=True,
+        verbose_name="cреднее время заполнения контейнера"
+    )
+
     def mass(self) -> int:
         """Возвращает массу контейнера по его виду"""
         mass_dict = {
@@ -447,14 +458,6 @@ class Container(models.Model):
         else:
             return None
 
-    def avg_fill_time(self) -> str:
-        """Среднее время заполнения этого контейнера"""
-        avg_fill_time = cache.get(f"{self.pk}_avg_fill_time")
-        if not avg_fill_time:
-            return "Среднее время заполнения контейнера рассчитывается..."
-        else:
-            return avg_fill_time
-
     def calc_avg_fill_time(self) -> Union[datetime.timedelta, None]:
         """Считает среднее время заполнения контейнера
         (точнее, среднее время до первого сообщения о заполненности)"""
@@ -473,22 +476,6 @@ class Container(models.Model):
         else:
             return None
 
-    def cache_avg_fill_time(self) -> None:
-        """Сохраняем в кэш среднее время заполнения контейнера"""
-        cache.set(
-            f"{self.pk}_avg_fill_time",
-            str(self.calc_avg_fill_time()),
-            None
-        )
-
-    def avg_takeout_wait_time(self) -> str:
-        """Среднее время ожидания выноса этого контейнера"""
-        avg_takeout_wat_time = cache.get(f"{self.pk}_avg_takeout_wait_time")
-        if not avg_takeout_wat_time:
-            return "Среднее время ожидания выноса контейнера рассчитывается..."
-        else:
-            return avg_takeout_wat_time
-
     def calc_avg_takeout_wait_time(self) -> Union[datetime.timedelta, None]:
         """Считает среднее время ожидания выноса контейнера"""
         reports = self.full_reports.all()
@@ -503,14 +490,6 @@ class Container(models.Model):
                     count += 1
             avg_takeout_wait_time = sum_time / count
             return avg_takeout_wait_time
-
-    def cache_avg_takeout_wait_time(self) -> None:
-        """Сохраняем в кэш среднее время ожидания выноса контейнера"""
-        cache.set(
-            f"{self.pk}_avg_takeout_wait_time",
-            str(self.calc_avg_takeout_wait_time()),
-            None
-        )
 
     def __str__(self) -> str:
         return f"Контейнер №{self.pk}"

@@ -72,14 +72,14 @@ def handle_first_full_report(container_id: int, by_staff: bool) -> None:
 
     time.sleep(10)  # Ждём сохранения в БД
 
-    container.cache_avg_fill_time()
+    container.avg_fill_time = container.calc_avg_fill_time()
 
     """Если выполняются условия для вывоза по
     кол-ву бумаги, сообщаем"""
     if by_staff or container.is_reported_just_enough():
         container._is_full = True  # Для сортировки
-        container.save()
         check_mass_condition_to_notify(container)
+    container.save()
 
 
 @shared_task
@@ -109,11 +109,11 @@ def handle_empty_container(container_id: int) -> None:
     """При опустошении контейнера нужно запомнить время
     и пересчитать среднее время выноса"""
     container = Container.objects.get(pk=container_id)
-    container._is_full = False  # Для сортировки
-    container.save()
     last_full_report = container.last_full_report()
     if last_full_report:
         last_full_report.emptied_at = timezone.now()
         last_full_report.save()
         time.sleep(10)  # Ждём сохранения в БД
-        container.cache_avg_takeout_wait_time()
+        container.avg_takeout_wait_time = container.calc_avg_takeout_wait_time()
+    container._is_full = False  # Для сортировки
+    container.save()
