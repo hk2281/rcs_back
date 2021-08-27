@@ -12,7 +12,7 @@ from rcs_back.users_app.views import *
 
 
 urlpatterns = [
-    path(f"api/{settings.ADMIN_URL}", admin.site.urls),
+    path(settings.ADMIN_URL, admin.site.urls),
     path("api/auth/users/me/", RetrieveCurrentUserView.as_view()),
     path("api/auth/registration-token", ObtainRegistrationTokenView.as_view()),
     path("api/auth/users/", CreateUserWithTokenView.as_view()),
