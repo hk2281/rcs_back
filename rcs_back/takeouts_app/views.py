@@ -25,9 +25,10 @@ class ContainersTakeoutConfirmationView(generics.UpdateAPIView):
 
     def perform_update(self, serializer):
         serializer.save(confirmed_at=timezone.now())
-        emptied_containers = serializer.validated_data["emptied_containers"]
-        for container in emptied_containers:
-            handle_empty_container.delay(container.pk)
+        if "emptied_containers" in serializer.validated_data:
+            emptied_containers = serializer.validated_data["emptied_containers"]
+            for container in emptied_containers:
+                handle_empty_container.delay(container.pk)
 
 
 class TankTakeoutRequestListView(generics.ListCreateAPIView):

@@ -1,6 +1,8 @@
-from datetime import timedelta
+import datetime
+
 from django.db import models
 from django.utils import timezone
+from typing import Union
 
 from rcs_back.containers_app.models import Container, Building, BuildingPart
 
@@ -9,7 +11,7 @@ tz = timezone.get_default_timezone()
 
 
 class ContainersTakeoutRequest(models.Model):
-    """Модель отчёта о выносе контейнеров из здания"""
+    """Модель отчёта о сборе контейнеров из здания"""
 
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -101,14 +103,14 @@ class TankTakeoutRequest(models.Model):
         null=True
     )
 
-    def wait_time(self) -> str:
+    def wait_time(self) -> Union[datetime.timedelta, None]:
         """Время ожидания вывоза"""
         if self.confirmed_at:
-            return str(self.confirmed_at - self.created_at)
+            return self.confirmed_at - self.created_at
         else:
-            return "Ещё не вывезли"
+            return None
 
-    def fill_time(self) -> str:
+    def fill_time(self) -> Union[datetime.timedelta, None]:
         """Время заполнения бака"""
         requests = TankTakeoutRequest.objects.filter(
             building=self.building
@@ -118,20 +120,21 @@ class TankTakeoutRequest(models.Model):
             "-created_at"
         )
         if requests and requests[0].confirmed_at:
-            return str(self.created_at-requests[0].confirmed_at)
+            return self.created_at-requests[0].confirmed_at
         else:
-            return "Нельзя посчитать"
+            return None
 
     def mass(self) -> int:
         """Рассчитанная масса вывоза как
         сумма масс выносов контейнеров"""
-        previous_tank_takeout = TankTakeoutRequest.objects.filter(
-            building=self.building, confirmed_at__lt=self.created_at
+        previous_tank_takeouts = TankTakeoutRequest.objects.filter(
+            building=self.building,
+            created_at__lt=self.created_at
         ).order_by("-created_at")
-        if previous_tank_takeout:
-            previous_datetime = previous_tank_takeout[0].confirmed_at
+        if previous_tank_takeouts and previous_tank_takeouts[0].confirmed_at:
+            previous_datetime = previous_tank_takeouts[0].confirmed_at
         else:
-            previous_datetime = self.created_at - timedelta(days=365)
+            previous_datetime = self.created_at - datetime.timedelta(days=365)
         takeouts = ContainersTakeoutRequest.objects.filter(
             building=self.building
         ).filter(
