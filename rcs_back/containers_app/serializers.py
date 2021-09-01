@@ -24,7 +24,6 @@ class BuildingSerializer(serializers.ModelSerializer):
             "id",
             "address",
             "itmo_worker_email",
-            "containers_takeout_email",
             "building_parts"
         ]
 
