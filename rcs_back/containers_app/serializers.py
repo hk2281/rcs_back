@@ -86,7 +86,6 @@ class ContainerSerializer(serializers.ModelSerializer):
             "description",
             "is_full",
             "status",
-            "is_public",
             "sticker",
             "email",
             "phone",
@@ -111,7 +110,6 @@ class ChangeContainerSerializer(serializers.ModelSerializer):
             "room",
             "description",
             "status",
-            "is_public",
             "email",
             "phone",
         ]

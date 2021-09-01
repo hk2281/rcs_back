@@ -11,16 +11,18 @@ def check_time_conditions() -> str:
     buildings_for_takeout = []
     building_parts_for_takeout = []
     for building in buildings:
+        building_part_notified = False
         building_parts = building.building_parts.all()
         if building_parts:
             for building_part in building_parts:
                 if building_part.needs_takeout():
+                    building_part_notified = True
                     takeout_condition_met_notify(
                         building, building_part.containers_for_takeout()
                     )
 
                     building_parts_for_takeout.append(building_part)
-        else:
+        if not building_part_notified:
             if building.needs_takeout():
                 takeout_condition_met_notify(
                     building, building.containers_for_takeout()

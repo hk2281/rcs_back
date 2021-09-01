@@ -1,8 +1,9 @@
 import datetime
 
 from django.db import models
+from django.db.models.query import QuerySet
 from django.utils import timezone
-from typing import Union
+from typing import Union, List
 
 from rcs_back.containers_app.models import Container, Building, BuildingPart
 
@@ -66,6 +67,16 @@ class ContainersTakeoutRequest(models.Model):
             for container in self.emptied_containers.all():
                 mass += container.mass()
         return mass
+
+    def unconfirmed_containers(self) -> QuerySet:
+        """Контейнеры, которые добавили в сбор при создании,
+        но они не были опустошены"""
+        return self.containers.difference(self.emptied_containers.all())
+
+    def emptied_containers_match(self) -> float:
+        """Соответствие (действительно собранных контейнеров /
+        число из списка на сбор)"""
+        return self.emptied_containers.count() / self.containers.count()
 
     def __str__(self) -> str:
         return (f"Запрос сбора контейнеров от "
@@ -146,6 +157,20 @@ class TankTakeoutRequest(models.Model):
         for takeout in takeouts:
             mass += takeout.mass()
         return mass
+
+    def confirmed_mass_match(self) -> Union[float, None]:
+        """Соответствие (рассчитанная масса / подтверждённую"""
+        if self.confirmed_mass:
+            return self.mass() / self.confirmed_mass
+        else:
+            return None
+
+    def mass_difference(self) -> Union[int, None]:
+        """Разность рассчитанной массы и подтверждённой"""
+        if self.confirmed_mass:
+            return self.mass() - self.confirmed_mass
+        else:
+            return None
 
     def __str__(self) -> str:
         return (f"Запрос вывоза накопительного бака от "

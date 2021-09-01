@@ -1,6 +1,7 @@
 import datetime
 
 from django.db import models
+from django.db.models.query import QuerySet
 from django.utils import timezone
 from typing import Union
 
@@ -45,7 +46,7 @@ class BaseBuilding(models.Model):
         return (self.meets_mass_takeout_condition() or
                 self.meets_time_takeout_condition())
 
-    def containers_for_takeout(self):
+    def containers_for_takeout(self) -> QuerySet:
         """Возвращает список контейнеров, которые нужно вынести"""
         containers_for_takeout = []
         for container in self.containers.all():
@@ -92,14 +93,18 @@ class BaseBuilding(models.Model):
             return True
         return False
 
-    def collected_mass(self) -> int:
-        """Собранная масса макулатуры за какой-то промежуток"""
+    def calculated_collected_mass(self) -> int:
+        """Собранная масса макулатуры, посчитанная как среднее"""
         mass = 0
         for request in self.containers_takeout_requests.filter(
             confirmed_at__isnull=False
         ):
             mass += request.mass()
         return mass
+
+    def container_count(self) -> int:
+        """Кол-во активных контейнеров"""
+        return self.containers.filter(status=Container.ACTIVE).count()
 
     class Meta:
         abstract = True
@@ -144,6 +149,24 @@ class Building(BaseBuilding):
 
     def get_building(self) -> "Building":
         return self
+
+    def confirmed_collected_mass(self) -> int:
+        """Суммарная масса собранной макулатуры,
+        подтверждённая после вывоза бака"""
+        mass = 0
+        for request in self.tank_takeout_requests.all():
+            if request.confirmed_mass:
+                mass += request.confirmed_mass
+        return mass
+
+    def avg_fill_speed(self) -> float:
+        """Средняя скорость сбора макулатуры (кг/месяц)"""
+        if self.tank_takeout_requests.order_by("created_at")[0].confirmed_mass:
+            start_date = self.tank_takeout_requests.order_by("created_at")[
+                0].confirmed_at
+        month_count = (timezone.now().year - start_date.year) * \
+            12 + (timezone.now().month - start_date.month)
+        return self.confirmed_collected_mass() / month_count
 
     def __str__(self) -> str:
         return self.address
@@ -193,17 +216,17 @@ class Container(models.Model):
 
     """Варианты вида"""
     ECOBOX = 1
-    OFFICE_CAN = 2
+    PUBLIC_ECOBOX = 2
     OFFICE_BOX = 3
     KIND_CHOICES = (
         (ECOBOX, "экобокс"),
-        (OFFICE_CAN, "офисная урна"),
+        (PUBLIC_ECOBOX, "экобокс в общественном месте"),
         (OFFICE_BOX, "коробка из-под бумаги")
     )
 
     """Масса вида"""
     ECOBOX_MASS = 10
-    OFFICE_CAN_MASS = 15
+    PUBLIC_ECOBOX_MASS = 15
     OFFICE_BOX_MASS = 20
 
     kind = models.PositiveSmallIntegerField(
@@ -247,11 +270,6 @@ class Container(models.Model):
         choices=STATUS_CHOICES,
         default=ACTIVE,
         verbose_name="состояние"
-    )
-
-    is_public = models.BooleanField(
-        default=False,
-        verbose_name="находится в общественном месте"
     )
 
     sticker = models.ImageField(
@@ -298,7 +316,7 @@ class Container(models.Model):
         """Возвращает массу контейнера по его виду"""
         mass_dict = {
             self.ECOBOX: self.ECOBOX_MASS,
-            self.OFFICE_CAN: self.OFFICE_CAN_MASS,
+            self.PUBLIC_ECOBOX: self.PUBLIC_ECOBOX_MASS,
             self.OFFICE_BOX: self.OFFICE_BOX_MASS
         }
 
@@ -307,9 +325,20 @@ class Container(models.Model):
         else:
             return 0
 
+    def collected_mass(self) -> int:
+        """Рассчитанная суммарная масса, собранная из этого контейнера"""
+        takeout_count = self.full_reports.filter(
+            emptied_at__isnull=False
+        ).count()
+        return takeout_count * self.mass()
+
     def is_active(self) -> bool:
         """Активен ли контейнер?"""
         return self.status == self.ACTIVE
+
+    def is_public(self) -> bool:
+        """Находится в общественном месте?"""
+        return self.kind == self.PUBLIC_ECOBOX
 
     def last_full_report(self) -> Union["FullContainerReport", None]:
         """Возвращает самый новый и
@@ -350,7 +379,7 @@ class Container(models.Model):
     def ignore_reports_count(self) -> int:
         """Возвращает количество сообщений о заполненности,
         которое нужно игнорировать, если контейнер в общественом месте"""
-        if not self.is_public:
+        if not self.is_public():
             return 0
         if self.building_part:
             """type=4 - условие на игнорирование сообщений.
@@ -371,7 +400,7 @@ class Container(models.Model):
         Учитывается количество сообщений, которые надо игнорировать."""
         if self.is_active() and self.last_full_report():
 
-            if not self.is_public:
+            if not self.is_public():
                 return True
 
             if self.last_full_report().by_staff:
@@ -387,7 +416,7 @@ class Container(models.Model):
         """Ровно ли достаточно сообщений о заполненности поступило,
         чтобы считать контейнер полным?"""
         if self.is_active() and self.last_full_report():
-            if not self.is_public:
+            if not self.is_public():
                 return self.last_full_report().count == 1
             ignore_count = self.ignore_reports_count()
             return self.last_full_report().count == ignore_count + 1
@@ -397,7 +426,7 @@ class Container(models.Model):
     def get_time_condition_days(self) -> int:
         """Возвращает максимальное кол-во дней, которое
         этот контейнер может быть заполнен по условию"""
-        if self.is_public:
+        if self.is_public():
             if (self.building_part and
                     self.building_part.public_days_condition()):
                 return self.building_part.public_days_condition()
@@ -415,10 +444,10 @@ class Container(models.Model):
         if self.is_active() and self.get_time_condition_days():
 
             if self.is_full():
-                return True
-
-            days = (timezone.now() - self.empty_from()).days
-            return days > self.get_time_condition_days()
+                days_full = self.cur_takeout_wait_time().days
+                return days_full > self.get_time_condition_days()
+            else:
+                return False
         else:
             """Если такого условия нет, то False"""
             return False

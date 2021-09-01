@@ -22,6 +22,20 @@ class ContainerAdmin(admin.ModelAdmin):
     ]
 
 
+class BuildingPartAdmin(admin.ModelAdmin):
+    readonly_fields = [
+        "current_mass",
+        "meets_mass_takeout_condition",
+        "meets_time_takeout_condition",
+        "needs_takeout",
+        "containers_for_takeout",
+        "public_days_condition",
+        "office_days_condition",
+        "is_mass_condition_commited",
+        "container_count"
+    ]
+
+
 class BuildingAdmin(admin.ModelAdmin):
     readonly_fields = [
         "current_mass",
@@ -32,7 +46,9 @@ class BuildingAdmin(admin.ModelAdmin):
         "public_days_condition",
         "office_days_condition",
         "is_mass_condition_commited",
-        "collected_mass"
+        "container_count",
+        "confirmed_collected_mass",
+        "avg_fill_speed"
     ]
 
 
@@ -44,5 +60,5 @@ class FullContainerReportAdmin(admin.ModelAdmin):
 
 admin.site.register(Container, ContainerAdmin)
 admin.site.register(Building, BuildingAdmin)
-admin.site.register(BuildingPart, BuildingAdmin)
+admin.site.register(BuildingPart, BuildingPartAdmin)
 admin.site.register(FullContainerReport, FullContainerReportAdmin)

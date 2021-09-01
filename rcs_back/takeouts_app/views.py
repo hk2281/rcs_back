@@ -8,6 +8,7 @@ from rcs_back.takeouts_app.serializers import *
 from rcs_back.takeouts_app.utils import *
 from rcs_back.containers_app.models import Building
 from rcs_back.containers_app.tasks import handle_empty_container
+from rcs_back.containers_app.utils.model import total_mass
 
 
 class ContainersTakeoutListView(generics.ListCreateAPIView):
@@ -83,9 +84,9 @@ class CollectedMassView(views.APIView):
         resp = {}
         for building in Building.objects.all():
             building_dict = {}
-            building_dict["total"] = building.collected_mass()
-            for building_part in building.building_parts.all():
-                building_dict[str(building_part)
-                              ] = building_part.collected_mass()
+            building_dict[
+                "collected_mass"] = building.confirmed_collected_mass()
+            building_dict["container_count"] = building.container_count()
             resp[str(building)] = building_dict
+        resp["total_mass"] = total_mass()
         return Response(resp)
