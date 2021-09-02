@@ -15,7 +15,7 @@ def check_container_state(sender, instance: Container,
     if not instance.sticker:
         sticker_im = generate_sticker(instance.pk)
         sticker_io = BytesIO()
-        sticker_im.save(sticker_io, "JPEG", quality=85)
+        sticker_im.save(sticker_io, "png", quality=100)
         sticker = File(sticker_io, name=f"sticker_{instance.pk}")
         instance.sticker = sticker
         instance.save()
