@@ -4101,6 +4101,166 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "сборы архивов",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "worker_name",
+									"value": "Тест Тестов",
+									"type": "text"
+								},
+								{
+									"key": "worker_phone",
+									"value": "89222222222",
+									"type": "text"
+								},
+								{
+									"key": "building",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "room",
+									"value": "1324",
+									"type": "text"
+								},
+								{
+									"key": "mass",
+									"value": "20",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/archive-takeouts",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"archive-takeouts"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "create",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "worker_name",
+											"value": "Тест Тестов",
+											"type": "text"
+										},
+										{
+											"key": "worker_phone",
+											"value": "89222222222",
+											"type": "text"
+										},
+										{
+											"key": "building",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "room",
+											"value": "1324",
+											"type": "text"
+										},
+										{
+											"key": "mass",
+											"value": "20",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/archive-takeouts",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"archive-takeouts"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 05 Sep 2021 13:16:47 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language, Origin"
+								},
+								{
+									"key": "Allow",
+									"value": "POST, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "112"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 2,\n    \"worker_name\": \"Тест Тестов\",\n    \"worker_phone\": \"89222222222\",\n    \"building\": 1,\n    \"room\": \"1324\",\n    \"mass\": 20\n}"
+						}
+					]
+				}
+			]
 		}
 	]
 }

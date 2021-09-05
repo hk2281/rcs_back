@@ -139,3 +139,17 @@ class AddTakeoutConditionSerializer(serializers.ModelSerializer):
             "building",
             "building_part"
         ]
+
+
+class ArchiveTakeoutSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ArchiveTakeout
+        fields = [
+            "id",
+            "worker_name",
+            "worker_phone",
+            "building",
+            "room",
+            "mass"
+        ]

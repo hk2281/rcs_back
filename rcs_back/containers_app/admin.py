@@ -47,6 +47,7 @@ class BuildingAdmin(admin.ModelAdmin):
         "office_days_condition",
         "is_mass_condition_commited",
         "container_count",
+        "calculated_collected_mass",
         "confirmed_collected_mass",
         "avg_fill_speed"
     ]

@@ -1,3 +1,4 @@
+from django.db.models import query
 from django.utils import timezone
 from rest_framework import generics, views, permissions
 from rest_framework.response import Response
@@ -90,3 +91,9 @@ class CollectedMassView(views.APIView):
             resp[str(building)] = building_dict
         resp["total_mass"] = total_mass()
         return Response(resp)
+
+
+class ArchiveTakeoutListView(generics.CreateAPIView):
+    """View для создания сбора архива"""
+    queryset = ArchiveTakeout.objects.all()
+    serializer_class = ArchiveTakeoutSerializer

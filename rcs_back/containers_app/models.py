@@ -93,15 +93,6 @@ class BaseBuilding(models.Model):
             return True
         return False
 
-    def calculated_collected_mass(self) -> int:
-        """Собранная масса макулатуры, посчитанная как среднее"""
-        mass = 0
-        for request in self.containers_takeout_requests.filter(
-            confirmed_at__isnull=False
-        ):
-            mass += request.mass()
-        return mass
-
     def container_count(self) -> int:
         """Кол-во активных контейнеров"""
         return self.containers.filter(status=Container.ACTIVE).count()
@@ -149,6 +140,17 @@ class Building(BaseBuilding):
 
     def get_building(self) -> "Building":
         return self
+
+    def calculated_collected_mass(self) -> int:
+        """Собранная масса макулатуры, посчитанная как среднее"""
+        mass = 0
+        for request in self.containers_takeout_requests.filter(
+            confirmed_at__isnull=False
+        ):
+            mass += request.mass()
+        for takeout in self.archive_takeouts.all():
+            mass += takeout.mass
+        return mass
 
     def confirmed_collected_mass(self) -> int:
         """Суммарная масса собранной макулатуры,

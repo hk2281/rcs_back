@@ -146,7 +146,7 @@ class TankTakeoutRequest(models.Model):
             previous_datetime = previous_tank_takeouts[0].confirmed_at
         else:
             previous_datetime = self.created_at - datetime.timedelta(days=365)
-        takeouts = ContainersTakeoutRequest.objects.filter(
+        container_takeouts = ContainersTakeoutRequest.objects.filter(
             building=self.building
         ).filter(
             created_at__gt=previous_datetime
@@ -154,8 +154,17 @@ class TankTakeoutRequest(models.Model):
             created_at__lt=self.created_at
         )
         mass = 0
-        for takeout in takeouts:
+        for takeout in container_takeouts:
             mass += takeout.mass()
+        archive_takeouts = ArchiveTakeout.objects.filter(
+            building=self.building
+        ).filter(
+            created_at__gt=previous_datetime
+        ).filter(
+            created_at__lt=self.created_at
+        )
+        for takeout in archive_takeouts:
+            mass += takeout.mass
         return mass
 
     def confirmed_mass_match(self) -> Union[float, None]:
@@ -294,3 +303,47 @@ class MassTakeoutConditionCommit(models.Model):
     class Meta:
         verbose_name = "выполнено условие для сбора"
         verbose_name_plural = "выполнены условия для сбора"
+
+
+class ArchiveTakeout(models.Model):
+    """Модель сбора архива"""
+
+    worker_name = models.CharField(
+        max_length=128,
+        verbose_name="ФИО обратившегося сотрудника"
+    )
+
+    worker_phone = models.CharField(
+        max_length=24,
+        verbose_name="телефон сотрудника"
+    )
+
+    building = models.ForeignKey(
+        to=Building,
+        on_delete=models.PROTECT,
+        related_name="archive_takeouts",
+        verbose_name="здание"
+    )
+
+    room = models.CharField(
+        max_length=16,
+        verbose_name="аудитория"
+    )
+
+    mass = models.PositiveIntegerField(
+        verbose_name="масса"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="время создания"
+    )
+
+    def __str__(self) -> str:
+        return ("Сбор архива от "
+                f"{self.created_at.astimezone(tz).strftime('%d.%m.%Y')}"
+                f"в {self.building}")
+
+    class Meta:
+        verbose_name = "сбор архива"
+        verbose_name_plural = "сборы архивов"
