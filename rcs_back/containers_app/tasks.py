@@ -38,7 +38,7 @@ def public_container_add_notify(container_id: int) -> None:
     with NamedTemporaryFile() as tmp:
         sticker_im = generate_sticker(container_id)
         sticker_im.save(tmp.name, "png", quality=100)
-        email.attach_file(tmp.name)
+        email.attach("sticker.png", tmp.read(), "image/png")
         email.send()
 
 
