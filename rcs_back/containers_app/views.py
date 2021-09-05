@@ -1,13 +1,9 @@
-from django.http.response import HttpResponse
-from django.utils import timezone
 from rest_framework import generics, permissions, views, status
 from rest_framework.response import Response
-from tempfile import NamedTemporaryFile
 
 from rcs_back.utils.mixins import UpdateThenRetrieveModelMixin
 from rcs_back.containers_app.models import BuildingPart, Container
 from .utils.email import *
-from .utils.excel import get_container_stats_xl
 from .serializers import *
 from .tasks import *
 
@@ -177,26 +173,3 @@ class EmptyContainerView(views.APIView):
                     container.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class ContainerStatsExcelView(views.APIView):
-    """Возвращает .xlsx файл со статистикой по контейнерам"""
-
-    def get(self, request, *args, **kwargs):
-        wb = get_container_stats_xl()
-        with NamedTemporaryFile() as tmp:
-            fname = "recycle-starter-container-stats-"
-            fname += timezone.now().strftime("%d.%m.%Y")
-            fname += ".xlsx"
-            wb.save(tmp.name)
-            file_data = tmp.read()
-            response = HttpResponse(
-                file_data,
-                headers={
-                    "Content-Type": "application/vnd.ms-excel",
-                    "Content-Disposition":
-                    f'attachment; filename={fname}',
-                    "Content-Language": "ru-RU"
-                }
-            )
-            return response

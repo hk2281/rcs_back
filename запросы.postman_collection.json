@@ -3956,6 +3956,122 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "Статистика в excel",
+			"item": [
+				{
+					"name": "контейнеры",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/stats/containers",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"stats",
+								"containers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "сборы",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/stats/container-takeouts",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"stats",
+								"container-takeouts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "вывозы",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/stats/tank-takeouts",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"stats",
+								"tank-takeouts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "вся",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/stats",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"stats"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

@@ -3,7 +3,7 @@ import datetime
 from django.db import models
 from django.db.models.query import QuerySet
 from django.utils import timezone
-from typing import Union, List
+from typing import Union
 
 from rcs_back.containers_app.models import Container, Building, BuildingPart
 

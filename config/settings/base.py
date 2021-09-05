@@ -98,6 +98,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "rcs_back.containers_app",
+    "rcs_back.stats_app",
     "rcs_back.takeouts_app"
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
