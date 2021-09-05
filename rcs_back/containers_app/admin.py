@@ -29,8 +29,6 @@ class BuildingPartAdmin(admin.ModelAdmin):
         "meets_time_takeout_condition",
         "needs_takeout",
         "containers_for_takeout",
-        "public_days_condition",
-        "office_days_condition",
         "is_mass_condition_commited",
         "container_count"
     ]
@@ -43,8 +41,6 @@ class BuildingAdmin(admin.ModelAdmin):
         "meets_time_takeout_condition",
         "needs_takeout",
         "containers_for_takeout",
-        "public_days_condition",
-        "office_days_condition",
         "is_mass_condition_commited",
         "container_count",
         "calculated_collected_mass",

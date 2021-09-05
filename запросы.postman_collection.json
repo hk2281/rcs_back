@@ -3425,151 +3425,6 @@
 			"name": "условия для сбора",
 			"item": [
 				{
-					"name": "create",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "building",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "building_part",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "type",
-									"value": "4",
-									"type": "text"
-								},
-								{
-									"key": "number",
-									"value": "4",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{host}}/takeout-conditions",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"takeout-conditions"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "create",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "building",
-											"value": "1",
-											"type": "text"
-										},
-										{
-											"key": "building_part",
-											"value": "1",
-											"type": "text"
-										},
-										{
-											"key": "type",
-											"value": "4",
-											"type": "text"
-										},
-										{
-											"key": "number",
-											"value": "4",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/takeout-conditions",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"takeout-conditions"
-									]
-								}
-							},
-							"status": "Created",
-							"code": 201,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Sun, 25 Jul 2021 11:26:57 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "WSGIServer/0.2 CPython/3.9.5"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Vary",
-									"value": "Accept, Accept-Language"
-								},
-								{
-									"key": "Allow",
-									"value": "GET, POST, HEAD, OPTIONS"
-								},
-								{
-									"key": "X-Frame-Options",
-									"value": "DENY"
-								},
-								{
-									"key": "Content-Length",
-									"value": "59"
-								},
-								{
-									"key": "Content-Language",
-									"value": "ru"
-								},
-								{
-									"key": "X-Content-Type-Options",
-									"value": "nosniff"
-								},
-								{
-									"key": "X-XSS-Protection",
-									"value": "1; mode=block"
-								},
-								{
-									"key": "Referrer-Policy",
-									"value": "same-origin"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"id\": 5,\n    \"type\": 4,\n    \"number\": 4,\n    \"building\": 1,\n    \"building_part\": 1\n}"
-						}
-					]
-				},
-				{
 					"name": "list with filters",
 					"request": {
 						"auth": {
@@ -3629,7 +3484,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Mon, 09 Aug 2021 16:39:52 GMT"
+									"value": "Sun, 05 Sep 2021 14:21:45 GMT"
 								},
 								{
 									"key": "Server",
@@ -3653,7 +3508,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "490"
+									"value": "271"
 								},
 								{
 									"key": "Content-Language",
@@ -3673,7 +3528,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "[\n    {\n        \"id\": 3,\n        \"type\": 2,\n        \"number\": 3,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        }\n    },\n    {\n        \"id\": 4,\n        \"type\": 3,\n        \"number\": 14,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        }\n    },\n    {\n        \"id\": 5,\n        \"type\": 4,\n        \"number\": 1,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        }\n    },\n    {\n        \"id\": 6,\n        \"type\": 1,\n        \"number\": 3,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        }\n    }\n]"
+							"body": "[\n    {\n        \"id\": 6,\n        \"building\": null,\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        },\n        \"office_days\": 3,\n        \"public_days\": 3,\n        \"mass\": 50,\n        \"ignore_reports\": 2\n    },\n    {\n        \"id\": 5,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": null,\n        \"office_days\": 3,\n        \"public_days\": 3,\n        \"mass\": 50,\n        \"ignore_reports\": 2\n    }\n]"
 						}
 					]
 				},
@@ -3696,20 +3551,20 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "number",
+									"key": "public_days",
 									"value": "4",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{host}}/takeout-conditions/6",
+							"raw": "{{host}}/takeout-conditions/5",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"takeout-conditions",
-								"6"
+								"5"
 							]
 						}
 					},
@@ -3723,20 +3578,20 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "number",
+											"key": "public_days",
 											"value": "4",
 											"type": "text"
 										}
 									]
 								},
 								"url": {
-									"raw": "{{host}}/takeout-conditions/6",
+									"raw": "{{host}}/takeout-conditions/5",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
 										"takeout-conditions",
-										"6"
+										"5"
 									]
 								}
 							},
@@ -3746,7 +3601,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sun, 22 Aug 2021 11:23:30 GMT"
+									"value": "Sun, 05 Sep 2021 14:23:09 GMT"
 								},
 								{
 									"key": "Server",
@@ -3770,7 +3625,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "121"
+									"value": "150"
 								},
 								{
 									"key": "Content-Language",
@@ -3790,7 +3645,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"id\": 6,\n    \"type\": 1,\n    \"number\": 4,\n    \"building\": {\n        \"id\": 1,\n        \"address\": \"Кронверкский 49\"\n    },\n    \"building_part\": {\n        \"id\": 1,\n        \"num\": 1\n    }\n}"
+							"body": "{\n    \"id\": 5,\n    \"building\": {\n        \"id\": 1,\n        \"address\": \"Кронверкский 49\"\n    },\n    \"building_part\": null,\n    \"office_days\": 3,\n    \"public_days\": 4,\n    \"mass\": 50,\n    \"ignore_reports\": 2\n}"
 						}
 					]
 				},
@@ -3884,103 +3739,6 @@
 							],
 							"cookie": [],
 							"body": null
-						}
-					]
-				},
-				{
-					"name": "опции для типа условий",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{host}}/takeout-conditions/type-options",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"takeout-conditions",
-								"type-options"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "опции для типа условий",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/takeout-conditions/type-options",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"takeout-conditions",
-										"type-options"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Sun, 25 Jul 2021 11:29:05 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "WSGIServer/0.2 CPython/3.9.5"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Vary",
-									"value": "Accept, Accept-Language"
-								},
-								{
-									"key": "Allow",
-									"value": "GET, HEAD, OPTIONS"
-								},
-								{
-									"key": "X-Frame-Options",
-									"value": "DENY"
-								},
-								{
-									"key": "Content-Length",
-									"value": "370"
-								},
-								{
-									"key": "Content-Language",
-									"value": "ru"
-								},
-								{
-									"key": "X-Content-Type-Options",
-									"value": "nosniff"
-								},
-								{
-									"key": "X-XSS-Protection",
-									"value": "1; mode=block"
-								},
-								{
-									"key": "Referrer-Policy",
-									"value": "same-origin"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"1\": \"не больше N дней в офисе\",\n    \"2\": \"не больше N дней в общественном месте\",\n    \"3\": \"суммарная масса бумаги в корпусе не больше N кг\",\n    \"4\": \"игнорировать первые N сообщенийо заполненности контейнера в общественном месте\"\n}"
 						}
 					]
 				}

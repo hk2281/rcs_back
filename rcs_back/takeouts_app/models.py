@@ -212,63 +212,62 @@ class TankTakeoutCompany(models.Model):
 
 
 class TakeoutCondition(models.Model):
-    """Модель условия для сбора"""
+    """Модель условий для сбора"""
 
-    OFFICE_DAYS = 1
-    PUBLIC_DAYS = 2
-    MASS = 3
-    IGNORE_REPORTS = 4
-
-    TYPE_CHOICES = (
-        (OFFICE_DAYS, "не больше N дней в офисе"),
-        (PUBLIC_DAYS, "не больше N дней в общественном месте"),
-        (MASS, "суммарная масса бумаги в корпусе не больше N кг"),
-        (IGNORE_REPORTS, ("игнорировать первые N сообщений "
-                          "о заполненности контейнера в общественном месте"))
+    office_days = models.PositiveIntegerField(
+        verbose_name="максимальное кол-во дней в офисе полным",
+        blank=True,
+        null=True
     )
 
-    type = models.PositiveSmallIntegerField(
-        choices=TYPE_CHOICES,
-        verbose_name="тип условия"
+    public_days = models.PositiveIntegerField(
+        verbose_name="максимальное кол-во дней в общ. месте полным",
+        blank=True,
+        null=True
     )
 
-    number = models.PositiveIntegerField(
-        verbose_name="N"
+    mass = models.PositiveIntegerField(
+        verbose_name="максимальная суммарная масса бумаги",
+        blank=True,
+        null=True
     )
 
-    building = models.ForeignKey(
+    ignore_reports = models.PositiveIntegerField(
+        verbose_name="кол-во первых сообщений, которые нужно игнорировать",
+        blank=True,
+        null=True
+    )
+
+    building = models.OneToOneField(
         to=Building,
         on_delete=models.CASCADE,
-        related_name="takeout_conditions",
+        null=True,
+        blank=True,
+        related_name="takeout_condition",
         verbose_name="здание"
     )
 
-    building_part = models.ForeignKey(
+    building_part = models.OneToOneField(
         to=BuildingPart,
         on_delete=models.CASCADE,
-        related_name="takeout_conditions",
         null=True,
         blank=True,
+        related_name="takeout_condition",
         verbose_name="корпус здания"
     )
 
     def __str__(self) -> str:
-        string = (f"Условие {self.get_type_display()} "
-                  f"в {self.building}")
+        if self.building:
+            return f"Условие для сбора в {self.building}"
         if self.building_part:
-            string += ", "
-            string += str(self.building_part)
-        return string
+            return (f"Условие для сбора в "
+                    f"{self.building_part.building} {self.building_part}")
+        else:
+            return "???"
 
     class Meta:
         verbose_name = "условие для сбора"
         verbose_name_plural = "условия для сбора"
-        constraints = [
-            models.UniqueConstraint(
-                fields=["building_part", "type"],
-                name="unique_condition_for_building"
-            )
-        ]
 
 
 class MassTakeoutConditionCommit(models.Model):

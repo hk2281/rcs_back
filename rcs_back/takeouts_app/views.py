@@ -1,4 +1,4 @@
-from django.db.models import query
+from django.db.models import Q
 from django.utils import timezone
 from rest_framework import generics, views, permissions
 from rest_framework.response import Response
@@ -55,13 +55,21 @@ class TankTakeoutConfirmationView(generics.UpdateAPIView):
 
 class TakeoutConditionListView(generics.ListCreateAPIView):
     queryset = TakeoutCondition.objects.all()
-    filterset_fields = ["building", "building_part"]
+    filterset_fields = ["building_part"]
 
     def get_serializer_class(self):
         if self.request.method == "POST":
             return AddTakeoutConditionSerializer
         else:
             return TakeoutConditionSerializer
+
+    def get_queryset(self):
+        if "building" in self.request.query_params:
+            building_pk = self.request.query_params.get("building")
+            return TakeoutCondition.objects.filter(
+                Q(building__pk=building_pk) |
+                Q(building_part__building__pk=building_pk)
+            )
 
 
 class TakeoutConditionDetailView(UpdateThenRetrieveModelMixin,

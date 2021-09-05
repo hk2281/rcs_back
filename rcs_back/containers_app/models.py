@@ -23,12 +23,9 @@ class BaseBuilding(models.Model):
         return current_mass
 
     def meets_mass_takeout_condition(self) -> bool:
-        """Выполняются ли в здании/корпусе условия для сбора по общей массе.
-        3 - условие на массу"""
-        mass_condition = self.takeout_conditions.filter(
-            type=3
-        ).first()
-        if mass_condition and self.current_mass() > mass_condition.number:
+        """Выполняются ли в здании/корпусе условия для сбора по общей массе"""
+        mass_condition = self.takeout_condition.mass
+        if mass_condition and self.current_mass() > mass_condition:
             return True
         else:
             return False
@@ -53,28 +50,6 @@ class BaseBuilding(models.Model):
             if container.needs_takeout():
                 containers_for_takeout.append(container)
         return containers_for_takeout
-
-    def public_days_condition(self) -> int:
-        """Возвращает кол-во дней, через которое
-        нужно выносить бумагу в общественных местах"""
-        condition = self.takeout_conditions.filter(
-            type=2
-        ).first()
-        if condition:
-            return condition.number
-        else:
-            return 0
-
-    def office_days_condition(self) -> int:
-        """Возвращает кол-во дней, через которое
-        нужно выносить бумагу в офисе"""
-        condition = self.takeout_conditions.filter(
-            type=1
-        ).first()
-        if condition:
-            return condition.number
-        else:
-            return 0
 
     def is_mass_condition_commited(self) -> bool:
         """Зафиксировано ли выполнение условия по массе?"""
@@ -372,24 +347,16 @@ class Container(models.Model):
         else:
             return None
 
-    def ignore_reports_count(self) -> int:
+    def ignore_reports_count(self) -> Union[int, None]:
         """Возвращает количество сообщений о заполненности,
         которое нужно игнорировать, если контейнер в общественом месте"""
         if not self.is_public():
             return 0
-        if self.building_part:
-            """type=4 - условие на игнорирование сообщений.
-            В приоритете правило для корпуса"""
-            building_part_condition = self.building_part.takeout_conditions.filter(
-                type=4).first()
-            if building_part_condition:
-                return building_part_condition.number
-        building_condition = self.building.takeout_conditions.filter(
-            type=4).first()
-        if building_condition:
-            return building_condition.number
+        if (self.building_part and
+                self.building_part.takeout_condition.ignore_reports):
+            return self.building_part.takeout_condition.ignore_reports
         else:
-            return 0
+            return self.building.takeout_condition.ignore_reports
 
     def is_full(self) -> bool:
         """Полный ли контейнер?
@@ -424,16 +391,16 @@ class Container(models.Model):
         этот контейнер может быть заполнен по условию"""
         if self.is_public():
             if (self.building_part and
-                    self.building_part.public_days_condition()):
-                return self.building_part.public_days_condition()
+                    self.building_part.takeout_condition.public_days):
+                return self.building_part.takeout_condition.public_days
             else:
-                return self.building.public_days_condition()
+                return self.building.takeout_condition.public_days
         else:
             if (self.building_part and
-                    self.building_part.office_days_condition()):
-                return self.building_part.office_days_condition()
+                    self.building_part.takeout_condition.office_days):
+                return self.building_part.takeout_condition.office_days
             else:
-                return self.building.office_days_condition()
+                return self.building.takeout_condition.office_days
 
     def check_time_conditions(self) -> bool:
         '''Выполнены ли условия "не больше N дней"'''

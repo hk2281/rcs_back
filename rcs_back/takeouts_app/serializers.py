@@ -120,10 +120,12 @@ class TakeoutConditionSerializer(serializers.ModelSerializer):
         model = TakeoutCondition
         fields = [
             "id",
-            "type",
-            "number",
             "building",
-            "building_part"
+            "building_part",
+            "office_days",
+            "public_days",
+            "mass",
+            "ignore_reports"
         ]
 
 
@@ -134,10 +136,12 @@ class AddTakeoutConditionSerializer(serializers.ModelSerializer):
         model = TakeoutCondition
         fields = [
             "id",
-            "type",
-            "number",
             "building",
-            "building_part"
+            "building_part",
+            "office_days",
+            "public_days",
+            "mass",
+            "ignore_reports"
         ]
 
 
