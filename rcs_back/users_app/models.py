@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils import timezone
 
+from rcs_back.containers_app.models import Building
+
 
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
@@ -48,6 +50,13 @@ class User(AbstractUser):
     first_name = None
     last_name = None
     email = models.EmailField(unique=True, verbose_name="почта")
+    building = models.ForeignKey(
+        to=Building,
+        on_delete=models.PROTECT,
+        verbose_name="здание",
+        blank=True,
+        null=True
+    )
 
     objects = UserManager()
 

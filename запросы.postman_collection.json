@@ -1418,7 +1418,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Thu, 12 Aug 2021 10:10:04 GMT"
+									"value": "Sun, 05 Sep 2021 12:00:52 GMT"
 								},
 								{
 									"key": "Server",
@@ -1442,7 +1442,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "55"
+									"value": "67"
 								},
 								{
 									"key": "Content-Language",
@@ -1462,7 +1462,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"id\": 4,\n    \"email\": \"test2@test.com\",\n    \"has_eco_group\": false\n}"
+							"body": "{\n    \"id\": 2,\n    \"email\": \"test@test.com\",\n    \"has_eco_group\": false,\n    \"building\": 1\n}"
 						}
 					]
 				},
@@ -1476,18 +1476,23 @@
 							"formdata": [
 								{
 									"key": "email",
-									"value": "testasd@test.com",
+									"value": "testbuilding@test.com",
 									"type": "text"
 								},
 								{
 									"key": "password",
 									"value": "TESTtest123",
 									"type": "text"
+								},
+								{
+									"key": "building",
+									"value": "1",
+									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{host}}/auth/users/?token=UmBt3d3zSpy6Ik5LCxvS34ysW8YapnFL",
+							"raw": "{{host}}/auth/users/?token=dx42mBfkmH4cAUkoXK0FMjHcm6QDq4bd",
 							"host": [
 								"{{host}}"
 							],
@@ -1499,7 +1504,7 @@
 							"query": [
 								{
 									"key": "token",
-									"value": "UmBt3d3zSpy6Ik5LCxvS34ysW8YapnFL"
+									"value": "dx42mBfkmH4cAUkoXK0FMjHcm6QDq4bd"
 								}
 							]
 						}
@@ -1515,18 +1520,23 @@
 									"formdata": [
 										{
 											"key": "email",
-											"value": "testasd@test.com",
+											"value": "testbuilding@test.com",
 											"type": "text"
 										},
 										{
 											"key": "password",
 											"value": "TESTtest123",
 											"type": "text"
+										},
+										{
+											"key": "building",
+											"value": "1",
+											"type": "text"
 										}
 									]
 								},
 								"url": {
-									"raw": "{{host}}/auth/users/?token=UmBt3d3zSpy6Ik5LCxvS34ysW8YapnFL",
+									"raw": "{{host}}/auth/users/?token=dx42mBfkmH4cAUkoXK0FMjHcm6QDq4bd",
 									"host": [
 										"{{host}}"
 									],
@@ -1538,7 +1548,7 @@
 									"query": [
 										{
 											"key": "token",
-											"value": "UmBt3d3zSpy6Ik5LCxvS34ysW8YapnFL"
+											"value": "dx42mBfkmH4cAUkoXK0FMjHcm6QDq4bd"
 										}
 									]
 								}
@@ -1549,7 +1559,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sun, 22 Aug 2021 09:38:49 GMT"
+									"value": "Sun, 05 Sep 2021 11:59:19 GMT"
 								},
 								{
 									"key": "Server",
@@ -1573,7 +1583,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "36"
+									"value": "41"
 								},
 								{
 									"key": "Content-Language",
@@ -1593,7 +1603,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"email\": \"testasd@test.com\",\n    \"id\": 12\n}"
+							"body": "{\n    \"email\": \"testbuilding@test.com\",\n    \"id\": 13\n}"
 						}
 					]
 				},
