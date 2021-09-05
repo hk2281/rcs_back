@@ -1,15 +1,15 @@
-import datetime
 import time
 
-from django.core.cache import cache
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils import timezone
 from celery import shared_task
+from tempfile import NamedTemporaryFile
 
 from rcs_back.containers_app.models import (
     FullContainerReport, Container, BuildingPart)
 from rcs_back.takeouts_app.utils.email import takeout_condition_met_notify
+from rcs_back.containers_app.utils.qr import generate_sticker
 from rcs_back.takeouts_app.models import MassTakeoutConditionCommit
 
 
@@ -17,7 +17,7 @@ from rcs_back.takeouts_app.models import MassTakeoutConditionCommit
 def public_container_add_notify(container_id: int) -> None:
     """Отправляет сообщение с инструкциями для активации
     добавленного контейнера"""
-    time.sleep(10)  # Ждём сохранения в БД и генерации стикера
+    time.sleep(10)  # Ждём сохранения в БД
     container = Container.objects.get(pk=container_id)
     is_ecobox = container.kind == Container.ECOBOX
 
@@ -35,8 +35,11 @@ def public_container_add_notify(container_id: int) -> None:
         [container.email]
     )
     email.content_subtype = "html"
-    email.attach_file(container.sticker.path)
-    email.send()
+    with NamedTemporaryFile() as tmp:
+        sticker_im = generate_sticker(container_id)
+        sticker_im.save(tmp.name, "png", quality=100)
+        email.attach_file(tmp.name)
+        email.send()
 
 
 def check_mass_condition_to_notify(container: Container) -> None:

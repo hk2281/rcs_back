@@ -42,7 +42,7 @@ def add_container_id(sticker: Image, container_id: int) -> Image:
     """Вставляет id контейнера в стикер"""
     draw = ImageDraw.Draw(sticker)
     font_path = str(settings.APPS_DIR / "containers_app" /
-                    "utils" / "MullerBlack.ttf")
+                    "utils" / "MullerBold.ttf")
     font = ImageFont.truetype(font_path, 110)
     coords = (437, 340)
     text = f"ID {container_id}"

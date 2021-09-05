@@ -85,7 +85,6 @@ class ContainerSerializer(serializers.ModelSerializer):
             "description",
             "is_full",
             "status",
-            "sticker",
             "email",
             "phone",
             "cur_fill_time",

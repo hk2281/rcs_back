@@ -1,9 +1,12 @@
+from django.http.response import HttpResponse
 from rest_framework import generics, permissions, views, status
 from rest_framework.response import Response
+from tempfile import NamedTemporaryFile
 
 from rcs_back.utils.mixins import UpdateThenRetrieveModelMixin
 from rcs_back.containers_app.models import BuildingPart, Container
 from .utils.email import *
+from .utils.qr import generate_sticker
 from .serializers import *
 from .tasks import *
 
@@ -173,3 +176,24 @@ class EmptyContainerView(views.APIView):
                     container.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ContainerStickerView(views.APIView):
+    """Возвращает стикер контейнера"""
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        with NamedTemporaryFile() as tmp:
+            fname = f"container-sticker-{self.kwargs['pk']}"
+            sticker_im = generate_sticker(self.kwargs["pk"])
+            sticker_im.save(tmp.name, "png", quality=100)
+            file_data = tmp.read()
+            response = HttpResponse(
+                file_data,
+                headers={
+                    "Content-Type": "image/png",
+                    "Content-Disposition":
+                    f'attachment; filename={fname}'
+                }
+            )
+            return response

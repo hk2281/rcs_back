@@ -1865,7 +1865,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Wed, 01 Sep 2021 09:54:54 GMT"
+									"value": "Sun, 05 Sep 2021 11:19:30 GMT"
 								},
 								{
 									"key": "Server",
@@ -1889,7 +1889,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "1639"
+									"value": "1403"
 								},
 								{
 									"key": "Content-Language",
@@ -1909,7 +1909,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "[\n    {\n        \"id\": 42,\n        \"kind\": 2,\n        \"mass\": 15,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 2,\n            \"num\": 2\n        },\n        \"floor\": 3,\n        \"room\": \"2301\",\n        \"description\": \"в центре аудитории\",\n        \"is_full\": false,\n        \"status\": 2,\n        \"sticker\": \"http://127.0.0.1:8000/media/stickers/sticker_42\",\n        \"email\": \"test@test.com\",\n        \"phone\": \"89999999999\",\n        \"cur_fill_time\": \"597298.568145\",\n        \"cur_takeout_wait_time\": null,\n        \"avg_fill_time\": null,\n        \"avg_takeout_wait_time\": null\n    },\n    {\n        \"id\": 2,\n        \"kind\": 1,\n        \"mass\": 10,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        },\n        \"floor\": 3,\n        \"room\": \"1303\",\n        \"description\": \"У окна\",\n        \"is_full\": true,\n        \"status\": 2,\n        \"sticker\": \"http://127.0.0.1:8000/media/stickers/sticker_2\",\n        \"email\": \"\",\n        \"phone\": \"\",\n        \"cur_fill_time\": null,\n        \"cur_takeout_wait_time\": \"690262.984398\",\n        \"avg_fill_time\": null,\n        \"avg_takeout_wait_time\": null\n    },\n    {\n        \"id\": 7,\n        \"kind\": 1,\n        \"mass\": 10,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        },\n        \"floor\": 3,\n        \"room\": \"\",\n        \"description\": \"\",\n        \"is_full\": false,\n        \"status\": 2,\n        \"sticker\": \"http://127.0.0.1:8000/media/stickers/sticker_7\",\n        \"email\": \"test@test.com\",\n        \"phone\": \"89999999999\",\n        \"cur_fill_time\": \"491373.454318\",\n        \"cur_takeout_wait_time\": null,\n        \"avg_fill_time\": null,\n        \"avg_takeout_wait_time\": null\n    },\n    {\n        \"id\": 1,\n        \"kind\": 1,\n        \"mass\": 10,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        },\n        \"floor\": 6,\n        \"room\": \"1600\",\n        \"description\": \"\",\n        \"is_full\": true,\n        \"status\": 2,\n        \"sticker\": \"http://127.0.0.1:8000/media/stickers/sticker_1\",\n        \"email\": \"\",\n        \"phone\": \"\",\n        \"cur_fill_time\": null,\n        \"cur_takeout_wait_time\": \"491239.53866\",\n        \"avg_fill_time\": \"00:03:46.836039\",\n        \"avg_takeout_wait_time\": \"17:47:14.078495\"\n    }\n]"
+							"body": "[\n    {\n        \"id\": 42,\n        \"kind\": 2,\n        \"mass\": 15,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 2,\n            \"num\": 2\n        },\n        \"floor\": 3,\n        \"room\": \"2301\",\n        \"description\": \"в центре аудитории\",\n        \"is_full\": false,\n        \"status\": 2,\n        \"email\": \"test@test.com\",\n        \"phone\": \"89999999999\",\n        \"cur_fill_time\": \"947975.022434\",\n        \"cur_takeout_wait_time\": null,\n        \"avg_fill_time\": null,\n        \"avg_takeout_wait_time\": null\n    },\n    {\n        \"id\": 2,\n        \"kind\": 1,\n        \"mass\": 10,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        },\n        \"floor\": 3,\n        \"room\": \"1303\",\n        \"description\": \"У окна\",\n        \"is_full\": true,\n        \"status\": 2,\n        \"email\": \"\",\n        \"phone\": \"\",\n        \"cur_fill_time\": null,\n        \"cur_takeout_wait_time\": \"1040939.43475\",\n        \"avg_fill_time\": null,\n        \"avg_takeout_wait_time\": null\n    },\n    {\n        \"id\": 7,\n        \"kind\": 1,\n        \"mass\": 10,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        },\n        \"floor\": 3,\n        \"room\": \"\",\n        \"description\": \"\",\n        \"is_full\": false,\n        \"status\": 2,\n        \"email\": \"test@test.com\",\n        \"phone\": \"89999999999\",\n        \"cur_fill_time\": \"842049.903371\",\n        \"cur_takeout_wait_time\": null,\n        \"avg_fill_time\": null,\n        \"avg_takeout_wait_time\": null\n    },\n    {\n        \"id\": 1,\n        \"kind\": 1,\n        \"mass\": 10,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        },\n        \"floor\": 6,\n        \"room\": \"1600\",\n        \"description\": \"\",\n        \"is_full\": true,\n        \"status\": 2,\n        \"email\": \"\",\n        \"phone\": \"\",\n        \"cur_fill_time\": null,\n        \"cur_takeout_wait_time\": \"841915.986483\",\n        \"avg_fill_time\": \"00:03:46.836039\",\n        \"avg_takeout_wait_time\": \"17:47:14.078495\"\n    }\n]"
 						},
 						{
 							"name": "list with sort",
@@ -2267,7 +2267,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Wed, 25 Aug 2021 10:07:00 GMT"
+									"value": "Sun, 05 Sep 2021 11:19:40 GMT"
 								},
 								{
 									"key": "Server",
@@ -2291,7 +2291,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "512"
+									"value": "346"
 								},
 								{
 									"key": "Content-Language",
@@ -2311,7 +2311,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"id\": 1,\n    \"kind\": 1,\n    \"mass\": 10,\n    \"building\": {\n        \"id\": 1,\n        \"address\": \"Кронверкский 49\"\n    },\n    \"building_part\": {\n        \"id\": 1,\n        \"num\": 1\n    },\n    \"floor\": 6,\n    \"room\": \"1601\",\n    \"description\": \"\",\n    \"is_full\": true,\n    \"status\": 2,\n    \"is_public\": false,\n    \"created_at\": \"2021-07-16T17:36:25.961942+03:00\",\n    \"sticker\": \"http://127.0.0.1:8000/media/stickers/sticker_1\",\n    \"email\": \"\",\n    \"phone\": \"\",\n    \"cur_fill_time\": \"Контейнер уже заполнен.\",\n    \"cur_takeout_wait_time\": \"0:20:02.599796\",\n    \"avg_fill_time\": \"0:00:30.204788\",\n    \"avg_takeout_wait_time\": \"21:51:55.577916\"\n}"
+							"body": "{\n    \"id\": 1,\n    \"kind\": 1,\n    \"mass\": 10,\n    \"building\": {\n        \"id\": 1,\n        \"address\": \"Кронверкский 49\"\n    },\n    \"building_part\": {\n        \"id\": 1,\n        \"num\": 1\n    },\n    \"floor\": 6,\n    \"room\": \"1600\",\n    \"description\": \"\",\n    \"is_full\": true,\n    \"status\": 2,\n    \"email\": \"\",\n    \"phone\": \"\",\n    \"cur_fill_time\": null,\n    \"cur_takeout_wait_time\": \"841925.565627\",\n    \"avg_fill_time\": \"00:03:46.836039\",\n    \"avg_takeout_wait_time\": \"17:47:14.078495\"\n}"
 						}
 					]
 				},
@@ -2526,6 +2526,25 @@
 							"body": null
 						}
 					]
+				},
+				{
+					"name": "получить стикер",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/containers/1/sticker",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"containers",
+								"1",
+								"sticker"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

@@ -272,12 +272,6 @@ class Container(models.Model):
         verbose_name="состояние"
     )
 
-    sticker = models.ImageField(
-        verbose_name="стикер",
-        upload_to="stickers/",
-        blank=True
-    )
-
     activated_at = models.DateTimeField(
         null=True,
         blank=True,
