@@ -3,6 +3,8 @@ import datetime
 from django.db import models
 from django.db.models.query import QuerySet
 from django.utils import timezone
+from secrets import choice
+from string import ascii_letters, digits
 from typing import Union
 
 
@@ -483,6 +485,13 @@ class Container(models.Model):
             avg_takeout_wait_time = sum_time / count
             return avg_takeout_wait_time
 
+    def requested_activation(self) -> bool:
+        """Была ли запрошена активация для этого контейнера?"""
+        try:
+            return bool(self.activation_token)
+        except ContainerActivationToken.DoesNotExist:
+            return False
+
     def __str__(self) -> str:
         return f"Контейнер №{self.pk}"
 
@@ -537,3 +546,47 @@ class FullContainerReport(models.Model):
     class Meta:
         verbose_name = "контейнер заполнен"
         verbose_name_plural = "контейнеры заполнены"
+
+
+class ContainerActivationToken(models.Model):
+    """Модель токена для активации контейнера через email"""
+
+    TOKEN_LENGTH = 32
+
+    token = models.CharField(
+        max_length=32,
+        blank=True,
+        verbose_name="токен"
+    )
+
+    container = models.OneToOneField(
+        to=Container,
+        on_delete=models.CASCADE,
+        related_name="activation_token",
+        verbose_name="контейнер"
+    )
+
+    def generate_token(self) -> str:
+        """Генерирует рандомный токен"""
+        token = ''.join(choice(
+            ascii_letters + digits
+        ) for _ in range(self.TOKEN_LENGTH))
+        return token
+
+    def set_token(self) -> None:
+        """Задать значение поля token"""
+        while True:
+            token = self.generate_token()
+            """Проверка на уникальность"""
+            if not ContainerActivationToken.objects.filter(
+                token=token
+            ).first():
+                break
+        self.token = token
+
+    def __str__(self) -> str:
+        return f"токен №{self.pk}"
+
+    class Meta:
+        verbose_name = "токен для активации контейнера"
+        verbose_name_plural = "токены для активации контейнеров"

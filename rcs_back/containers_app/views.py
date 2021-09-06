@@ -1,10 +1,11 @@
 from django.http.response import HttpResponse
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, views, status
 from rest_framework.response import Response
 from tempfile import NamedTemporaryFile
 
 from rcs_back.utils.mixins import UpdateThenRetrieveModelMixin
-from rcs_back.containers_app.models import BuildingPart, Container
+from rcs_back.containers_app.models import *
 from .utils.email import *
 from .utils.qr import generate_sticker
 from .serializers import *
@@ -121,13 +122,6 @@ class ContainerPublicAddView(generics.CreateAPIView):
         public_container_add_notify.delay(instance.pk)
 
 
-class ActivateContainerView(generics.UpdateAPIView):
-    """ View для активации контейнера """
-    permission_classes = [permissions.AllowAny]
-    serializer_class = ActivateContainerSerializer
-    queryset = Container.objects.filter(status=Container.WAITING)
-
-
 class PublicFeedbackView(views.APIView):
     """View для обратной связи на главной странице"""
     serializer_class = PublicFeedbackSerializer
@@ -197,3 +191,77 @@ class ContainerStickerView(views.APIView):
                 }
             )
             return response
+
+
+class ContainerActivationRequestView(views.APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        container = get_object_or_404(
+            Container, pk=self.kwargs["pk"]
+        )
+        if container.status != container.WAITING:
+            resp = {
+                "error": "This container has already been activated"
+            }
+            return Response(
+                resp,
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if container.requested_activation():
+            resp = {
+                "error": "This container has already requested activated"
+            }
+            return Response(
+                resp,
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        token = ContainerActivationToken.objects.create(
+            container=container
+        )
+        token.set_token()
+        token.save()
+        container_activation_request_notify(container)
+        resp = {
+            "success": "email sent"
+        }
+        return Response(resp)
+
+
+class ContainerActivationView(views.APIView):
+    """View для активации контейнера через письмо"""
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        container = get_object_or_404(
+            Container, pk=self.kwargs["pk"]
+        )
+        if container.status != container.WAITING:
+            resp = "<h5>Этот контейнер уже активирован.</h5>"
+            return HttpResponse(
+                resp,
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if "token" in self.request.query_params:
+            token = self.request.query_params.get("token")
+            if (not container.requested_activation() or
+                    container.activation_token.token != token):
+                resp = "<h5>Ошибка: неправильный токен для активации.</h5>"
+                return HttpResponse(
+                    resp,
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            else:
+                container.status = container.ACTIVE
+                container.save()
+                container.activation_token.delete()
+                resp = "<h5>Контейнер успешно активирован.</h5>"
+                return HttpResponse(resp)
+        else:
+            resp = "<h5>Ошибка: неправильный токен для активации.</h5>"
+            return HttpResponse(
+                resp,
+                status=status.HTTP_400_BAD_REQUEST
+            )

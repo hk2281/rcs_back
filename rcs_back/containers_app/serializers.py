@@ -52,21 +52,6 @@ class FullContainerReportSerializer(serializers.ModelSerializer):
         ]
 
 
-class ActivateContainerSerializer(serializers.ModelSerializer):
-    """ Сериализатор для активации контейнера """
-    class Meta:
-        model = Container
-        fields = ["id", "status"]
-
-    def validate_status(self, value):
-        """ Этот сериализатор используется только для того,
-        чтобы активировать контейнер """
-        if value != 2:
-            msg = "status can be only 2 for this view"
-            raise serializers.ValidationError(msg)
-        return value
-
-
 class ContainerSerializer(serializers.ModelSerializer):
     """ Сериализатор контейнера"""
     building = BuildingShortSerializer()
@@ -85,6 +70,7 @@ class ContainerSerializer(serializers.ModelSerializer):
             "description",
             "is_full",
             "status",
+            "requested_activation",
             "email",
             "phone",
             "cur_fill_time",

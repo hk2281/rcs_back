@@ -19,6 +19,7 @@ class ContainerAdmin(admin.ModelAdmin):
         "check_time_conditions",
         "needs_takeout",
         "get_mass_rule_trigger",
+        "requested_activation"
     ]
 
 

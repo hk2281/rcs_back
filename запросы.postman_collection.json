@@ -291,115 +291,6 @@
 					]
 				},
 				{
-					"name": "активировать свой контейнер",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "status",
-									"value": "2",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{host}}/containers/7/activate",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"containers",
-								"7",
-								"activate"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "активировать свой контейнер",
-							"originalRequest": {
-								"method": "PATCH",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "status",
-											"value": "2",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/containers/7/activate",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"containers",
-										"7",
-										"activate"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Tue, 20 Jul 2021 12:09:30 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "WSGIServer/0.2 CPython/3.9.5"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Vary",
-									"value": "Accept, Accept-Language"
-								},
-								{
-									"key": "Allow",
-									"value": "PUT, PATCH, OPTIONS"
-								},
-								{
-									"key": "X-Frame-Options",
-									"value": "DENY"
-								},
-								{
-									"key": "Content-Length",
-									"value": "19"
-								},
-								{
-									"key": "Content-Language",
-									"value": "ru"
-								},
-								{
-									"key": "X-Content-Type-Options",
-									"value": "nosniff"
-								},
-								{
-									"key": "X-XSS-Protection",
-									"value": "1; mode=block"
-								},
-								{
-									"key": "Referrer-Policy",
-									"value": "same-origin"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"id\": 7,\n    \"status\": 2\n}"
-						}
-					]
-				},
-				{
 					"name": "обратная связь",
 					"request": {
 						"method": "POST",
@@ -1875,7 +1766,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sun, 05 Sep 2021 11:19:30 GMT"
+									"value": "Mon, 06 Sep 2021 10:29:16 GMT"
 								},
 								{
 									"key": "Server",
@@ -1899,7 +1790,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "1403"
+									"value": "1521"
 								},
 								{
 									"key": "Content-Language",
@@ -1919,7 +1810,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "[\n    {\n        \"id\": 42,\n        \"kind\": 2,\n        \"mass\": 15,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 2,\n            \"num\": 2\n        },\n        \"floor\": 3,\n        \"room\": \"2301\",\n        \"description\": \"в центре аудитории\",\n        \"is_full\": false,\n        \"status\": 2,\n        \"email\": \"test@test.com\",\n        \"phone\": \"89999999999\",\n        \"cur_fill_time\": \"947975.022434\",\n        \"cur_takeout_wait_time\": null,\n        \"avg_fill_time\": null,\n        \"avg_takeout_wait_time\": null\n    },\n    {\n        \"id\": 2,\n        \"kind\": 1,\n        \"mass\": 10,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        },\n        \"floor\": 3,\n        \"room\": \"1303\",\n        \"description\": \"У окна\",\n        \"is_full\": true,\n        \"status\": 2,\n        \"email\": \"\",\n        \"phone\": \"\",\n        \"cur_fill_time\": null,\n        \"cur_takeout_wait_time\": \"1040939.43475\",\n        \"avg_fill_time\": null,\n        \"avg_takeout_wait_time\": null\n    },\n    {\n        \"id\": 7,\n        \"kind\": 1,\n        \"mass\": 10,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        },\n        \"floor\": 3,\n        \"room\": \"\",\n        \"description\": \"\",\n        \"is_full\": false,\n        \"status\": 2,\n        \"email\": \"test@test.com\",\n        \"phone\": \"89999999999\",\n        \"cur_fill_time\": \"842049.903371\",\n        \"cur_takeout_wait_time\": null,\n        \"avg_fill_time\": null,\n        \"avg_takeout_wait_time\": null\n    },\n    {\n        \"id\": 1,\n        \"kind\": 1,\n        \"mass\": 10,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        },\n        \"floor\": 6,\n        \"room\": \"1600\",\n        \"description\": \"\",\n        \"is_full\": true,\n        \"status\": 2,\n        \"email\": \"\",\n        \"phone\": \"\",\n        \"cur_fill_time\": null,\n        \"cur_takeout_wait_time\": \"841915.986483\",\n        \"avg_fill_time\": \"00:03:46.836039\",\n        \"avg_takeout_wait_time\": \"17:47:14.078495\"\n    }\n]"
+							"body": "[\n    {\n        \"id\": 2,\n        \"kind\": 1,\n        \"mass\": 10,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        },\n        \"floor\": 3,\n        \"room\": \"1303\",\n        \"description\": \"У окна\",\n        \"is_full\": true,\n        \"status\": 2,\n        \"requested_activation\": false,\n        \"email\": \"\",\n        \"phone\": \"\",\n        \"cur_fill_time\": null,\n        \"cur_takeout_wait_time\": \"1124324.785517\",\n        \"avg_fill_time\": null,\n        \"avg_takeout_wait_time\": null\n    },\n    {\n        \"id\": 7,\n        \"kind\": 1,\n        \"mass\": 10,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        },\n        \"floor\": 3,\n        \"room\": \"\",\n        \"description\": \"\",\n        \"is_full\": false,\n        \"status\": 2,\n        \"requested_activation\": false,\n        \"email\": \"test@test.com\",\n        \"phone\": \"89999999999\",\n        \"cur_fill_time\": \"925435.254573\",\n        \"cur_takeout_wait_time\": null,\n        \"avg_fill_time\": null,\n        \"avg_takeout_wait_time\": null\n    },\n    {\n        \"id\": 1,\n        \"kind\": 1,\n        \"mass\": 10,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 1,\n            \"num\": 1\n        },\n        \"floor\": 6,\n        \"room\": \"1600\",\n        \"description\": \"\",\n        \"is_full\": true,\n        \"status\": 2,\n        \"requested_activation\": false,\n        \"email\": \"\",\n        \"phone\": \"\",\n        \"cur_fill_time\": null,\n        \"cur_takeout_wait_time\": \"925301.341255\",\n        \"avg_fill_time\": \"00:03:46.836039\",\n        \"avg_takeout_wait_time\": \"17:47:14.078495\"\n    },\n    {\n        \"id\": 42,\n        \"kind\": 2,\n        \"mass\": 15,\n        \"building\": {\n            \"id\": 1,\n            \"address\": \"Кронверкский 49\"\n        },\n        \"building_part\": {\n            \"id\": 2,\n            \"num\": 2\n        },\n        \"floor\": 3,\n        \"room\": \"2301\",\n        \"description\": \"в центре аудитории\",\n        \"is_full\": false,\n        \"status\": 2,\n        \"requested_activation\": false,\n        \"email\": \"test@test.com\",\n        \"phone\": \"89999999999\",\n        \"cur_fill_time\": \"1031360.422812\",\n        \"cur_takeout_wait_time\": null,\n        \"avg_fill_time\": null,\n        \"avg_takeout_wait_time\": null\n    }\n]"
 						},
 						{
 							"name": "list with sort",
@@ -2277,7 +2168,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sun, 05 Sep 2021 11:19:40 GMT"
+									"value": "Mon, 06 Sep 2021 10:29:30 GMT"
 								},
 								{
 									"key": "Server",
@@ -2301,7 +2192,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "346"
+									"value": "375"
 								},
 								{
 									"key": "Content-Language",
@@ -2321,7 +2212,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"id\": 1,\n    \"kind\": 1,\n    \"mass\": 10,\n    \"building\": {\n        \"id\": 1,\n        \"address\": \"Кронверкский 49\"\n    },\n    \"building_part\": {\n        \"id\": 1,\n        \"num\": 1\n    },\n    \"floor\": 6,\n    \"room\": \"1600\",\n    \"description\": \"\",\n    \"is_full\": true,\n    \"status\": 2,\n    \"email\": \"\",\n    \"phone\": \"\",\n    \"cur_fill_time\": null,\n    \"cur_takeout_wait_time\": \"841925.565627\",\n    \"avg_fill_time\": \"00:03:46.836039\",\n    \"avg_takeout_wait_time\": \"17:47:14.078495\"\n}"
+							"body": "{\n    \"id\": 1,\n    \"kind\": 1,\n    \"mass\": 10,\n    \"building\": {\n        \"id\": 1,\n        \"address\": \"Кронверкский 49\"\n    },\n    \"building_part\": {\n        \"id\": 1,\n        \"num\": 1\n    },\n    \"floor\": 6,\n    \"room\": \"1600\",\n    \"description\": \"\",\n    \"is_full\": true,\n    \"status\": 2,\n    \"requested_activation\": false,\n    \"email\": \"\",\n    \"phone\": \"\",\n    \"cur_fill_time\": null,\n    \"cur_takeout_wait_time\": \"925315.500938\",\n    \"avg_fill_time\": \"00:03:46.836039\",\n    \"avg_takeout_wait_time\": \"17:47:14.078495\"\n}"
 						}
 					]
 				},
@@ -2555,6 +2446,196 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "запросить активацию контейнера",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/containers/42/request-activation",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"containers",
+								"42",
+								"request-activation"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "запросить активацию контейнера",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/containers/42/request-activation",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"containers",
+										"42",
+										"request-activation"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 06 Sep 2021 10:19:24 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language, Origin"
+								},
+								{
+									"key": "Allow",
+									"value": "POST, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "24"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": \"email sent\"\n}"
+						}
+					]
+				},
+				{
+					"name": "активировать контейнер через письмо",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/containers/42/activate?token=8FZHM1ZxzpFcq0XHPgmBHbiuyaO0I3rY",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"containers",
+								"42",
+								"activate"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "8FZHM1ZxzpFcq0XHPgmBHbiuyaO0I3rY"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "активировать контейнер через письмо",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/containers/42/activate?token=8FZHM1ZxzpFcq0XHPgmBHbiuyaO0I3rY",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"containers",
+										"42",
+										"activate"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "8FZHM1ZxzpFcq0XHPgmBHbiuyaO0I3rY"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "html",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 06 Sep 2021 10:27:38 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Content-Type",
+									"value": "text/html; charset=utf-8"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language, Origin"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "66"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "<h5>Контейнер успешно активирован.</h5>"
+						}
+					]
 				}
 			]
 		},

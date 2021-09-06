@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+{% autoescape on %}
+<div>Активацию запрашивает контейнер:</div>
+<br>
+<div>ID контейнера {{ container.pk }}. Объём контейнера: {{ container.mass }}кг</div>
+<br>
+<div>Здание: {{ container.building.address }}. Этаж: {{ container.floor}}. Аудитория: {{ container.room }}.</div>
+<br>
+<div>Телефон: {{container.phone}} Почта: {{container.email}} </div>
+<br>
+<div>Комментарий: {{ container.description }}</div>
+<br>
+<div>Если указанные данные не соответствуют действительности (указаны некорректные контактные данные, в выбранном здании
+    нет указанного номера аудитории и т.п.) свяжитесь с автором заявки для уточнения сведений.</div>
+<br>
+<div>Если указанные данные верны, переведите контейнер в активное состояние:</div>
+<a href="{{ activation_link }}">Активировать контейнер</a>
+{% endautoescape %}
+{% endblock %}

@@ -1,25 +1,11 @@
 from datetime import timedelta
 from typing import List
 from django.core.mail import EmailMessage
-from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
 from django.utils import timezone
 
 from rcs_back.containers_app.models import Building, Container
-from rcs_back.takeouts_app.models import (ContainersTakeoutRequest,
-                                          TankTakeoutCompany)
-
-
-def get_hoz_emails() -> List[str]:
-    """Список email'ов хоз отдела"""
-    hozs = get_user_model().objects.filter(
-        groups__name=settings.HOZ_GROUP
-    )
-    emails = []
-    for hos in hozs:
-        emails.append(hos.email)
-    return emails
+from rcs_back.takeouts_app.models import TankTakeoutCompany
 
 
 def takeout_condition_met_notify(building: Building,
