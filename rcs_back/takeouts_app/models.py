@@ -60,13 +60,41 @@ class ContainersTakeoutRequest(models.Model):
         blank=True
     )
 
+    requesting_worker_name = models.CharField(
+        max_length=128,
+        verbose_name="ФИО обратившегося сотрудника (архив)",
+        blank=True
+    )
+
+    requesting_worker_phone = models.CharField(
+        max_length=24,
+        verbose_name="телефон сотрудника (архив)",
+        blank=True
+    )
+
+    archive_room = models.CharField(
+        max_length=16,
+        verbose_name="аудитория",
+        blank=True
+    )
+
+    archive_mass = models.PositiveIntegerField(
+        verbose_name="масса",
+        blank=True,
+        null=True
+    )
+
     def mass(self) -> int:
-        """Возвращает массу бумаги в подтверждённых контейнерах"""
-        mass = 0
-        if self.emptied_containers.all():
-            for container in self.emptied_containers.all():
-                mass += container.mass()
-        return mass
+        """Возвращает массу бумаги в подтверждённых контейнерах
+        или архиве"""
+        if self.archive_mass:
+            return self.archive_mass
+        else:
+            mass = 0
+            if self.emptied_containers.all():
+                for container in self.emptied_containers.all():
+                    mass += container.mass()
+            return mass
 
     def unconfirmed_containers(self) -> QuerySet:
         """Контейнеры, которые добавили в сбор при создании,
@@ -156,15 +184,6 @@ class TankTakeoutRequest(models.Model):
         mass = 0
         for takeout in container_takeouts:
             mass += takeout.mass()
-        archive_takeouts = ArchiveTakeout.objects.filter(
-            building=self.building
-        ).filter(
-            created_at__gt=previous_datetime
-        ).filter(
-            created_at__lt=self.created_at
-        )
-        for takeout in archive_takeouts:
-            mass += takeout.mass
         return mass
 
     def confirmed_mass_match(self) -> Union[float, None]:
@@ -302,47 +321,3 @@ class MassTakeoutConditionCommit(models.Model):
     class Meta:
         verbose_name = "выполнено условие для сбора"
         verbose_name_plural = "выполнены условия для сбора"
-
-
-class ArchiveTakeout(models.Model):
-    """Модель сбора архива"""
-
-    worker_name = models.CharField(
-        max_length=128,
-        verbose_name="ФИО обратившегося сотрудника"
-    )
-
-    worker_phone = models.CharField(
-        max_length=24,
-        verbose_name="телефон сотрудника"
-    )
-
-    building = models.ForeignKey(
-        to=Building,
-        on_delete=models.PROTECT,
-        related_name="archive_takeouts",
-        verbose_name="здание"
-    )
-
-    room = models.CharField(
-        max_length=16,
-        verbose_name="аудитория"
-    )
-
-    mass = models.PositiveIntegerField(
-        verbose_name="масса"
-    )
-
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name="время создания"
-    )
-
-    def __str__(self) -> str:
-        return ("Сбор архива от "
-                f"{self.created_at.astimezone(tz).strftime('%d.%m.%Y')}"
-                f"в {self.building}")
-
-    class Meta:
-        verbose_name = "сбор архива"
-        verbose_name_plural = "сборы архивов"

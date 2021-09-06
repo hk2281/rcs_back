@@ -125,8 +125,6 @@ class Building(BaseBuilding):
             confirmed_at__isnull=False
         ):
             mass += request.mass()
-        for takeout in self.archive_takeouts.all():
-            mass += takeout.mass
         return mass
 
     def confirmed_collected_mass(self) -> int:

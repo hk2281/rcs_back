@@ -27,7 +27,11 @@ class ContainersTakeoutRequestSerializer(serializers.ModelSerializer):
             "confirmed_at",
             "emptied_containers",
             "worker_info",
-            "mass"
+            "mass",
+            "requesting_worker_name",
+            "requesting_worker_phone",
+            "archive_room",
+            "archive_mass"
         ]
         read_only_fields = [
             "created_at",
@@ -57,7 +61,11 @@ class ContainersTakeoutConfirmationSerializer(serializers.ModelSerializer):
             "confirmed_at",
             "emptied_containers",
             "worker_info",
-            "mass"
+            "mass",
+            "requesting_worker_name",
+            "requesting_worker_phone",
+            "archive_room",
+            "archive_mass"
         ]
         read_only_fields = [
             "created_at",
@@ -142,18 +150,4 @@ class AddTakeoutConditionSerializer(serializers.ModelSerializer):
             "public_days",
             "mass",
             "ignore_reports"
-        ]
-
-
-class ArchiveTakeoutSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = ArchiveTakeout
-        fields = [
-            "id",
-            "worker_name",
-            "worker_phone",
-            "building",
-            "room",
-            "mass"
         ]

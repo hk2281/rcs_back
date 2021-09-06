@@ -2865,75 +2865,7 @@
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "list",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/container-takeout-requests",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"container-takeout-requests"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Tue, 20 Jul 2021 09:10:37 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "WSGIServer/0.2 CPython/3.9.5"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Vary",
-									"value": "Accept, Accept-Language"
-								},
-								{
-									"key": "Allow",
-									"value": "GET, POST, HEAD, OPTIONS"
-								},
-								{
-									"key": "X-Frame-Options",
-									"value": "DENY"
-								},
-								{
-									"key": "Content-Length",
-									"value": "437"
-								},
-								{
-									"key": "Content-Language",
-									"value": "ru"
-								},
-								{
-									"key": "X-Content-Type-Options",
-									"value": "nosniff"
-								},
-								{
-									"key": "X-XSS-Protection",
-									"value": "1; mode=block"
-								},
-								{
-									"key": "Referrer-Policy",
-									"value": "same-origin"
-								}
-							],
-							"cookie": [],
-							"body": "[\n    {\n        \"id\": 3,\n        \"created_at\": \"2021-07-19T16:44:08.799140+03:00\",\n        \"building\": 1,\n        \"containers\": [\n            1,\n            2\n        ],\n        \"confirmed_at\": \"2021-07-19T16:48:21.258925+03:00\",\n        \"emptied_containers\": [\n            1,\n            2\n        ],\n        \"worker_info\": \"Тест Тестович\",\n        \"mass\": 15\n    },\n    {\n        \"id\": 4,\n        \"created_at\": \"2021-07-20T12:10:08.704861+03:00\",\n        \"building\": 1,\n        \"containers\": [\n            1,\n            2\n        ],\n        \"confirmed_at\": \"2021-07-20T12:10:28.687917+03:00\",\n        \"emptied_containers\": [\n            1,\n            2\n        ],\n        \"worker_info\": \"Тест Тестович\",\n        \"mass\": 15\n    }\n]"
-						}
-					]
+					"response": []
 				},
 				{
 					"name": "create",
@@ -3000,7 +2932,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Tue, 20 Jul 2021 09:10:08 GMT"
+									"value": "Mon, 06 Sep 2021 11:43:32 GMT"
 								},
 								{
 									"key": "Server",
@@ -3012,7 +2944,7 @@
 								},
 								{
 									"key": "Vary",
-									"value": "Accept, Accept-Language"
+									"value": "Accept, Accept-Language, Origin"
 								},
 								{
 									"key": "Allow",
@@ -3024,7 +2956,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "158"
+									"value": "275"
 								},
 								{
 									"key": "Content-Language",
@@ -3044,7 +2976,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"id\": 4,\n    \"created_at\": \"2021-07-20T12:10:08.704861+03:00\",\n    \"building\": 1,\n    \"containers\": [\n        1,\n        2\n    ],\n    \"confirmed_at\": null,\n    \"emptied_containers\": [],\n    \"worker_info\": \"\",\n    \"mass\": 0\n}"
+							"body": "{\n    \"id\": 18,\n    \"created_at\": \"2021-09-06T14:43:32.728727+03:00\",\n    \"building\": 1,\n    \"building_part\": null,\n    \"containers\": [\n        1,\n        2\n    ],\n    \"confirmed_at\": null,\n    \"emptied_containers\": [],\n    \"worker_info\": \"\",\n    \"mass\": 0,\n    \"requesting_worker_name\": \"\",\n    \"requesting_worker_phone\": \"\",\n    \"archive_room\": \"\",\n    \"archive_mass\": null\n}"
 						}
 					]
 				},
@@ -3160,6 +3092,278 @@
 							],
 							"cookie": [],
 							"body": "{\n    \"id\": 4,\n    \"created_at\": \"2021-07-20T12:10:08.704861+03:00\",\n    \"building\": 1,\n    \"containers\": [\n        1,\n        2\n    ],\n    \"confirmed_at\": \"2021-07-20T12:10:28.687917+03:00\",\n    \"emptied_containers\": [\n        1,\n        2\n    ],\n    \"worker_info\": \"Тест Тестович\",\n    \"mass\": 15\n}"
+						}
+					]
+				},
+				{
+					"name": "создать сбор архива",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "requesting_worker_name",
+									"value": "Тест Тестов",
+									"type": "text"
+								},
+								{
+									"key": "requesting_worker_phone",
+									"value": "89222222222",
+									"type": "text"
+								},
+								{
+									"key": "archive_room",
+									"value": "1234",
+									"type": "text"
+								},
+								{
+									"key": "archive_mass",
+									"value": "150",
+									"type": "text"
+								},
+								{
+									"key": "building",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/container-takeout-requests",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"container-takeout-requests"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "создать сбор архива",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "requesting_worker_name",
+											"value": "Тест Тестов",
+											"type": "text"
+										},
+										{
+											"key": "requesting_worker_phone",
+											"value": "89222222222",
+											"type": "text"
+										},
+										{
+											"key": "archive_room",
+											"value": "1234",
+											"type": "text"
+										},
+										{
+											"key": "archive_mass",
+											"value": "150",
+											"type": "text"
+										},
+										{
+											"key": "building",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/container-takeout-requests",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"container-takeout-requests"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 06 Sep 2021 11:45:55 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language, Origin"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, POST, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "309"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 20,\n    \"created_at\": \"2021-09-06T14:45:55.504683+03:00\",\n    \"building\": 1,\n    \"building_part\": null,\n    \"containers\": [],\n    \"confirmed_at\": null,\n    \"emptied_containers\": [],\n    \"worker_info\": \"\",\n    \"mass\": 150,\n    \"requesting_worker_name\": \"Тест Тестов\",\n    \"requesting_worker_phone\": \"89222222222\",\n    \"archive_room\": \"1234\",\n    \"archive_mass\": 150\n}"
+						}
+					]
+				},
+				{
+					"name": "подтвердить сбор архива",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "worker_info",
+									"value": "Работник вынесший контейнер",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/container-takeout-requests/20",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"container-takeout-requests",
+								"20"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "подтвердить сбор архива",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "worker_info",
+											"value": "Работник вынесший контейнер",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/container-takeout-requests/20",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"container-takeout-requests",
+										"20"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 06 Sep 2021 11:48:04 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language, Origin"
+								},
+								{
+									"key": "Allow",
+									"value": "PUT, PATCH, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "240"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 20,\n    \"created_at\": \"2021-09-06T14:45:55.504683+03:00\",\n    \"building\": 1,\n    \"containers\": [],\n    \"confirmed_at\": \"2021-09-06T14:48:04.887710+03:00\",\n    \"emptied_containers\": [],\n    \"worker_info\": \"Работник вынесший контейнер\",\n    \"mass\": 150\n}"
 						}
 					]
 				}
@@ -3938,166 +4142,6 @@
 						}
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "сборы архивов",
-			"item": [
-				{
-					"name": "create",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "worker_name",
-									"value": "Тест Тестов",
-									"type": "text"
-								},
-								{
-									"key": "worker_phone",
-									"value": "89222222222",
-									"type": "text"
-								},
-								{
-									"key": "building",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "room",
-									"value": "1324",
-									"type": "text"
-								},
-								{
-									"key": "mass",
-									"value": "20",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{host}}/archive-takeouts",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"archive-takeouts"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "create",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "worker_name",
-											"value": "Тест Тестов",
-											"type": "text"
-										},
-										{
-											"key": "worker_phone",
-											"value": "89222222222",
-											"type": "text"
-										},
-										{
-											"key": "building",
-											"value": "1",
-											"type": "text"
-										},
-										{
-											"key": "room",
-											"value": "1324",
-											"type": "text"
-										},
-										{
-											"key": "mass",
-											"value": "20",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/archive-takeouts",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"archive-takeouts"
-									]
-								}
-							},
-							"status": "Created",
-							"code": 201,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Sun, 05 Sep 2021 13:16:47 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "WSGIServer/0.2 CPython/3.9.5"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Vary",
-									"value": "Accept, Accept-Language, Origin"
-								},
-								{
-									"key": "Allow",
-									"value": "POST, OPTIONS"
-								},
-								{
-									"key": "X-Frame-Options",
-									"value": "DENY"
-								},
-								{
-									"key": "Content-Length",
-									"value": "112"
-								},
-								{
-									"key": "Content-Language",
-									"value": "ru"
-								},
-								{
-									"key": "X-Content-Type-Options",
-									"value": "nosniff"
-								},
-								{
-									"key": "X-XSS-Protection",
-									"value": "1; mode=block"
-								},
-								{
-									"key": "Referrer-Policy",
-									"value": "same-origin"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"id\": 2,\n    \"worker_name\": \"Тест Тестов\",\n    \"worker_phone\": \"89222222222\",\n    \"building\": 1,\n    \"room\": \"1324\",\n    \"mass\": 20\n}"
-						}
-					]
 				}
 			]
 		}

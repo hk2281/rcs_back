@@ -33,8 +33,7 @@ urlpatterns = [
     path("api/takeout-conditions/<int:pk>",
          TakeoutConditionDetailView.as_view()),
     path("api/full-container-reports", FullContainerReportView.as_view()),
-    path("api/collected-mass", CollectedMassView.as_view()),
-    path("api/archive-takeouts", ArchiveTakeoutListView.as_view())
+    path("api/collected-mass", CollectedMassView.as_view())
 ]
 
 if bool(settings.DEBUG):
