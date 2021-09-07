@@ -1,8 +1,9 @@
 from django.core.mail import EmailMessage
+from django.conf import settings
 from django.template.loader import render_to_string
 
-from rcs_back.containers_app.models import Container
-from rcs_back.utils.email import get_eco_emails, get_hoz_emails
+from rcs_back.containers_app.models import Container, EmailToken
+from rcs_back.utils.model import building_worker_emails, get_eco_emails
 
 
 def send_public_feedback(email: str, msg: str, container_id: int = 0) -> None:
@@ -25,23 +26,26 @@ def send_public_feedback(email: str, msg: str, container_id: int = 0) -> None:
     email.send()
 
 
-def container_activation_request_notify(container: Container) -> None:
-    """Отправляет сообщение с обратной связью на почту экологу"""
+def container_activation_request_notify(container: Container,
+                                        token: EmailToken) -> None:
+    """Отправляет запрос на активацию экологу и коменданту здания"""
 
-    activation_link = "https://recycle-starter.itmo.ru/api/containers/"  # FIXME
-    activation_link += str(container.pk)
-    activation_link += f"/activate?token={container.activation_token.token}"
-    msg = render_to_string("container_activation_request.html", {
-        "container": container,
-        "activation_link": activation_link
-    }
-    )
+    emails = building_worker_emails(container.building)
+    if emails:
+        activation_link = settings.DOMAIN + "/api/containers/"  # FIXME
+        activation_link += str(container.pk)
+        activation_link += f"/activate?token={token.token}"
+        msg = render_to_string("container_activation_request.html", {
+            "container": container,
+            "activation_link": activation_link
+        }
+        )
 
-    email = EmailMessage(
-        "Запрос активации контейнера на сайте RCS",
-        msg,
-        "noreply@rcs-itmo.ru",
-        get_eco_emails() + get_hoz_emails()
-    )
-    email.content_subtype = "html"
-    email.send()
+        email = EmailMessage(
+            "Запрос активации контейнера на сайте RCS",
+            msg,
+            "noreply@rcs-itmo.ru",
+            emails
+        )
+        email.content_subtype = "html"
+        email.send()

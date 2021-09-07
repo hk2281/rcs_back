@@ -1,14 +1,17 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 
-from .models import RegistrationToken, User
+from .models import User
 
 
 class UserAdmin(DjangoUserAdmin):
     """Define admin model for custom User model with no email field."""
 
     fieldsets = (
-        (None, {'fields': ('email', 'password', "building")}),
+        (None, {'fields': (
+            'email', 'password', "building",
+            "name", "phone"
+        )}),
         ('Permissions', {'fields': ('is_active', 'is_staff',
                                     'is_superuser', 'groups',
                                     'user_permissions')}),
@@ -26,4 +29,3 @@ class UserAdmin(DjangoUserAdmin):
 
 
 admin.site.register(User, UserAdmin)
-admin.site.register(RegistrationToken)

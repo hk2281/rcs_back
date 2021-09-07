@@ -1358,147 +1358,6 @@
 					]
 				},
 				{
-					"name": "регистрация",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "email",
-									"value": "testbuilding@test.com",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "TESTtest123",
-									"type": "text"
-								},
-								{
-									"key": "building",
-									"value": "1",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{host}}/auth/users/?token=dx42mBfkmH4cAUkoXK0FMjHcm6QDq4bd",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"auth",
-								"users",
-								""
-							],
-							"query": [
-								{
-									"key": "token",
-									"value": "dx42mBfkmH4cAUkoXK0FMjHcm6QDq4bd"
-								}
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "регистрация",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "email",
-											"value": "testbuilding@test.com",
-											"type": "text"
-										},
-										{
-											"key": "password",
-											"value": "TESTtest123",
-											"type": "text"
-										},
-										{
-											"key": "building",
-											"value": "1",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{host}}/auth/users/?token=dx42mBfkmH4cAUkoXK0FMjHcm6QDq4bd",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"auth",
-										"users",
-										""
-									],
-									"query": [
-										{
-											"key": "token",
-											"value": "dx42mBfkmH4cAUkoXK0FMjHcm6QDq4bd"
-										}
-									]
-								}
-							},
-							"status": "Created",
-							"code": 201,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Sun, 05 Sep 2021 11:59:19 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "WSGIServer/0.2 CPython/3.9.5"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Vary",
-									"value": "Accept, Accept-Language, Origin"
-								},
-								{
-									"key": "Allow",
-									"value": "POST, OPTIONS"
-								},
-								{
-									"key": "X-Frame-Options",
-									"value": "DENY"
-								},
-								{
-									"key": "Content-Length",
-									"value": "41"
-								},
-								{
-									"key": "Content-Language",
-									"value": "ru"
-								},
-								{
-									"key": "X-Content-Type-Options",
-									"value": "nosniff"
-								},
-								{
-									"key": "X-XSS-Protection",
-									"value": "1; mode=block"
-								},
-								{
-									"key": "Referrer-Policy",
-									"value": "same-origin"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"email\": \"testbuilding@test.com\",\n    \"id\": 13\n}"
-						}
-					]
-				},
-				{
 					"name": "Подтвердить почту",
 					"request": {
 						"method": "POST",
@@ -1613,103 +1472,6 @@
 							],
 							"cookie": [],
 							"body": null
-						}
-					]
-				},
-				{
-					"name": "Получть токен для регистрации",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{host}}/auth/registration-token",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"auth",
-								"registration-token"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "Получть токен для регистрации",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/auth/registration-token",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"auth",
-										"registration-token"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Sun, 22 Aug 2021 12:42:11 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "WSGIServer/0.2 CPython/3.9.5"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Vary",
-									"value": "Accept, Accept-Language, Origin"
-								},
-								{
-									"key": "Allow",
-									"value": "GET, HEAD, OPTIONS"
-								},
-								{
-									"key": "X-Frame-Options",
-									"value": "DENY"
-								},
-								{
-									"key": "Content-Length",
-									"value": "75"
-								},
-								{
-									"key": "Content-Language",
-									"value": "ru"
-								},
-								{
-									"key": "X-Content-Type-Options",
-									"value": "nosniff"
-								},
-								{
-									"key": "X-XSS-Protection",
-									"value": "1; mode=block"
-								},
-								{
-									"key": "Referrer-Policy",
-									"value": "same-origin"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"signup_url\": \"e-kondr01.ru/signup?token=JryG8NpIBU0qX6Qdy4hEFttKfiANaveL\"\n}"
 						}
 					]
 				}
@@ -2865,7 +2627,75 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "list",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/container-takeout-requests",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"container-takeout-requests"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 07 Sep 2021 16:46:49 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language, Origin"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, POST, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "3547"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 3,\n        \"created_at\": \"2021-07-19T16:44:08.799140+03:00\",\n        \"building\": 1,\n        \"building_part\": null,\n        \"containers\": [\n            1,\n            2\n        ],\n        \"confirmed_at\": \"2021-07-19T16:48:21.258925+03:00\",\n        \"emptied_containers\": [\n            1,\n            2\n        ],\n        \"worker_info\": \"Тест Тестович\",\n        \"mass\": 20,\n        \"requesting_worker_name\": \"\",\n        \"requesting_worker_phone\": \"\",\n        \"archive_room\": \"\",\n        \"archive_mass\": null\n    },\n    {\n        \"id\": 6,\n        \"created_at\": \"2021-07-20T12:15:39.013655+03:00\",\n        \"building\": 1,\n        \"building_part\": null,\n        \"containers\": [\n            1,\n            2\n        ],\n        \"confirmed_at\": \"2021-07-20T12:15:51.189634+03:00\",\n        \"emptied_containers\": [\n            1,\n            2\n        ],\n        \"worker_info\": \"Тест Тестович\",\n        \"mass\": 20,\n        \"requesting_worker_name\": \"\",\n        \"requesting_worker_phone\": \"\",\n        \"archive_room\": \"\",\n        \"archive_mass\": null\n    },\n    {\n        \"id\": 7,\n        \"created_at\": \"2021-07-20T12:16:02.545240+03:00\",\n        \"building\": 1,\n        \"building_part\": null,\n        \"containers\": [\n            1,\n            2\n        ],\n        \"confirmed_at\": \"2021-07-20T12:16:06.418593+03:00\",\n        \"emptied_containers\": [\n            1,\n            2\n        ],\n        \"worker_info\": \"Тест Тестович\",\n        \"mass\": 20,\n        \"requesting_worker_name\": \"\",\n        \"requesting_worker_phone\": \"\",\n        \"archive_room\": \"\",\n        \"archive_mass\": null\n    },\n    {\n        \"id\": 12,\n        \"created_at\": \"2021-08-02T21:22:17.682372+03:00\",\n        \"building\": 1,\n        \"building_part\": 1,\n        \"containers\": [\n            1,\n            2\n        ],\n        \"confirmed_at\": \"2021-08-08T18:51:12+03:00\",\n        \"emptied_containers\": [\n            1\n        ],\n        \"worker_info\": \"\",\n        \"mass\": 10,\n        \"requesting_worker_name\": \"\",\n        \"requesting_worker_phone\": \"\",\n        \"archive_room\": \"\",\n        \"archive_mass\": null\n    },\n    {\n        \"id\": 13,\n        \"created_at\": \"2021-08-11T17:56:49.203819+03:00\",\n        \"building\": 1,\n        \"building_part\": 1,\n        \"containers\": [\n            1,\n            2,\n            7\n        ],\n        \"confirmed_at\": null,\n        \"emptied_containers\": [],\n        \"worker_info\": \"\",\n        \"mass\": 0,\n        \"requesting_worker_name\": \"\",\n        \"requesting_worker_phone\": \"\",\n        \"archive_room\": \"\",\n        \"archive_mass\": null\n    },\n    {\n        \"id\": 14,\n        \"created_at\": \"2021-08-25T12:46:14.110010+03:00\",\n        \"building\": 1,\n        \"building_part\": null,\n        \"containers\": [\n            1\n        ],\n        \"confirmed_at\": \"2021-08-25T12:46:27.664378+03:00\",\n        \"emptied_containers\": [\n            1\n        ],\n        \"worker_info\": \"Тест Тестович\",\n        \"mass\": 10,\n        \"requesting_worker_name\": \"\",\n        \"requesting_worker_phone\": \"\",\n        \"archive_room\": \"\",\n        \"archive_mass\": null\n    },\n    {\n        \"id\": 15,\n        \"created_at\": \"2021-08-26T20:08:35.849775+03:00\",\n        \"building\": 1,\n        \"building_part\": null,\n        \"containers\": [\n            1\n        ],\n        \"confirmed_at\": \"2021-08-26T20:08:47.867597+03:00\",\n        \"emptied_containers\": [\n            1\n        ],\n        \"worker_info\": \"Тест Тестович\",\n        \"mass\": 10,\n        \"requesting_worker_name\": \"\",\n        \"requesting_worker_phone\": \"\",\n        \"archive_room\": \"\",\n        \"archive_mass\": null\n    },\n    {\n        \"id\": 16,\n        \"created_at\": \"2021-08-26T20:26:47.619586+03:00\",\n        \"building\": 1,\n        \"building_part\": null,\n        \"containers\": [\n            1\n        ],\n        \"confirmed_at\": \"2021-08-26T20:26:55.266550+03:00\",\n        \"emptied_containers\": [\n            1\n        ],\n        \"worker_info\": \"Тест Тестович\",\n        \"mass\": 10,\n        \"requesting_worker_name\": \"\",\n        \"requesting_worker_phone\": \"\",\n        \"archive_room\": \"\",\n        \"archive_mass\": null\n    },\n    {\n        \"id\": 18,\n        \"created_at\": \"2021-09-06T14:43:32.728727+03:00\",\n        \"building\": 1,\n        \"building_part\": null,\n        \"containers\": [\n            1,\n            2\n        ],\n        \"confirmed_at\": null,\n        \"emptied_containers\": [],\n        \"worker_info\": \"\",\n        \"mass\": 0,\n        \"requesting_worker_name\": \"\",\n        \"requesting_worker_phone\": \"\",\n        \"archive_room\": \"\",\n        \"archive_mass\": null\n    },\n    {\n        \"id\": 19,\n        \"created_at\": \"2021-09-06T14:45:13.987957+03:00\",\n        \"building\": 1,\n        \"building_part\": null,\n        \"containers\": [],\n        \"confirmed_at\": null,\n        \"emptied_containers\": [],\n        \"worker_info\": \"\",\n        \"mass\": 150,\n        \"requesting_worker_name\": \"Тест Тестов\",\n        \"requesting_worker_phone\": \"89222222222\",\n        \"archive_room\": \"1234\",\n        \"archive_mass\": 150\n    },\n    {\n        \"id\": 20,\n        \"created_at\": \"2021-09-06T14:45:55.504683+03:00\",\n        \"building\": 1,\n        \"building_part\": null,\n        \"containers\": [],\n        \"confirmed_at\": \"2021-09-06T14:48:04.887710+03:00\",\n        \"emptied_containers\": [],\n        \"worker_info\": \"Работник вынесший контейнер\",\n        \"mass\": 150,\n        \"requesting_worker_name\": \"Тест Тестов\",\n        \"requesting_worker_phone\": \"89222222222\",\n        \"archive_room\": \"1234\",\n        \"archive_mass\": 150\n    }\n]"
+						}
+					]
 				},
 				{
 					"name": "create",
@@ -2932,7 +2762,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Mon, 06 Sep 2021 11:43:32 GMT"
+									"value": "Tue, 07 Sep 2021 16:52:44 GMT"
 								},
 								{
 									"key": "Server",
@@ -2976,7 +2806,95 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"id\": 18,\n    \"created_at\": \"2021-09-06T14:43:32.728727+03:00\",\n    \"building\": 1,\n    \"building_part\": null,\n    \"containers\": [\n        1,\n        2\n    ],\n    \"confirmed_at\": null,\n    \"emptied_containers\": [],\n    \"worker_info\": \"\",\n    \"mass\": 0,\n    \"requesting_worker_name\": \"\",\n    \"requesting_worker_phone\": \"\",\n    \"archive_room\": \"\",\n    \"archive_mass\": null\n}"
+							"body": "{\n    \"id\": 25,\n    \"created_at\": \"2021-09-07T19:52:44.274886+03:00\",\n    \"building\": 1,\n    \"building_part\": null,\n    \"containers\": [\n        1,\n        2\n    ],\n    \"confirmed_at\": null,\n    \"emptied_containers\": [],\n    \"worker_info\": \"\",\n    \"mass\": 0,\n    \"requesting_worker_name\": \"\",\n    \"requesting_worker_phone\": \"\",\n    \"archive_room\": \"\",\n    \"archive_mass\": null\n}"
+						},
+						{
+							"name": "создать сбор со всеми полными контейнерами",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "building",
+											"value": "1",
+											"type": "text"
+										}
+									],
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/container-takeout-requests?all-full-containers=true",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"container-takeout-requests"
+									],
+									"query": [
+										{
+											"key": "all-full-containers",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 07 Sep 2021 16:55:40 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language, Origin"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, POST, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "275"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 30,\n    \"created_at\": \"2021-09-07T19:55:40.041358+03:00\",\n    \"building\": 1,\n    \"building_part\": null,\n    \"containers\": [\n        1,\n        2\n    ],\n    \"confirmed_at\": null,\n    \"emptied_containers\": [],\n    \"worker_info\": \"\",\n    \"mass\": 0,\n    \"requesting_worker_name\": \"\",\n    \"requesting_worker_phone\": \"\",\n    \"archive_room\": \"\",\n    \"archive_mass\": null\n}"
 						}
 					]
 				},

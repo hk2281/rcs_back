@@ -86,23 +86,6 @@ class Building(BaseBuilding):
         verbose_name="адрес"
     )
 
-    itmo_worker_email = models.EmailField(
-        verbose_name="email коменданта здания",
-        blank=True
-    )
-
-    itmo_worker_name = models.CharField(
-        max_length=128,
-        verbose_name="ФИО коменданта здания",
-        blank=True
-    )
-
-    itmo_worker_phone = models.CharField(
-        max_length=16,
-        verbose_name="номер коменданта здания",
-        blank=True
-    )
-
     get_container_room = models.CharField(
         max_length=64,
         verbose_name="аудитория, в которой можно получить контейнер",
@@ -136,14 +119,17 @@ class Building(BaseBuilding):
                 mass += request.confirmed_mass
         return mass
 
-    def avg_fill_speed(self) -> float:
+    def avg_fill_speed(self) -> Union[float, None]:
         """Средняя скорость сбора макулатуры (кг/месяц)"""
-        if self.tank_takeout_requests.order_by("created_at")[0].confirmed_mass:
-            start_date = self.tank_takeout_requests.order_by("created_at")[
-                0].confirmed_at
-        month_count = (timezone.now().year - start_date.year) * \
-            12 + (timezone.now().month - start_date.month)
-        return self.confirmed_collected_mass() / month_count
+        if self.tank_takeout_requests.count():
+            if self.tank_takeout_requests.order_by("created_at")[0].confirmed_mass:
+                start_date = self.tank_takeout_requests.order_by("created_at")[
+                    0].confirmed_at
+            month_count = (timezone.now().year - start_date.year) * \
+                12 + (timezone.now().month - start_date.month)
+            return self.confirmed_collected_mass() / month_count
+        else:
+            return None
 
     def __str__(self) -> str:
         return self.address
@@ -281,6 +267,11 @@ class Container(models.Model):
         blank=True,
         null=True,
         verbose_name="cреднее время заполнения контейнера"
+    )
+
+    requested_activation = models.BooleanField(
+        default=False,
+        verbose_name="запрошена активация"
     )
 
     def mass(self) -> int:
@@ -483,13 +474,6 @@ class Container(models.Model):
             avg_takeout_wait_time = sum_time / count
             return avg_takeout_wait_time
 
-    def requested_activation(self) -> bool:
-        """Была ли запрошена активация для этого контейнера?"""
-        try:
-            return bool(self.activation_token)
-        except ContainerActivationToken.DoesNotExist:
-            return False
-
     def __str__(self) -> str:
         return f"Контейнер №{self.pk}"
 
@@ -546,8 +530,10 @@ class FullContainerReport(models.Model):
         verbose_name_plural = "контейнеры заполнены"
 
 
-class ContainerActivationToken(models.Model):
-    """Модель токена для активации контейнера через email"""
+class EmailToken(models.Model):
+    """Модель токена для:
+    активации контейнера через email;
+    создания сбора всех контейнеров через email"""
 
     TOKEN_LENGTH = 32
 
@@ -555,13 +541,6 @@ class ContainerActivationToken(models.Model):
         max_length=32,
         blank=True,
         verbose_name="токен"
-    )
-
-    container = models.OneToOneField(
-        to=Container,
-        on_delete=models.CASCADE,
-        related_name="activation_token",
-        verbose_name="контейнер"
     )
 
     def generate_token(self) -> str:
@@ -576,7 +555,7 @@ class ContainerActivationToken(models.Model):
         while True:
             token = self.generate_token()
             """Проверка на уникальность"""
-            if not ContainerActivationToken.objects.filter(
+            if not EmailToken.objects.filter(
                 token=token
             ).first():
                 break
@@ -586,5 +565,5 @@ class ContainerActivationToken(models.Model):
         return f"токен №{self.pk}"
 
     class Meta:
-        verbose_name = "токен для активации контейнера"
-        verbose_name_plural = "токены для активации контейнеров"
+        verbose_name = "токен для email"
+        verbose_name_plural = "токены для email"

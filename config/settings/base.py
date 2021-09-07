@@ -330,3 +330,4 @@ DJOSER = {
 
 ECO_GROUP = "эко"
 HOZ_GROUP = "хоз"
+DOMAIN = "https://recycle-starter.itmo.ru"

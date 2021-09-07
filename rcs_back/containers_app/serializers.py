@@ -23,7 +23,6 @@ class BuildingSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "address",
-            "itmo_worker_email",
             "building_parts"
         ]
 

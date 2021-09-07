@@ -1,5 +1,6 @@
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.conf import settings
 from rest_framework import generics, permissions, views, status
 from rest_framework.response import Response
 from tempfile import NamedTemporaryFile
@@ -194,6 +195,7 @@ class ContainerStickerView(views.APIView):
 
 
 class ContainerActivationRequestView(views.APIView):
+    """View для запроса активации контейнером"""
     permission_classes = [permissions.AllowAny]
 
     def post(self, request, *args, **kwargs):
@@ -208,21 +210,21 @@ class ContainerActivationRequestView(views.APIView):
                 resp,
                 status=status.HTTP_400_BAD_REQUEST
             )
-        if container.requested_activation():
+        if container.requested_activation:
             resp = {
-                "error": "This container has already requested activated"
+                "error": "This container has already requested activation"
             }
             return Response(
                 resp,
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        token = ContainerActivationToken.objects.create(
-            container=container
-        )
+        token = EmailToken.objects.create()
         token.set_token()
         token.save()
-        container_activation_request_notify(container)
+        container.requested_activation = True
+        container.save()
+        container_activation_request_notify(container, token)
         resp = {
             "success": "email sent"
         }
@@ -238,30 +240,27 @@ class ContainerActivationView(views.APIView):
             Container, pk=self.kwargs["pk"]
         )
         if container.status != container.WAITING:
-            resp = "<h5>Этот контейнер уже активирован.</h5>"
-            return HttpResponse(
-                resp,
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        if "token" in self.request.query_params:
-            token = self.request.query_params.get("token")
-            if (not container.requested_activation() or
-                    container.activation_token.token != token):
-                resp = "<h5>Ошибка: неправильный токен для активации.</h5>"
-                return HttpResponse(
-                    resp,
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            else:
+            title = "Ошибка активации"
+            text = "Этот контейнер уже активирован"
+            status = "error"
+        elif "token" in self.request.query_params:
+            r_token = self.request.query_params.get("token")
+            token = EmailToken.objects.filter(
+                token=r_token
+            ).first()
+            if token:
                 container.status = container.ACTIVE
+                container.requested_activation = False
                 container.save()
-                container.activation_token.delete()
-                resp = "<h5>Контейнер успешно активирован.</h5>"
-                return HttpResponse(resp)
+                token.delete()
+                title = "Успешная активация"
+                text = "Контейнер успешно активирован"
+                status = "success"
         else:
-            resp = "<h5>Ошибка: неправильный токен для активации.</h5>"
-            return HttpResponse(
-                resp,
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            title = "Ошибка активации"
+            text = "Неверный токен для активации"
+            status = "error"
+        redirect_path = f"/reslult?title={title}&text={text}&status={status}"
+        return HttpResponseRedirect(
+            redirect_to=settings.DOMAIN + redirect_path
+        )

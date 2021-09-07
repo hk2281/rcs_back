@@ -7,7 +7,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 def generate_qr_with_logo(container_id: int) -> Image:
     """Генерирует QR код с ссылкой на фронт на контейнер и с лого"""
-    url = f"https://placeholder.com/containers/{container_id}"  # FIXME
+    url = settings.DOMAIN + f"containers/{container_id}"  # FIXME
     qr = qrcode.QRCode(
         version=5,
         error_correction=qrcode.constants.ERROR_CORRECT_H,
