@@ -13,3 +13,19 @@ git clone https://github.com/xalvaine/restarter.git
 
 Gunicorn workers на сервере иногда умирали с signal 9, скорее всего
 потому что не хватало памяти. Пофиксил, добавив swap-memory.
+
+
+ТЕСТИРОВАНИЕ
+
+
+run tests:
+python manage.py test --settings config.settings.test --parallel --keepdb
+
+
+coverage: 
+
+coverage run manage.py test --settings config.settings.test --parallel --keepdb
+
+coverage html
+
+смотрим htmlcov/index.html

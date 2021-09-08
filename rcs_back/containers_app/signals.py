@@ -16,8 +16,8 @@ def check_container_state(sender, instance: Container,
 
 
 @receiver(post_save, sender=Building)
-def check_container_state(sender, instance: Building,
-                          created: bool, **kwargs) -> None:
+def create_takeout_condition_for_building(sender, instance: Building,
+                                          created: bool, **kwargs) -> None:
     """Создаём условия для сбора при создании здания"""
     if created:
         TakeoutCondition.objects.create(
@@ -26,8 +26,8 @@ def check_container_state(sender, instance: Building,
 
 
 @receiver(post_save, sender=BuildingPart)
-def check_container_state(sender, instance: BuildingPart,
-                          created: bool, **kwargs) -> None:
+def create_takeout_condition_for_bpart(sender, instance: BuildingPart,
+                                       created: bool, **kwargs) -> None:
     """Создаём условия для сбора при создании корпуса здания"""
     if created:
         TakeoutCondition.objects.create(
