@@ -90,6 +90,10 @@ class ContainerModelTests(TestCase):
         )
         for container in active_containers:
             self.assertTrue(container.is_active())
+        all_containers = Container.objects.all()
+        inactive_containers = all_containers.difference(active_containers)
+        for container in inactive_containers:
+            self.assertFalse(container.is_active())
 
     def test_is_public(self):
 

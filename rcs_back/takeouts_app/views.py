@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db.models import Q
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
@@ -9,7 +10,6 @@ from rest_framework.response import Response
 from rcs_back.utils.mixins import UpdateThenRetrieveModelMixin
 from rcs_back.takeouts_app.models import *
 from rcs_back.takeouts_app.serializers import *
-from rcs_back.takeouts_app.utils import *
 from rcs_back.containers_app.models import Building, EmailToken
 from rcs_back.containers_app.tasks import handle_empty_container
 from rcs_back.containers_app.utils.model import total_mass
@@ -44,7 +44,8 @@ class ContainersTakeoutListView(generics.ListCreateAPIView):
                 title = "Ошибка активации"
                 text = "Неверный токен для активации"
                 status = "error"
-            redirect_path = f"/reslult?title={title}&text={text}&status={status}"
+            redirect_path = f"/reslult?title={title}&text={text}"
+            redirect_path += f"&status={status}"
             return HttpResponseRedirect(
                 redirect_to=settings.DOMAIN + redirect_path
             )
@@ -96,9 +97,14 @@ class ContainersTakeoutConfirmationView(generics.UpdateAPIView):
         сбора"""
         serializer.save(confirmed_at=timezone.now())
         if "emptied_containers" in serializer.validated_data:
-            emptied_containers = serializer.validated_data["emptied_containers"]
+            emptied_containers = serializer.validated_data[
+                "emptied_containers"
+            ]
             for container in emptied_containers:
                 handle_empty_container.delay(container.pk)
+            building = self.get_object().building
+            building._takeout_notified = False
+            building.save()
 
 
 class TankTakeoutRequestListView(generics.ListCreateAPIView):
@@ -107,7 +113,7 @@ class TankTakeoutRequestListView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         instance = serializer.save()
-        tank_takeout_notify(instance.building)
+        instance.building.tank_takeout_notify()
 
 
 class TankTakeoutConfirmationView(generics.UpdateAPIView):

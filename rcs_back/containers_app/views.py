@@ -219,12 +219,8 @@ class ContainerActivationRequestView(views.APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        token = EmailToken.objects.create()
-        token.set_token()
-        token.save()
-        container.requested_activation = True
-        container.save()
-        container_activation_request_notify(container, token)
+        container.request_activation()
+
         resp = {
             "success": "email sent"
         }
@@ -249,9 +245,7 @@ class ContainerActivationView(views.APIView):
                 token=r_token
             ).first()
             if token:
-                container.status = container.ACTIVE
-                container.requested_activation = False
-                container.save()
+                container.activate()
                 token.delete()
                 title = "Успешная активация"
                 text = "Контейнер успешно активирован"

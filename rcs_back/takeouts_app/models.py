@@ -210,26 +210,6 @@ class TankTakeoutRequest(models.Model):
         verbose_name_plural = "запросы вывоза баков"
 
 
-class TankTakeoutCompany(models.Model):
-    """Модель компании, ответственной за вывоз бака"""
-
-    email = models.EmailField(
-        verbose_name="email"
-    )
-
-    is_active = models.BooleanField(
-        default=True,
-        verbose_name="активна"
-    )
-
-    def __str__(self) -> str:
-        return self.email
-
-    class Meta:
-        verbose_name = "компания, вывоза бака"
-        verbose_name_plural = "компании, вывоз бака"
-
-
 class TakeoutCondition(models.Model):
     """Модель условий для сбора"""
 
@@ -287,37 +267,3 @@ class TakeoutCondition(models.Model):
     class Meta:
         verbose_name = "условие для сбора"
         verbose_name_plural = "условия для сбора"
-
-
-class MassTakeoutConditionCommit(models.Model):
-    """Модель фиксации выполнения
-    условия на вынос по массе"""
-
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name="время создания"
-    )
-
-    building = models.ForeignKey(
-        to=Building,
-        on_delete=models.CASCADE,
-        related_name="mass_condition_commits",
-        verbose_name="здание"
-    )
-
-    building_part = models.ForeignKey(
-        to=BuildingPart,
-        on_delete=models.CASCADE,
-        related_name="mass_condition_commits",
-        null=True,
-        blank=True,
-        verbose_name="корпус здания"
-    )
-
-    def __str__(self) -> str:
-        return (f"{self.created_at.astimezone(tz).strftime('%d.%m.%Y %H:%M')}"
-                f"в {self.building}")
-
-    class Meta:
-        verbose_name = "выполнено условие для сбора"
-        verbose_name_plural = "выполнены условия для сбора"

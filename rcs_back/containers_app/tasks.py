@@ -6,11 +6,8 @@ from django.utils import timezone
 from celery import shared_task
 from tempfile import NamedTemporaryFile
 
-from rcs_back.containers_app.models import (
-    FullContainerReport, Container, BuildingPart)
-from rcs_back.takeouts_app.utils.email import takeout_condition_met_notify
+from rcs_back.containers_app.models import FullContainerReport, Container
 from rcs_back.containers_app.utils.qr import generate_sticker
-from rcs_back.takeouts_app.models import MassTakeoutConditionCommit
 
 
 @shared_task
@@ -42,27 +39,6 @@ def public_container_add_notify(container_id: int) -> None:
         email.send()
 
 
-def check_mass_condition_to_notify(container: Container) -> None:
-    """Проверяем, нужно ли отправить оповещение для сбора контейнеров.
-    Если условие по массе выполняется, то оповещаем и фиксируем выполнение."""
-    trigger = container.get_mass_rule_trigger()
-    if trigger:
-        """Выполняется условие по массе"""
-        if not trigger.is_mass_condition_commited():
-            """Нет коммита выполнения"""
-            building_part = container.building_part if isinstance(
-                trigger, BuildingPart) else None
-            MassTakeoutConditionCommit.objects.create(
-                building=container.building,
-                building_part=building_part
-            )
-
-        takeout_condition_met_notify(
-            trigger.get_building(),
-            trigger.containers_for_takeout()
-        )
-
-
 @shared_task
 def handle_first_full_report(container_id: int, by_staff: bool) -> None:
     """При заполнении контейнера нужно запомнить время
@@ -79,9 +55,9 @@ def handle_first_full_report(container_id: int, by_staff: bool) -> None:
 
     """Если выполняются условия для вывоза по
     кол-ву бумаги, сообщаем"""
-    if by_staff or container.is_reported_just_enough():
+    if container.is_full():
         container._is_full = True  # Для сортировки
-        check_mass_condition_to_notify(container)
+        container.building_check_conditions_to_notify()
     container.save()
 
 
@@ -101,10 +77,10 @@ def handle_repeat_full_report(container_id: int, by_staff: bool) -> None:
 
     """Если выполняются условия для вывоза по
     кол-ву бумаги, сообщаем"""
-    if by_staff or container.is_reported_just_enough():
+    if container.is_full():
         container._is_full = True  # Для сортировки
         container.save()
-        check_mass_condition_to_notify(container)
+        container.building.check_conditions_to_notify()
 
 
 @shared_task

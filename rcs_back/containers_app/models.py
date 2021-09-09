@@ -1,14 +1,59 @@
 import datetime
 
+from django.conf import settings
+from django.core.mail import EmailMessage
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models.query import QuerySet
 from django.utils import timezone
+from django.template.loader import render_to_string
 from secrets import choice
 from string import ascii_letters, digits
 from typing import Union
 
+from rcs_back.utils.model import *
+
 
 tz = timezone.get_default_timezone()
+
+
+class EmailToken(models.Model):
+    """Модель токена для:
+    активации контейнера через email;
+    создания сбора всех контейнеров через email"""
+
+    TOKEN_LENGTH = 32
+
+    token = models.CharField(
+        max_length=32,
+        blank=True,
+        verbose_name="токен"
+    )
+
+    def generate_token(self) -> str:
+        """Генерирует рандомный токен"""
+        token = ''.join(choice(
+            ascii_letters + digits
+        ) for _ in range(self.TOKEN_LENGTH))
+        return token
+
+    def set_token(self) -> None:
+        """Задать значение поля token"""
+        while True:
+            token = self.generate_token()
+            """Проверка на уникальность"""
+            if not EmailToken.objects.filter(
+                token=token
+            ).first():
+                break
+        self.token = token
+
+    def __str__(self) -> str:
+        return f"токен №{self.pk}"
+
+    class Meta:
+        verbose_name = "токен для email"
+        verbose_name_plural = "токены для email"
 
 
 class BaseBuilding(models.Model):
@@ -40,11 +85,6 @@ class BaseBuilding(models.Model):
                 return True
         return False
 
-    def needs_takeout(self) -> bool:
-        """Нужно ли вынести бумагу?"""
-        return (self.meets_mass_takeout_condition() or
-                self.meets_time_takeout_condition())
-
     def containers_for_takeout(self) -> QuerySet:
         """Возвращает список контейнеров, которые нужно вынести"""
         containers_for_takeout = []
@@ -52,23 +92,6 @@ class BaseBuilding(models.Model):
             if container.needs_takeout():
                 containers_for_takeout.append(container)
         return containers_for_takeout
-
-    def is_mass_condition_commited(self) -> bool:
-        """Зафиксировано ли выполнение условия по массе?"""
-        latest_commit = self.mass_condition_commits.order_by(
-            "-created_at"
-        ).first()
-        latest_takeout_request = self.containers_takeout_requests.filter(
-            confirmed_at__isnull=False
-        ).order_by(
-            "-created_at"
-        ).first()
-        if latest_commit and latest_takeout_request:
-            if latest_commit.created_at > latest_takeout_request.created_at:
-                return True
-        if not latest_takeout_request and latest_commit:
-            return True
-        return False
 
     def container_count(self) -> int:
         """Кол-во активных контейнеров"""
@@ -98,8 +121,105 @@ class Building(BaseBuilding):
         blank=True
     )
 
-    def get_building(self) -> "Building":
-        return self
+    _takeout_notified = models.BooleanField(
+        default=False,
+        verbose_name="послано оповещение о необходимоси сбора"
+    )
+
+    def needs_takeout(self) -> bool:
+        """Нужно ли вынести бумагу?"""
+        if hasattr(self, "building_parts"):
+            for bpart in self.building_parts.all():
+                if bpart.needs_takeout():
+                    return True
+        return (self.meets_mass_takeout_condition() or
+                self.meets_time_takeout_condition())
+
+    def check_conditions_to_notify(self) -> None:
+        """Проверяет условия на вынос и если нужно,
+        отправляет email-оповещание о необходимости сбора"""
+        if not self._takeout_notified and self.needs_takeout():
+
+            self._takeout_notified = True
+            self.save()
+
+            self.takeout_condition_met_notify()
+
+    def takeout_condition_met_notify(self) -> None:
+        """Оповещение о необходимости сбора"""
+        emails = self.worker_emails()
+        if emails:
+
+            due_date = timezone.now().date() + datetime.timedelta(days=1)
+            token = EmailToken.objects.create()
+            token.set_token()
+            token.save()
+            link = settings.DOMAIN
+            link += f"/api/container-takeout-requests?token={token.token}"
+            link += f"&building={self.pk}"
+
+            msg = render_to_string("takeout_condition_met.html", {
+                "due_date": due_date,
+                "containers": self.containers_for_takeout(),
+                "link": link,
+                "has_building_parts": hasattr(self, "building_parts"),
+            }
+            )
+
+            email = EmailMessage(
+                "Оповещание от сервиса RCS",
+                msg,
+                "noreply@rcs-itmo.ru",
+                emails
+            )
+            email.content_subtype = "html"
+            email.send()
+
+    def tank_takeout_notify(self) -> None:
+        """Отправляет запрос на вывоз накопительного бака"""
+        tank_takeout_company = TankTakeoutCompany.objects.first()
+        if tank_takeout_company and tank_takeout_company.email:
+
+            phone = ""
+            name = ""
+            hoz_worker = self.get_hoz_workers().first()
+            if hoz_worker:
+                phone = hoz_worker.phone
+                name = hoz_worker.name
+
+            msg = render_to_string("tank_takeout.html", {
+                "address": self.address,
+                "phone": phone,
+                "name": name
+            }
+            )
+
+            email = EmailMessage(
+                "Оповещание от сервиса RCS",
+                msg,
+                "noreply@rcs-itmo.ru",
+                [tank_takeout_company.email]
+            )
+            email.content_subtype = "html"
+            email.send()
+
+    def get_hoz_workers(self) -> QuerySet["User"]:
+        """QuerySet из сотрудников хоз отдела"""
+        hoz_workers = get_user_model().objects.filter(
+            groups__name=settings.HOZ_GROUP
+        ).filter(
+            building=self
+        )
+        return hoz_workers
+
+    def worker_emails(self) -> List[str]:
+        """Возвращает email всех сотрудников эко отдела
+        и email коменданта здания"""
+        emails = get_eco_emails()
+        hoz_worker = self.get_hoz_workers().first()
+        if hoz_worker:
+            emails.append(hoz_worker.email)
+        return emails
 
     def calculated_collected_mass(self) -> int:
         """Собранная масса макулатуры, посчитанная как среднее"""
@@ -122,7 +242,8 @@ class Building(BaseBuilding):
     def avg_fill_speed(self) -> Union[float, None]:
         """Средняя скорость сбора макулатуры (кг/месяц)"""
         if self.tank_takeout_requests.count():
-            if self.tank_takeout_requests.order_by("created_at")[0].confirmed_mass:
+            if self.tank_takeout_requests.order_by(
+                    "created_at")[0].confirmed_mass:
                 start_date = self.tank_takeout_requests.order_by("created_at")[
                     0].confirmed_at
             month_count = (timezone.now().year - start_date.year) * \
@@ -153,8 +274,10 @@ class BuildingPart(BaseBuilding):
         verbose_name="здание"
     )
 
-    def get_building(self) -> Building:
-        return self.building
+    def needs_takeout(self) -> bool:
+        """Нужно ли вынести бумагу?"""
+        return (self.meets_mass_takeout_condition() or
+                self.meets_time_takeout_condition())
 
     def __str__(self) -> str:
         return f"корпус {self.num}"
@@ -366,17 +489,6 @@ class Container(models.Model):
         else:
             return False
 
-    def is_reported_just_enough(self) -> bool:
-        """Ровно ли достаточно сообщений о заполненности поступило,
-        чтобы считать контейнер полным?"""
-        if self.is_active() and self.last_full_report():
-            if not self.is_public():
-                return self.last_full_report().count == 1
-            ignore_count = self.ignore_reports_count()
-            return self.last_full_report().count == ignore_count + 1
-        else:
-            return False
-
     def get_time_condition_days(self) -> int:
         """Возвращает максимальное кол-во дней, которое
         этот контейнер может быть заполнен по условию"""
@@ -474,6 +586,44 @@ class Container(models.Model):
             avg_takeout_wait_time = sum_time / count
             return avg_takeout_wait_time
 
+    def request_activation(self) -> None:
+        """Запросить активацию контейнера"""
+        if not self.is_active():
+            token = EmailToken.objects.create()
+            token.set_token()
+            token.save()
+            self.requested_activation = True
+            self.save()
+            self.activation_request_notify()
+
+    def activation_request_notify(self, token: EmailToken) -> None:
+        """Отправляет запрос на активацию экологу и коменданту здания"""
+        emails = self.building.worker_emails()
+        if emails:
+            activation_link = settings.DOMAIN + "/api/containers/"  # FIXME
+            activation_link += str(self.pk)
+            activation_link += f"/activate?token={token.token}"
+            msg = render_to_string("container_activation_request.html", {
+                "container": self,
+                "activation_link": activation_link
+            }
+            )
+
+            email = EmailMessage(
+                "Запрос активации контейнера на сайте RCS",
+                msg,
+                "noreply@rcs-itmo.ru",
+                emails
+            )
+            email.content_subtype = "html"
+            email.send()
+
+    def activate(self) -> None:
+        """Активировать контейнер"""
+        self.status = Container.ACTIVE
+        self.requested_activation = False
+        self.save()
+
     def __str__(self) -> str:
         return f"Контейнер №{self.pk}"
 
@@ -530,40 +680,21 @@ class FullContainerReport(models.Model):
         verbose_name_plural = "контейнеры заполнены"
 
 
-class EmailToken(models.Model):
-    """Модель токена для:
-    активации контейнера через email;
-    создания сбора всех контейнеров через email"""
+class TankTakeoutCompany(models.Model):
+    """Модель компании, ответственной за вывоз бака"""
 
-    TOKEN_LENGTH = 32
-
-    token = models.CharField(
-        max_length=32,
-        blank=True,
-        verbose_name="токен"
+    email = models.EmailField(
+        verbose_name="email"
     )
 
-    def generate_token(self) -> str:
-        """Генерирует рандомный токен"""
-        token = ''.join(choice(
-            ascii_letters + digits
-        ) for _ in range(self.TOKEN_LENGTH))
-        return token
-
-    def set_token(self) -> None:
-        """Задать значение поля token"""
-        while True:
-            token = self.generate_token()
-            """Проверка на уникальность"""
-            if not EmailToken.objects.filter(
-                token=token
-            ).first():
-                break
-        self.token = token
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="активна"
+    )
 
     def __str__(self) -> str:
-        return f"токен №{self.pk}"
+        return self.email
 
     class Meta:
-        verbose_name = "токен для email"
-        verbose_name_plural = "токены для email"
+        verbose_name = "компания, вывоза бака"
+        verbose_name_plural = "компании, вывоз бака"

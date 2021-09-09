@@ -20,5 +20,8 @@ class RetrieveCurrentUserView(APIView):
         resp["id"] = request.user.pk
         resp["email"] = request.user.email
         resp["has_eco_group"] = has_eco_group
-        resp["building"] = request.user.building.pk
+        if request.user.building:
+            resp["building"] = request.user.building.pk
+        else:
+            resp["building"] = None
         return Response(resp)

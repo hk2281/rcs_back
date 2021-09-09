@@ -23,6 +23,4 @@ class TankTakeoutRequestAdmin(admin.ModelAdmin):
 
 admin.site.register(ContainersTakeoutRequest, ContainersTakeoutRequestAdmin)
 admin.site.register(TankTakeoutRequest, TankTakeoutRequestAdmin)
-admin.site.register(TankTakeoutCompany)
 admin.site.register(TakeoutCondition)
-admin.site.register(MassTakeoutConditionCommit)

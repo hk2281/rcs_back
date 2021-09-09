@@ -15,10 +15,8 @@ class ContainerAdmin(admin.ModelAdmin):
         "last_emptied_report",
         "ignore_reports_count",
         "is_full",
-        "is_reported_just_enough",
         "check_time_conditions",
         "needs_takeout",
-        "get_mass_rule_trigger",
         "requested_activation"
     ]
 
@@ -30,7 +28,6 @@ class BuildingPartAdmin(admin.ModelAdmin):
         "meets_time_takeout_condition",
         "needs_takeout",
         "containers_for_takeout",
-        "is_mass_condition_commited",
         "container_count"
     ]
 
@@ -42,7 +39,6 @@ class BuildingAdmin(admin.ModelAdmin):
         "meets_time_takeout_condition",
         "needs_takeout",
         "containers_for_takeout",
-        "is_mass_condition_commited",
         "container_count",
         "calculated_collected_mass",
         "confirmed_collected_mass",
@@ -61,3 +57,4 @@ admin.site.register(Building, BuildingAdmin)
 admin.site.register(BuildingPart, BuildingPartAdmin)
 admin.site.register(FullContainerReport, FullContainerReportAdmin)
 admin.site.register(EmailToken)
+admin.site.register(TankTakeoutCompany)
