@@ -54,11 +54,8 @@ def handle_first_full_report(container_id: int, by_staff: bool) -> None:
     container.avg_fill_time = container.calc_avg_fill_time()
 
     """Если выполняются условия для вывоза по
-    кол-ву бумаги, сообщаем"""
-    if container.is_full():
-        container._is_full = True  # Для сортировки
-        container.building_check_conditions_to_notify()
-    container.save()
+    кол-ву бумаги, нужно сообщить"""
+    container.check_fullness()
 
 
 @shared_task
@@ -77,10 +74,7 @@ def handle_repeat_full_report(container_id: int, by_staff: bool) -> None:
 
     """Если выполняются условия для вывоза по
     кол-ву бумаги, сообщаем"""
-    if container.is_full():
-        container._is_full = True  # Для сортировки
-        container.save()
-        container.building.check_conditions_to_notify()
+    container.check_fullness()
 
 
 @shared_task

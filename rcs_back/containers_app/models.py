@@ -147,7 +147,7 @@ class Building(BaseBuilding):
 
     def takeout_condition_met_notify(self) -> None:
         """Оповещение о необходимости сбора"""
-        emails = self.worker_emails()
+        emails = self.get_worker_emails()
         if emails:
 
             due_date = timezone.now().date() + datetime.timedelta(days=1)
@@ -212,7 +212,7 @@ class Building(BaseBuilding):
         )
         return hoz_workers
 
-    def worker_emails(self) -> List[str]:
+    def get_worker_emails(self) -> List[str]:
         """Возвращает email всех сотрудников эко отдела
         и email коменданта здания"""
         emails = get_eco_emails()
@@ -489,6 +489,15 @@ class Container(models.Model):
         else:
             return False
 
+    def check_fullness(self) -> None:
+        """Проверяет, полный ли контейнер. Если полный,
+        то сохраняет для сортировки и проверяет,
+        не выполнилось ли условие по массе"""
+        if self.is_full() and not self._is_full:
+            self._is_full = True  # Для сортировки
+            self.save()
+            self.building.check_conditions_to_notify()
+
     def get_time_condition_days(self) -> int:
         """Возвращает максимальное кол-во дней, которое
         этот контейнер может быть заполнен по условию"""
@@ -594,11 +603,11 @@ class Container(models.Model):
             token.save()
             self.requested_activation = True
             self.save()
-            self.activation_request_notify()
+            self.activation_request_notify(token)
 
     def activation_request_notify(self, token: EmailToken) -> None:
         """Отправляет запрос на активацию экологу и коменданту здания"""
-        emails = self.building.worker_emails()
+        emails = self.building.get_worker_emails()
         if emails:
             activation_link = settings.DOMAIN + "/api/containers/"  # FIXME
             activation_link += str(self.pk)
