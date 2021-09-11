@@ -1,11 +1,15 @@
+import pandas as pd
+import pdfkit
+
 from django.conf import settings
 from django.db.models import Q
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, HttpResponse
 from rest_framework import (generics, views, permissions,
                             status as drf_status, exceptions)
 from rest_framework.response import Response
+from tempfile import NamedTemporaryFile
 
 from rcs_back.utils.mixins import UpdateThenRetrieveModelMixin
 from rcs_back.takeouts_app.models import *
@@ -13,6 +17,7 @@ from rcs_back.takeouts_app.serializers import *
 from rcs_back.containers_app.models import Building, EmailToken
 from rcs_back.containers_app.tasks import handle_empty_container
 from rcs_back.containers_app.utils.model import total_mass
+from rcs_back.stats_app.excel import get_short_container_info_xl
 
 
 class ContainersTakeoutListView(generics.ListCreateAPIView):
@@ -105,6 +110,59 @@ class ContainersTakeoutConfirmationView(generics.UpdateAPIView):
             building = self.get_object().building
             building._takeout_notified = False
             building.save()
+
+
+class ContainersForTakeoutView(views.APIView):
+    """View для получения PDF со списком
+    контейнеров на сбор"""
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        """Чтобы сделать из excel pdf, нужно провести
+        следующую цепочку:
+        excel -> pandas -> html -> pdf"""
+        takeout_pk = self.kwargs["pk"]
+        takeout = get_object_or_404(
+            ContainersTakeoutRequest,
+            pk=int(takeout_pk)
+        )
+        containers = takeout.containers.all()
+        wb = get_short_container_info_xl(containers)
+
+        with NamedTemporaryFile() as xl_f, \
+                NamedTemporaryFile(suffix=".html") as html_f, \
+                NamedTemporaryFile(suffix=".pdf") as pdf_f:
+
+            wb.save(xl_f.name)
+
+            df = pd.read_excel(
+                xl_f.name,
+                na_filter=False  # Чтобы не было "NaN" в пустых клетках
+            )
+
+            html = df.to_html(index=False)  # чтобы не было столбца индекс
+            with open(html_f.name, "w", encoding="utf-8") as file:
+                # чтобы была правильная кодировка
+                file.writelines('<meta charset="UTF-8">\n')
+                file.write(html)
+
+            pdfkit.from_file(html_f.name, pdf_f.name)
+
+            fname = "recycle-starter-containers-takeout-"
+            fname += timezone.now().strftime("%d.%m.%Y")
+            fname += ".pdf"
+            file_data = pdf_f
+
+            response = HttpResponse(
+                file_data,
+                headers={
+                    "Content-Type": "application/pdf",
+                    "Content-Disposition":
+                    f'attachment; filename={fname}'
+                }
+            )
+
+            return response
 
 
 class TankTakeoutRequestListView(generics.ListCreateAPIView):

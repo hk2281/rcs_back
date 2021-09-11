@@ -39,9 +39,9 @@ def set_width(ws: Worksheet) -> None:
                 dims[cell.column_letter] = max(
                     (dims.get(cell.column_letter, 0),
                      len(str(cell.value)))
-                ) + 0.5
+                )
     for col, value in dims.items():
-        ws.column_dimensions[col].width = value
+        ws.column_dimensions[col].width = value + 2
 
 
 def write_container_headers(ws: Worksheet) -> None:
@@ -105,7 +105,7 @@ def write_container(c: Container, ws: Worksheet, i: int) -> None:
     ws[f"P{i}"] = c.collected_mass()
 
 
-def get_container_stats_ws(ws) -> None:
+def get_container_stats_ws(ws: Worksheet) -> None:
     """Создаёт страницу из excel с актуальной статистикой по контейнерам"""
     ws.title = "Контейнеры"
     write_container_headers(ws)
@@ -163,7 +163,7 @@ def write_container_takeout(t: ContainersTakeoutRequest,
     ws[f"I{i}"] = t.worker_info
 
 
-def get_container_takeout_stats_ws(ws) -> None:
+def get_container_takeout_stats_ws(ws: Worksheet) -> None:
     """Создаёт страницу из excel с актуальной статистикой по сборам"""
     ws.title = "Сборы"
     write_container_takeout_headers(ws)
@@ -218,7 +218,7 @@ def write_tank_takeout(t: TankTakeoutRequest,
     ws[f"H{i}"] = t.mass_difference()
 
 
-def get_tank_takeout_stats_ws(ws) -> None:
+def get_tank_takeout_stats_ws(ws: Worksheet) -> None:
     """Создаёт страницу из excel с актуальной статистикой по вывозам"""
     ws.title = "Вывозы"
     write_tank_takeout_headers(ws)
@@ -250,7 +250,7 @@ def write_building(b: Building, ws: Worksheet, i: int) -> None:
     ws[f"D{i}"] = b.avg_fill_speed()
 
 
-def get_building_stats_ws(ws) -> None:
+def get_building_stats_ws(ws: Worksheet) -> None:
     """Создаёт страницу из excel с актуальной статистикой по зданию"""
     ws.title = "По зданиям"
     write_building_headers(ws)
@@ -284,4 +284,55 @@ def get_all_stats_xl() -> Workbook:
     get_tank_takeout_stats_ws(ws2)
     ws3 = wb.create_sheet()
     get_building_stats_ws(ws3)
+    return wb
+
+
+def write_short_container_headers(ws: Worksheet) -> None:
+    """Записывает заголовки в короткую статистику о контейнерах"""
+    ws["A1"] = "ID"
+    ws["B1"] = "Вид контейнера"
+    ws["C1"] = "Номер корпуса"
+    ws["D1"] = "Этаж"
+    ws["E1"] = "Аудитория"
+    ws["F1"] = "Описание"
+    ws["G1"] = "Номер телефона"
+    ws["H1"] = "Почта"
+
+    ws.row_dimensions[1].font = Font(bold=True)
+
+
+def write_short_container_info(c: Container, ws: Worksheet, i: int) -> None:
+    """Записывает краткую информацию об одном контейнере"""
+    ws[f"A{i}"] = c.pk
+    ws[f"B{i}"] = c.get_kind_display()
+    if c.building_part:
+        ws[f"C{i}"] = c.building_part.num
+    else:
+        ws[f"C{i}"] = "-"
+    ws[f"D{i}"] = c.floor
+    ws[f"E{i}"] = c.room
+    ws[f"F{i}"] = c.description
+    ws[f"G{i}"] = c.phone
+    ws[f"H{i}"] = c.email
+
+
+def get_short_container_info_ws(ws: Worksheet,
+                                containers: QuerySet[Container]) -> None:
+    """Создаёт страницу из excel с краткой информацией
+    по выбранным контейнерам"""
+    ws.title = "Контейнеры"
+    write_short_container_headers(ws)
+
+    for i in range(2, len(containers) + 2):
+        container = containers[i-2]
+        write_short_container_info(container, ws, i)
+
+    set_width(ws)
+
+
+def get_short_container_info_xl(containers: QuerySet[Container]) -> Workbook:
+    """Создаёт excel-WorkBook с актуальной статистикой по контейнерам"""
+    wb = Workbook()
+    ws = wb.active
+    get_short_container_info_ws(ws, containers)
     return wb
