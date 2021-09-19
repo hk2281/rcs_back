@@ -90,16 +90,27 @@ class ContainersTakeoutListView(generics.ListCreateAPIView):
             raise exceptions.NotAuthenticated()
 
 
-class ContainersTakeoutConfirmationView(generics.UpdateAPIView):
-    """View для создания подтверждения выноса контейнеров"""
-    serializer_class = ContainersTakeoutConfirmationSerializer
-    queryset = ContainersTakeoutRequest.objects.filter(
-        confirmed_at__isnull=True
-    )
+class ContainersTakeoutDetailView(generics.RetrieveUpdateAPIView):
+    """View для создания подтверждения выноса контейнеров
+    и для ретрива"""
+    queryset = ContainersTakeoutRequest.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.method == "PATCH":
+            return ContainersTakeoutConfirmationSerializer
+        else:
+            return ContainersTakeoutRequestSerializer
 
     def perform_update(self, serializer):
         """PATCH-запрос должен использоваться только для подтверждения
         сбора"""
+
+        takeout = self.get_object()
+        if takeout.confirmed_at:
+            raise exceptions.ValidationError(
+                {"error": "Сбор уже подтверждён"}
+            )
+
         serializer.save(confirmed_at=timezone.now())
         if "emptied_containers" in serializer.validated_data:
             emptied_containers = serializer.validated_data[
@@ -174,14 +185,27 @@ class TankTakeoutRequestListView(generics.ListCreateAPIView):
         instance.building.tank_takeout_notify()
 
 
-class TankTakeoutConfirmationView(generics.UpdateAPIView):
-    """View для создания подтверждения вывоза бака"""
-    serializer_class = TankTakeoutConfirmationSerializer
-    queryset = TankTakeoutRequest.objects.filter(
-        confirmed_at__isnull=True
-    )
+class TankTakeoutDetailView(generics.RetrieveUpdateAPIView):
+    """View для создания подтверждения вывоза бака
+    и для ретрива"""
+    queryset = TankTakeoutRequest.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.method == "PATCH":
+            return TankTakeoutConfirmationSerializer
+        else:
+            return TankTakeoutRequestSerializer
 
     def perform_update(self, serializer):
+        """PATCH-запрос должен использоваться только для подтверждения
+        вывоза"""
+
+        takeout = self.get_object()
+        if takeout.confirmed_at:
+            raise exceptions.ValidationError(
+                {"error": "Вывоз уже подтверждён"}
+            )
+
         serializer.save(confirmed_at=timezone.now())
 
 

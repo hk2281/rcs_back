@@ -107,12 +107,12 @@ class ContainersTakeoutRequest(models.Model):
         return self.emptied_containers.count() / self.containers.count()
 
     def __str__(self) -> str:
-        return (f"Запрос сбора контейнеров от "
+        return (f"Сбор контейнеров от "
                 f"{self.created_at.astimezone(tz).strftime('%d.%m.%Y %H:%M')}")
 
     class Meta:
-        verbose_name = "запрос сбора контейнеров"
-        verbose_name_plural = "запросы сбора контейнеров"
+        verbose_name = "сбор контейнеров"
+        verbose_name_plural = "сборы контейнеров"
 
 
 class TankTakeoutRequest(models.Model):
@@ -201,13 +201,13 @@ class TankTakeoutRequest(models.Model):
             return None
 
     def __str__(self) -> str:
-        return (f"Запрос вывоза накопительного бака от "
+        return (f"Вывоз накопительного бака от "
                 f"{self.created_at.astimezone(tz).strftime('%d.%m.%Y %H:%M')} "
                 f"в {self.building}")
 
     class Meta:
-        verbose_name = "запрос вывоза бака"
-        verbose_name_plural = "запросы вывоза баков"
+        verbose_name = "вывоз бака"
+        verbose_name_plural = "вывозы баков"
 
 
 class TakeoutCondition(models.Model):
