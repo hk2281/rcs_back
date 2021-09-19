@@ -246,11 +246,13 @@ class Building(BaseBuilding):
                     "created_at")[0].confirmed_mass:
                 start_date = self.tank_takeout_requests.order_by("created_at")[
                     0].confirmed_at
-            month_count = (timezone.now().year - start_date.year) * \
-                12 + (timezone.now().month - start_date.month)
-            return self.confirmed_collected_mass() / month_count
-        else:
-            return None
+                month_count = (timezone.now().year - start_date.year) * \
+                    12 + (timezone.now().month - start_date.month)
+                if not month_count:
+                    month_count = 1
+                return self.confirmed_collected_mass() / month_count
+
+        return None
 
     def __str__(self) -> str:
         return self.address
