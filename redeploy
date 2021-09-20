@@ -2,7 +2,7 @@
 cd .. 
 cd restarter
 git pull
-cd ./rcs_back
+cd ../rcs_back
 git pull
 docker-compose -f production.yml down
 docker-compose -f production.yml build
