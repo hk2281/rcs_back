@@ -317,10 +317,10 @@ class Container(models.Model):
         (OFFICE_BOX, "коробка из-под бумаги")
     )
 
-    """Масса вида"""
-    ECOBOX_MASS = 10
+    """Масса бумаги, вмещающейся в вид контейнера, в кг"""
+    ECOBOX_MASS = 30
     PUBLIC_ECOBOX_MASS = 15
-    OFFICE_BOX_MASS = 20
+    OFFICE_BOX_MASS = 4
 
     kind = models.PositiveSmallIntegerField(
         choices=KIND_CHOICES,
