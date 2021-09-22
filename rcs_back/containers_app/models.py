@@ -126,6 +126,11 @@ class Building(BaseBuilding):
         verbose_name="послано оповещение о необходимоси сбора"
     )
 
+    precollected_mass = models.PositiveSmallIntegerField(
+        default=0,
+        verbose_name="масса, собранная до старта сервиса"
+    )
+
     def needs_takeout(self) -> bool:
         """Нужно ли вынести бумагу?"""
         if hasattr(self, "building_parts"):
@@ -223,7 +228,7 @@ class Building(BaseBuilding):
 
     def calculated_collected_mass(self) -> int:
         """Собранная масса макулатуры, посчитанная как среднее"""
-        mass = 0
+        mass = self.precollected_mass if self.precollected_mass else 0
         for request in self.containers_takeout_requests.filter(
             confirmed_at__isnull=False
         ):
@@ -233,7 +238,7 @@ class Building(BaseBuilding):
     def confirmed_collected_mass(self) -> int:
         """Суммарная масса собранной макулатуры,
         подтверждённая после вывоза бака"""
-        mass = 0
+        mass = self.precollected_mass if self.precollected_mass else 0
         for request in self.tank_takeout_requests.all():
             if request.confirmed_mass:
                 mass += request.confirmed_mass
