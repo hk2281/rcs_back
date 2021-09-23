@@ -1,6 +1,5 @@
 #!/bin/bash
-cd .. 
-cd restarter
+cd ../restarter
 git pull
 cd ../rcs_back
 git pull
