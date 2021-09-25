@@ -326,8 +326,6 @@ DJOSER = {
 
 # Constants
 
-# Groups
-
 ECO_GROUP = "эко"
 HOZ_GROUP = "хоз"
-DOMAIN = "https://recycle-starter.itmo.ru"
+DOMAIN = "https://recycle.itmo.ru"
