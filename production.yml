@@ -85,7 +85,7 @@ services:
   
   next:
     build: ../restarter
-    command: sh -c "yarn build && yarn start"
+    command: yarn start
     volumes:
       - next-build:/home/next/build
     environment:
