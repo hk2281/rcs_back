@@ -181,12 +181,12 @@ class ContainerStickerView(views.APIView):
         with NamedTemporaryFile() as tmp:
             fname = f"container-sticker-{self.kwargs['pk']}"
             sticker_im = generate_sticker(self.kwargs["pk"])
-            sticker_im.save(tmp.name, "png", quality=100)
+            sticker_im.save(tmp.name, "pdf", quality=100)
             file_data = tmp.read()
             response = HttpResponse(
                 file_data,
                 headers={
-                    "Content-Type": "image/png",
+                    "Content-Type": "application/pdf",
                     "Content-Disposition":
                     f'attachment; filename={fname}'
                 }

@@ -55,3 +55,32 @@ def generate_sticker(container_id: int) -> Image:
     qr = generate_qr_with_logo(container_id=container_id)
     sticker = add_container_id(add_background(qr), container_id)
     return sticker
+
+
+def add_border_background(sticker: Image) -> Image:
+    """Вставляет задний фон для стикера с рамкой
+    (версия для печати)"""
+    background = Image.open(
+        settings.APPS_DIR / "containers_app" /
+        "utils" / "background-border.png"
+    )
+    sticker_w, sticker_h = sticker.size
+    bg_w, bg_h = background.size
+    offset = ((bg_w - sticker_w) // 2, (bg_h - sticker_h) // 2 + 120)
+    background.paste(sticker, offset)
+    return background
+
+
+def generate_sticker_for_print(container_id: int) -> Image:
+    """Создаёт стикер для контейнера по ID.
+    Версия для печати - с рамкой"""
+    qr: Image = generate_qr_with_logo(container_id=container_id)
+    sticker: Image = add_container_id(add_border_background(qr), container_id)
+    return sticker
+
+
+def save_stickers_for_print(start_id: int, count: int) -> None:
+    """Создаёт стикеры с указанными ID и сохраняет их в PDF"""
+    for i in range(start_id, start_id + count):
+        sticker: Image = generate_sticker_for_print(i)
+        sticker.save(f"sticker_{i}.pdf", "pdf", quality=100)
