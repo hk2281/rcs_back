@@ -131,6 +131,12 @@ class Building(BaseBuilding):
         verbose_name="масса, собранная до старта сервиса"
     )
 
+    passage_scheme = models.ImageField(
+        null=True,
+        blank=True,
+        verbose_name="схема проезда"
+    )
+
     def needs_takeout(self) -> bool:
         """Нужно ли вынести бумагу?"""
         if hasattr(self, "building_parts"):
@@ -172,9 +178,9 @@ class Building(BaseBuilding):
             )
 
             email = EmailMessage(
-                "Оповещание от сервиса RCS",
+                "Оповещание от сервиса RecycleStarter",
                 msg,
-                "noreply@rcs-itmo.ru",
+                None,
                 emails
             )
             email.content_subtype = "html"
@@ -200,12 +206,17 @@ class Building(BaseBuilding):
             )
 
             email = EmailMessage(
-                "Оповещание от сервиса RCS",
+                "Оповещание от сервиса RecycleStarter",
                 msg,
-                "noreply@rcs-itmo.ru",
+                None,
                 [tank_takeout_company.email]
             )
             email.content_subtype = "html"
+            if self.passage_scheme:
+                email.attach("passage.png",
+                             self.passage_scheme.read(),
+                             "image/png"
+                             )
             email.send()
 
     def get_hoz_workers(self) -> QuerySet["User"]:
@@ -626,9 +637,9 @@ class Container(models.Model):
             )
 
             email = EmailMessage(
-                "Запрос активации контейнера на сайте RCS",
+                "Запрос активации контейнера на сайте RecycleStarter",
                 msg,
-                "noreply@rcs-itmo.ru",
+                None,
                 emails
             )
             email.content_subtype = "html"
@@ -701,11 +712,6 @@ class TankTakeoutCompany(models.Model):
 
     email = models.EmailField(
         verbose_name="email"
-    )
-
-    is_active = models.BooleanField(
-        default=True,
-        verbose_name="активна"
     )
 
     def __str__(self) -> str:

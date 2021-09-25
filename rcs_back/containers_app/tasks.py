@@ -26,9 +26,9 @@ def public_container_add_notify(container_id: int) -> None:
     )
 
     email = EmailMessage(
-        "Добавление контейнера в сервисе RCS",
+        "Добавление контейнера в сервисе RecycleStarter",
         msg,
-        "noreply@rcs-itmo.ru",
+        None,
         [container.email]
     )
     email.content_subtype = "html"
