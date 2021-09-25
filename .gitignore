@@ -280,5 +280,5 @@ rcs_back/media/
 # vscode
 .vscode/
 
-# SSL certs
-certs/
+# Certbot
+certbot/
