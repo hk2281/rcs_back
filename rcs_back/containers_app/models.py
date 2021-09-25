@@ -312,10 +312,12 @@ class Container(models.Model):
     WAITING = 1
     ACTIVE = 2
     INACTIVE = 3
+    RESERVED = 4
     STATUS_CHOICES = (
         (WAITING, "ожидает подключения"),
         (ACTIVE, "активный"),
-        (INACTIVE, "не активный")
+        (INACTIVE, "не активный"),
+        (RESERVED, "распечатан стикер, контейнер не выбран")
     )
 
     """Варианты вида"""
@@ -562,7 +564,7 @@ class Container(models.Model):
     def cur_fill_time(self) -> Union[datetime.timedelta, None]:
         """Текущее время заполнения контейнера.
         Если None - то уже заполнен (либо не активен)"""
-        if self.is_active():
+        if self.is_active() and self.empty_from():
             if self.last_full_report():
                 return None
             else:

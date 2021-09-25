@@ -1,6 +1,7 @@
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.conf import settings
+from django.db.models import Q
 from rest_framework import generics, permissions, views, status
 from rest_framework.response import Response
 from tempfile import NamedTemporaryFile
@@ -39,7 +40,9 @@ class FullContainerReportView(generics.CreateAPIView):
 class ContainerDetailView(UpdateThenRetrieveModelMixin,
                           generics.RetrieveUpdateDestroyAPIView):
     """ View для CRUD-операций с контейнерами """
-    queryset = Container.objects.all()
+    queryset = Container.objects.filter(
+        ~Q(status=Container.RESERVED)
+    )
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     retrieve_serializer = ContainerSerializer
     update_serializer = ChangeContainerSerializer
@@ -51,10 +54,10 @@ class ContainerDetailView(UpdateThenRetrieveModelMixin,
             return self.update_serializer
 
 
-class ContainerListView(generics.ListCreateAPIView):
+class ContainerListView(generics.ListAPIView):
     """ View для CRUD-операций с контейнерами """
 
-    queryset = Container.objects.all()
+    serializer_class = ContainerSerializer
 
     filterset_fields = [
         "building",
@@ -72,7 +75,9 @@ class ContainerListView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         """Сортировка"""
-        queryset = Container.objects.all()
+        queryset = Container.objects.filter(
+            ~Q(status=Container.RESERVED)
+        )
         if "is_full" in self.request.query_params:
             is_full_param = self.request.query_params.get("is_full")
             is_full = False if is_full_param == "false" else True
@@ -98,12 +103,6 @@ class ContainerListView(generics.ListCreateAPIView):
 
         return queryset
 
-    def get_serializer_class(self):
-        if self.request.method == "GET":
-            return ContainerSerializer
-        else:
-            return ChangeContainerSerializer
-
 
 class BuildingListView(generics.ListAPIView):
     """Списко зданий (для опций при создании контейнера)"""
@@ -119,8 +118,39 @@ class ContainerPublicAddView(generics.CreateAPIView):
     serializer_class = ContainerPublicAddSerializer
 
     def perform_create(self, serializer):
-        instance = serializer.save(status=Container.WAITING)
-        public_container_add_notify.delay(instance.pk)
+        building = serializer.validated_data["building"]
+
+        """Если в заданном здании есть распечатанные стикеры,
+        то нужно использовать их id"""
+        if Container.objects.filter(
+            status=Container.RESERVED
+        ).filter(
+            building=building
+        ).exists():
+            container: Container = Container.objects.filter(
+                status=Container.RESERVED
+            ).filter(
+                building=building
+            ).first()
+            container.email = serializer.validated_data["email"]
+            container.phone = serializer.validated_data["phone"]
+            if "building_part" in serializer.validated_data:
+                container.building_part = serializer.validated_data[
+                    "building_part"]
+            container.floor = serializer.validated_data["floor"]
+            if "room" in serializer.validated_data:
+                container.room = serializer.validated_data["room"]
+            if "description" in serializer.validated_data:
+                container.description = serializer.validated_data[
+                    "description"]
+            container.kind = serializer.validated_data["kind"]
+            container.status = Container.WAITING
+            container.save()
+
+        else:
+            container = serializer.save(status=Container.WAITING)
+
+        public_container_add_notify.delay(container.pk)
 
 
 class PublicFeedbackView(views.APIView):

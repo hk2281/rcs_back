@@ -1,5 +1,6 @@
 from datetime import timedelta
 from django.db.models.query import QuerySet
+from django.db.models import Q
 from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.worksheet.worksheet import Worksheet
@@ -109,7 +110,9 @@ def get_container_stats_ws(ws: Worksheet) -> None:
     """Создаёт страницу из excel с актуальной статистикой по контейнерам"""
     ws.title = "Контейнеры"
     write_container_headers(ws)
-    containers = Container.objects.order_by("pk")
+    containers = Container.objects.filter(
+        ~Q(status=Container.RESERVED)
+    ).order_by("pk")
 
     for i in range(3, len(containers) + 3):
         container = containers[i-3]
