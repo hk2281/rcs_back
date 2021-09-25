@@ -225,12 +225,13 @@ EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-timeout
 EMAIL_TIMEOUT = 5
 DEFAULT_FROM_EMAIL = env(
-    "DJANGO_DEFAULT_FROM_EMAIL", default="RCS Back <noreply@e-kondr01.ru>"
+    "DJANGO_DEFAULT_FROM_EMAIL",
+    default="RecycleStarter <noreply@recycle.itmo.ru>"
 )
 SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
 EMAIL_SUBJECT_PREFIX = env(
     "DJANGO_EMAIL_SUBJECT_PREFIX",
-    default="[RCS Back]",
+    default="[RecycleStarter]",
 )
 
 # ADMIN
