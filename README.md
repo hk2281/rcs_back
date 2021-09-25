@@ -29,3 +29,10 @@ coverage run manage.py test --settings config.settings.test --parallel --keepdb
 coverage html
 
 смотрим htmlcov/index.html
+
+
+SSL
+
+добавил через certbot по этой статье: https://pentacent.medium.com/nginx-and-lets-encrypt-with-docker-in-less-than-5-minutes-b4b8a60d3a71
+
+Однако скрипт из неё не работал, так что сделал вручную по шагам то, что он делает
