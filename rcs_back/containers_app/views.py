@@ -284,7 +284,7 @@ class ContainerActivationView(views.APIView):
             title = "Ошибка активации"
             text = "Неверный токен для активации"
             status = "error"
-        redirect_path = f"/reslult?title={title}&text={text}&status={status}"
+        redirect_path = f"/result?title={title}&text={text}&status={status}"
         return HttpResponseRedirect(
             redirect_to=settings.DOMAIN + redirect_path
         )

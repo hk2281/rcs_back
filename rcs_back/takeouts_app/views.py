@@ -49,7 +49,7 @@ class ContainersTakeoutListView(generics.ListCreateAPIView):
                 title = "Ошибка активации"
                 text = "Неверный токен для активации"
                 status = "error"
-            redirect_path = f"/reslult?title={title}&text={text}"
+            redirect_path = f"/result?title={title}&text={text}"
             redirect_path += f"&status={status}"
             return HttpResponseRedirect(
                 redirect_to=settings.DOMAIN + redirect_path
