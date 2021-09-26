@@ -319,14 +319,11 @@ SIMPLE_JWT = {
 DJOSER = {
     "TOKEN_MODEL": None,  # We use only JWT
     "HIDE_USERS": True,
-    # FIXME
-    "PASSWORD_RESET_CONFIRM_URL": "#/reset/{uid}/{token}",
-    "SEND_ACTIVATION_EMAIL": True,
-    "ACTIVATION_URL": "activate/{uid}/{token}"
+    "PASSWORD_RESET_CONFIRM_URL": "reset/{uid}/{token}"
 }
 
 # Constants
 
 ECO_GROUP = "эко"
 HOZ_GROUP = "хоз"
-DOMAIN = "https://recycle.itmo.ru"
+DOMAIN = "recycle.itmo.ru"
