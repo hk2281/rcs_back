@@ -16,7 +16,6 @@ from rcs_back.takeouts_app.models import *
 from rcs_back.takeouts_app.serializers import *
 from rcs_back.containers_app.models import Building, EmailToken
 from rcs_back.containers_app.tasks import handle_empty_container
-from rcs_back.containers_app.utils.model import total_mass
 from rcs_back.stats_app.excel import get_short_container_info_xl
 
 
@@ -271,11 +270,17 @@ class CollectedMassView(views.APIView):
 
     def get(self, request, *args, **kwargs):
         resp = {}
+        total_mass = 0
         for building in Building.objects.all():
             building_dict = {}
             building_dict[
                 "collected_mass"] = building.confirmed_collected_mass()
+            total_mass += building.confirmed_collected_mass()
             building_dict["container_count"] = building.container_count()
             resp[str(building)] = building_dict
-        resp["total_mass"] = total_mass()
+        total_mass = total_mass // 1000  # В тоннах
+        resp["total_mass"] = total_mass
+        resp["trees"] = total_mass * 12
+        resp["energy"] = total_mass * 4.7
+        resp["water"] = total_mass * 33
         return Response(resp)
