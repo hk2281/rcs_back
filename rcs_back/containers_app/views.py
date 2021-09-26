@@ -78,6 +78,13 @@ class ContainerListView(generics.ListAPIView):
         queryset = Container.objects.filter(
             ~Q(status=Container.RESERVED)
         )
+        if (self.request.user.is_authenticated and
+            self.request.user.groups.filter(
+                name=settings.HOZ_GROUP) and
+                self.request.user.building):
+            queryset = queryset.filter(
+                building=self.request.user.building
+            )
         if "is_full" in self.request.query_params:
             is_full_param = self.request.query_params.get("is_full")
             is_full = False if is_full_param == "false" else True

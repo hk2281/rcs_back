@@ -23,8 +23,18 @@ from rcs_back.stats_app.excel import get_short_container_info_xl
 class ContainersTakeoutListView(generics.ListCreateAPIView):
     """CR для заявки на вынос контейнеров"""
     serializer_class = ContainersTakeoutRequestSerializer
-    queryset = ContainersTakeoutRequest.objects.all()
     permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        queryset = ContainersTakeoutRequest.objects.all()
+        if (self.request.user.is_authenticated and
+            self.request.user.groups.filter(
+                name=settings.HOZ_GROUP) and
+                self.request.user.building):
+            queryset = queryset.filter(
+                building=self.request.user.building
+            )
+        return queryset
 
     def get(self, request, *args, **kwargs):
         if ("token" in request.query_params and
@@ -46,7 +56,7 @@ class ContainersTakeoutListView(generics.ListCreateAPIView):
                 text = "Сбор успешно создан"
                 status = "success"
             elif token:
-                title = "Повторная создание"
+                title = "Повторное создание"
                 text = "Сбор уже был создан"
                 status = "info"
             else:
@@ -182,7 +192,17 @@ class ContainersForTakeoutView(views.APIView):
 
 class TankTakeoutRequestListView(generics.ListCreateAPIView):
     serializer_class = TankTakeoutRequestSerializer
-    queryset = TankTakeoutRequest.objects.all()
+
+    def get_queryset(self):
+        queryset = TankTakeoutRequest.objects.all()
+        if (self.request.user.is_authenticated and
+            self.request.user.groups.filter(
+                name=settings.HOZ_GROUP) and
+                self.request.user.building):
+            queryset = queryset.filter(
+                building=self.request.user.building
+            )
+        return queryset
 
     def perform_create(self, serializer):
         instance = serializer.save()
