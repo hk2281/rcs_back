@@ -21,7 +21,7 @@ from rcs_back.stats_app.excel import get_short_container_info_xl
 
 class ContainersTakeoutListView(generics.ListCreateAPIView):
     """CR для заявки на вынос контейнеров"""
-    serializer_class = ContainersTakeoutRequestSerializer
+    serializer_class = AddContainersTakeoutSerializer
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
@@ -107,12 +107,7 @@ class ContainersTakeoutDetailView(generics.RetrieveUpdateAPIView):
     """View для создания подтверждения выноса контейнеров
     и для ретрива"""
     queryset = ContainersTakeoutRequest.objects.all()
-
-    def get_serializer_class(self):
-        if self.request.method == "PATCH":
-            return ContainersTakeoutConfirmationSerializer
-        else:
-            return ContainersTakeoutRequestSerializer
+    serializer_class = ContainersTakeoutConfirmationSerializer
 
     def perform_update(self, serializer):
         """PATCH-запрос должен использоваться только для подтверждения

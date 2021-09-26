@@ -2,11 +2,11 @@ from rest_framework import serializers
 
 from rcs_back.containers_app.models import Container
 from rcs_back.containers_app.serializers import (
-    BuildingShortSerializer, BuildingPartSerializer)
+    BuildingShortSerializer, BuildingPartSerializer, ContainerSerializer)
 from rcs_back.takeouts_app.models import *
 
 
-class ContainersTakeoutRequestSerializer(serializers.ModelSerializer):
+class AddContainersTakeoutSerializer(serializers.ModelSerializer):
     """Для создания заявки на вынос контейнера"""
 
     containers = serializers.PrimaryKeyRelatedField(
@@ -44,7 +44,7 @@ class ContainersTakeoutRequestSerializer(serializers.ModelSerializer):
 class ContainersTakeoutConfirmationSerializer(serializers.ModelSerializer):
     """Для подтверждения выноса контейнеров"""
 
-    containers = serializers.PrimaryKeyRelatedField(
+    containers = ContainerSerializer(
         many=True, read_only=True
     )
     emptied_containers = serializers.PrimaryKeyRelatedField(
