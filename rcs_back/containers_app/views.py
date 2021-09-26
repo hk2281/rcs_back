@@ -265,21 +265,29 @@ class ContainerActivationView(views.APIView):
         container = get_object_or_404(
             Container, pk=self.kwargs["pk"]
         )
-        if container.status != container.WAITING:
-            title = "Ошибка активации"
-            text = "Этот контейнер уже активирован"
-            status = "error"
+        if container.is_active():
+            title = "Повторная активация"
+            text = "Контейнер уже был активирован"
+            status = "info"
         elif "token" in self.request.query_params:
             r_token = self.request.query_params.get("token")
-            token = EmailToken.objects.filter(
+            token: EmailToken = EmailToken.objects.filter(
                 token=r_token
             ).first()
-            if token:
+            if token and not token.is_used:
                 container.activate()
-                token.delete()
+                token.use()
                 title = "Успешная активация"
                 text = "Контейнер успешно активирован"
                 status = "success"
+            elif token:
+                title = "Повторная активация"
+                text = "Контейнер уже был активирован"
+                status = "info"
+            else:
+                title = "Ошибка активации"
+                text = "Неверный токен для активации"
+                status = "error"
         else:
             title = "Ошибка активации"
             text = "Неверный токен для активации"

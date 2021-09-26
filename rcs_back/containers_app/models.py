@@ -30,6 +30,11 @@ class EmailToken(models.Model):
         verbose_name="токен"
     )
 
+    is_used = models.BooleanField(
+        default=False,
+        verbose_name="использован"
+    )
+
     def generate_token(self) -> str:
         """Генерирует рандомный токен"""
         token = ''.join(choice(
@@ -47,6 +52,12 @@ class EmailToken(models.Model):
             ).first():
                 break
         self.token = token
+
+    def use(self) -> None:
+        """Использует токен"""
+        if not self.is_used:
+            self.is_used = True
+            self.save()
 
     def __str__(self) -> str:
         return f"токен №{self.pk}"

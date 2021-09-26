@@ -32,19 +32,23 @@ class ContainersTakeoutListView(generics.ListCreateAPIView):
             """Создание сбора через письмо"""
             r_token = self.request.query_params.get("token")
             r_building = self.request.query_params.get("building")
-            token = EmailToken.objects.filter(
+            token: EmailToken = EmailToken.objects.filter(
                 token=r_token
             ).first()
             building = get_object_or_404(Building, pk=r_building)
-            if token:
+            if token and not token.is_used:
                 takeout = ContainersTakeoutRequest.objects.create(
                     building=building
                 )
                 takeout.containers.add(*building.containers_for_takeout())
-                token.delete()
+                token.use()
                 title = "Создание сбора"
                 text = "Сбор успешно создан"
                 status = "success"
+            elif token:
+                title = "Повторная создание"
+                text = "Сбор уже был создан"
+                status = "info"
             else:
                 title = "Ошибка активации"
                 text = "Неверный токен для активации"
