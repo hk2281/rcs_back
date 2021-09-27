@@ -1,4 +1,5 @@
 import datetime
+import time
 
 from django.conf import settings
 from django.core.mail import EmailMessage
@@ -75,22 +76,21 @@ class BaseBuilding(models.Model):
         """Возвращает накопившуюся массу бумаги
         по зданию/корпусу"""
         current_mass = 0
-        for container in self.containers.all():
-            if container.is_full():
-                current_mass += container.mass()
+        for container in self.containers.filter(
+            _is_full=True
+        ):
+            current_mass += container.mass()
         return current_mass
 
     def meets_mass_takeout_condition(self) -> bool:
         """Выполняются ли в здании/корпусе условия для сбора по общей массе"""
         mass_condition = self.takeout_condition.mass
-        if mass_condition and self.current_mass() > mass_condition:
-            return True
-        else:
-            return False
+        return mass_condition and self.current_mass() > mass_condition
 
     def meets_time_takeout_condition(self) -> bool:
         """Выполняются ли в здании/корпусе условия для сбора
         по времени."""
+        container: Container
         for container in self.containers.all():
             if container.check_time_conditions():
                 return True
@@ -261,14 +261,15 @@ class Building(BaseBuilding):
         """Суммарная масса собранной макулатуры,
         подтверждённая после вывоза бака"""
         mass = self.precollected_mass if self.precollected_mass else 0
-        for request in self.tank_takeout_requests.all():
-            if request.confirmed_mass:
-                mass += request.confirmed_mass
+        for request in self.tank_takeout_requests.filter(
+            confirmed_mass__isnull=False
+        ):
+            mass += request.confirmed_mass
         return mass
 
     def avg_fill_speed(self) -> Union[float, None]:
         """Средняя скорость сбора макулатуры (кг/месяц)"""
-        if self.tank_takeout_requests.count():
+        if self.tank_takeout_requests.exists():
             if self.tank_takeout_requests.order_by(
                     "created_at")[0].confirmed_mass:
                 start_date = self.tank_takeout_requests.order_by("created_at")[
@@ -492,7 +493,7 @@ class Container(models.Model):
         else:
             return None
 
-    def ignore_reports_count(self) -> Union[int, None]:
+    def ignore_reports_count(self) -> int:
         """Возвращает количество сообщений о заполненности,
         которое нужно игнорировать, если контейнер в общественом месте"""
         if not self.is_public():
@@ -526,6 +527,12 @@ class Container(models.Model):
         не выполнилось ли условие по массе"""
         if self.is_full() and not self._is_full:
             self._is_full = True  # Для сортировки
+            report: FullContainerReport = self.last_full_report()
+            report.filled_at = timezone.now()
+            report.save()
+            self.save()
+            time.sleep(10)  # Ждём сохранения в БД
+            self.avg_fill_time = self.calc_avg_fill_time()
             self.save()
             self.building.check_conditions_to_notify()
 
@@ -576,11 +583,8 @@ class Container(models.Model):
         """Текущее время заполнения контейнера.
         Если None - то уже заполнен (либо не активен)"""
         if self.is_active() and self.empty_from():
-            if self.last_full_report():
-                return None
-            else:
-                fill_time = timezone.now() - self.empty_from()
-                return fill_time
+            fill_time = timezone.now() - self.empty_from()
+            return fill_time
         else:
             return None
 
@@ -594,15 +598,19 @@ class Container(models.Model):
             return None
 
     def calc_avg_fill_time(self) -> Union[datetime.timedelta, None]:
-        """Считает среднее время заполнения контейнера
-        (точнее, среднее время до первого сообщения о заполненности)"""
-        reports = self.full_reports.order_by("reported_full_at")
-        if len(reports) > 1:
+        """Считает среднее время заполнения контейнера"""
+        reports = self.full_reports.filter(
+            filled_at__isnull=False
+        ).order_by("filled_at")
+        if (self.activated_at and reports) or len(reports) > 1:
             sum_time = datetime.timedelta(seconds=0)
             count = 0
+            if self.activated_at:
+                sum_time += reports[0].filled_at - self.activated_at
+                count += 1
             for i in range(len(reports) - 1):
                 if reports[i].emptied_at:
-                    fill_time = reports[i+1].reported_full_at - \
+                    fill_time = reports[i+1].filled_at - \
                         reports[i].emptied_at
                     sum_time += fill_time
                     count += 1
@@ -613,17 +621,16 @@ class Container(models.Model):
 
     def calc_avg_takeout_wait_time(self) -> Union[datetime.timedelta, None]:
         """Считает среднее время ожидания выноса контейнера"""
-        reports = self.full_reports.all()
-        if not reports or (len(reports) == 1 and not reports[0].emptied_at):
+        reports = self.full_reports.filter(
+            emptied_at__isnull=False
+        )
+        if not reports:
             return None
         else:
             sum_time = datetime.timedelta(seconds=0)
-            count = 0
             for report in reports:
-                if report.takeout_wait_time():
-                    sum_time += report.takeout_wait_time()
-                    count += 1
-            avg_takeout_wait_time = sum_time / count
+                sum_time += report.takeout_wait_time()
+            avg_takeout_wait_time = sum_time / len(reports)
             return avg_takeout_wait_time
 
     def request_activation(self) -> None:
@@ -679,6 +686,12 @@ class FullContainerReport(models.Model):
     reported_full_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name="первый раз получено"
+    )
+
+    filled_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name="заполнен в"
     )
 
     container = models.ForeignKey(

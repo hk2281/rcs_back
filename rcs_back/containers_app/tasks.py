@@ -51,8 +51,6 @@ def handle_first_full_report(container_id: int, by_staff: bool) -> None:
 
     time.sleep(10)  # Ждём сохранения в БД
 
-    container.avg_fill_time = container.calc_avg_fill_time()
-
     """Если выполняются условия для вывоза по
     кол-ву бумаги, нужно сообщить"""
     container.check_fullness()

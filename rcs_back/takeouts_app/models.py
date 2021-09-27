@@ -159,7 +159,7 @@ class TankTakeoutRequest(models.Model):
             "-created_at"
         )
         if requests and requests[0].confirmed_at:
-            return self.created_at-requests[0].confirmed_at
+            return self.created_at - requests[0].confirmed_at
         else:
             return None
 
@@ -174,6 +174,7 @@ class TankTakeoutRequest(models.Model):
             previous_datetime = previous_tank_takeouts[0].confirmed_at
         else:
             previous_datetime = self.created_at - datetime.timedelta(days=365)
+
         container_takeouts = ContainersTakeoutRequest.objects.filter(
             building=self.building
         ).filter(
@@ -213,28 +214,27 @@ class TankTakeoutRequest(models.Model):
 class TakeoutCondition(models.Model):
     """Модель условий для сбора"""
 
-    office_days = models.PositiveIntegerField(
+    office_days = models.SmallIntegerField(
         verbose_name="максимальное кол-во дней в офисе полным",
         blank=True,
         null=True
     )
 
-    public_days = models.PositiveIntegerField(
+    public_days = models.SmallIntegerField(
         verbose_name="максимальное кол-во дней в общ. месте полным",
         blank=True,
         null=True
     )
 
-    mass = models.PositiveIntegerField(
+    mass = models.IntegerField(
         verbose_name="максимальная суммарная масса бумаги",
         blank=True,
         null=True
     )
 
-    ignore_reports = models.PositiveIntegerField(
+    ignore_reports = models.IntegerField(
         verbose_name="кол-во первых сообщений, которые нужно игнорировать",
-        blank=True,
-        null=True
+        default=0
     )
 
     building = models.OneToOneField(

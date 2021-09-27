@@ -8,6 +8,7 @@ class ContainerAdmin(admin.ModelAdmin):
         "mass",
         "activated_at",
         "avg_fill_time",
+        "calc_avg_fill_time",
         "avg_takeout_wait_time",
         "cur_fill_time",
         "cur_takeout_wait_time",
