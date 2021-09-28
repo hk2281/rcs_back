@@ -10,9 +10,11 @@ from django.utils import timezone
 from django.template.loader import render_to_string
 from secrets import choice
 from string import ascii_letters, digits
+from tempfile import NamedTemporaryFile
 from typing import Union
 
 from rcs_back.utils.model import *
+from rcs_back.containers_app.utils.qr import generate_sticker
 
 
 tz = timezone.get_default_timezone()
@@ -86,7 +88,7 @@ class BaseBuilding(models.Model):
     def meets_mass_takeout_condition(self) -> bool:
         """Выполняются ли в здании/корпусе условия для сбора по общей массе"""
         mass_condition = self.takeout_condition.mass
-        return mass_condition and self.current_mass() > mass_condition
+        return mass_condition and self.current_mass() >= mass_condition
 
     def meets_time_takeout_condition(self) -> bool:
         """Выполняются ли в здании/корпусе условия для сбора
@@ -522,6 +524,49 @@ class Container(models.Model):
         else:
             return False
 
+    def handle_first_full_report(self, by_staff: bool):
+        """При первом сообщение о заполненности контейнера
+        нужно создать FullContainerReport"""
+        FullContainerReport.objects.create(
+            container=self,
+            by_staff=by_staff
+        )
+
+        time.sleep(5)  # Ждём сохранения в БД
+
+        """Если выполняются условия для вывоза по
+        кол-ву бумаги, нужно сообщить"""
+        self.check_fullness()
+
+    def handle_repeat_full_report(self, by_staff: bool):
+        """При повторном сообщении о заполнении нужно
+        увеличить кол-во сообщений"""
+        report = self.last_full_report()
+        if report:
+            if by_staff:
+                report.by_staff = True
+            else:
+                report.count += 1
+            report.save()
+
+            time.sleep(5)  # Ждём сохранения в БД
+
+            """Если выполняются условия для вывоза по
+            кол-ву бумаги, сообщаем"""
+            self.check_fullness()
+
+    def handle_empty(self):
+        """При опустошении контейнера нужно запомнить время
+        и пересчитать среднее время выноса"""
+        last_full_report = self.last_full_report()
+        if last_full_report:
+            last_full_report.emptied_at = timezone.now()
+            last_full_report.save()
+            time.sleep(5)  # Ждём сохранения в БД
+            self.avg_takeout_wait_time = self.calc_avg_takeout_wait_time()
+        self._is_full = False  # Для сортировки
+        self.save()
+
     def check_fullness(self) -> None:
         """Проверяет, полный ли контейнер. Если полный,
         то сохраняет для сортировки и проверяет,
@@ -532,7 +577,7 @@ class Container(models.Model):
             report.filled_at = timezone.now()
             report.save()
             self.save()
-            time.sleep(10)  # Ждём сохранения в БД
+            time.sleep(5)  # Ждём сохранения в БД
             self.avg_fill_time = self.calc_avg_fill_time()
             self.save()
             self.building.check_conditions_to_notify()
@@ -565,16 +610,6 @@ class Container(models.Model):
         else:
             """Если такого условия нет, то False"""
             return False
-
-    def get_mass_rule_trigger(self) -> Union[Building, BuildingPart, None]:
-        """Проверяет, выполняется ли условие по массе, и если да,
-        то возвращает, чьё это условие"""
-        if (self.building_part and
-                self.building_part.meets_mass_takeout_condition()):
-            return self.building_part
-        elif self.building.meets_mass_takeout_condition():
-            return self.building
-        return None
 
     def cur_fill_time(self) -> Union[datetime.timedelta, None]:
         """Текущее время заполнения контейнера.
@@ -667,6 +702,31 @@ class Container(models.Model):
         self.status = Container.ACTIVE
         self.requested_activation = False
         self.save()
+
+    def public_add_notify(self) -> None:
+        """Отправляет сообщение с инструкциями для активации
+        добавленного контейнера"""
+        is_ecobox = self.kind == Container.ECOBOX
+
+        msg = render_to_string("public_container_add.html", {
+            "is_ecobox": is_ecobox,
+            "container_room": self.building.get_container_room,
+            "sticker_room": self.building.get_sticker_room
+        }
+        )
+
+        email = EmailMessage(
+            "Добавление контейнера в сервисе RecycleStarter",
+            msg,
+            None,
+            [self.email]
+        )
+        email.content_subtype = "html"
+        with NamedTemporaryFile() as tmp:
+            sticker_im = generate_sticker(self.pk)
+            sticker_im.save(tmp.name, "pdf", quality=100)
+            email.attach("sticker.pdf", tmp.read(), "application/pdf")
+            email.send()
 
     def __str__(self) -> str:
         return f"Контейнер №{self.pk}"

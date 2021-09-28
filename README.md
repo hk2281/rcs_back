@@ -25,7 +25,7 @@ python manage.py test --settings config.settings.test --parallel --keepdb
 
 coverage: 
 
-coverage run manage.py test --settings config.settings.test --parallel --keepdb
+coverage run manage.py test --settings config.settings.test --keepdb
 
 coverage html
 

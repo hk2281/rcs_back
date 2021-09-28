@@ -1,5 +1,3 @@
-import time
-
 from django.test import TestCase
 
 from rcs_back.containers_app.models import *
@@ -123,3 +121,115 @@ class ContainerModelTests(TestCase):
             self.public_container_in_bpart.get_time_condition_days(), 3)
         self.assertEqual(
             self.public_container_in_building.get_time_condition_days(), 5)
+
+
+class SimpleMassRuleTests(TestCase):
+    """Тест выполнения условий на сбор по массе"""
+
+    def setUp(self):
+        self.building = Building.objects.create(
+            address="ул. Тестовая 30"
+        )
+        self.condition_for_building = TakeoutCondition.objects.get(
+            building=self.building
+        )
+        self.condition_for_building.mass = 45
+        self.condition_for_building.save()
+        self.building.refresh_from_db()
+        self.public_container = Container.objects.create(
+            kind=Container.PUBLIC_ECOBOX,
+            building=self.building,
+            floor=1,
+            status=Container.ACTIVE
+        )
+        self.office_container = Container.objects.create(
+            kind=Container.ECOBOX,
+            building=self.building,
+            floor=1,
+            status=Container.ACTIVE
+        )
+
+    def test_empty_containers_empty_building(self):
+        self.assertFalse(self.public_container.is_full())
+        self.assertFalse(self.office_container.is_full())
+        self.assertFalse(self.building.meets_mass_takeout_condition())
+
+    def test_not_enough_mass_empty_building(self):
+        self.office_container.handle_first_full_report(False)
+        self.assertFalse(self.public_container.is_full())
+        self.assertTrue(self.office_container.is_full())
+        self.assertFalse(self.building.meets_mass_takeout_condition())
+
+    def test_enough_mass_full_building(self):
+        self.public_container.handle_first_full_report(False)
+        self.office_container.handle_first_full_report(False)
+        self.assertTrue(self.public_container.is_full())
+        self.assertTrue(self.office_container.is_full())
+        self.assertTrue(self.building.meets_mass_takeout_condition())
+        self.assertTrue(self.building.needs_takeout())
+
+
+class MassRuleIgnoreReportsTests(TestCase):
+    """Тест выполнения условий на сбор по массе.
+    У здания есть условие на игнорирование первых публичных
+    репортов"""
+
+    def setUp(self):
+        self.building = Building.objects.create(
+            address="ул. Тестовая 30"
+        )
+        self.condition_for_building = TakeoutCondition.objects.get(
+            building=self.building
+        )
+        self.condition_for_building.mass = 45
+        self.condition_for_building.ignore_reports = 1
+        self.condition_for_building.save()
+        self.building.refresh_from_db()
+        self.public_container = Container.objects.create(
+            kind=Container.PUBLIC_ECOBOX,
+            building=self.building,
+            floor=1,
+            status=Container.ACTIVE
+        )
+        self.office_container = Container.objects.create(
+            kind=Container.ECOBOX,
+            building=self.building,
+            floor=1,
+            status=Container.ACTIVE
+        )
+
+    def test_empty_containers_empty_building(self):
+        self.assertFalse(self.public_container.is_full())
+        self.assertFalse(self.office_container.is_full())
+        self.assertFalse(self.building.meets_mass_takeout_condition())
+
+    def test_not_enough_mass_empty_building(self):
+        self.office_container.handle_first_full_report(False)
+        self.assertFalse(self.public_container.is_full())
+        self.assertTrue(self.office_container.is_full())
+        self.assertFalse(self.building.meets_mass_takeout_condition())
+
+    def test_enough_mass_not_enough_reports(self):
+        self.public_container.handle_first_full_report(False)
+        self.office_container.handle_first_full_report(False)
+        self.assertFalse(self.public_container.is_full())
+        self.assertTrue(self.office_container.is_full())
+        self.assertFalse(self.building.meets_mass_takeout_condition())
+        self.assertFalse(self.building.needs_takeout())
+
+    def test_enough_mass_enough_reports(self):
+        self.public_container.handle_first_full_report(False)
+        self.public_container.handle_repeat_full_report(False)
+        self.office_container.handle_first_full_report(False)
+        self.assertTrue(self.public_container.is_full())
+        self.assertTrue(self.office_container.is_full())
+        self.assertTrue(self.building.meets_mass_takeout_condition())
+        self.assertTrue(self.building.needs_takeout())
+
+    def test_enough_mass_report_by_staff(self):
+        self.office_container.handle_first_full_report(False)
+        self.public_container.handle_first_full_report(True)
+        self.assertTrue(self.public_container.is_full())
+        self.assertTrue(self.office_container.is_full())
+        self.assertTrue(self.building.meets_mass_takeout_condition())
+        self.assertTrue(self.building.needs_takeout())
