@@ -98,12 +98,12 @@ class BaseBuilding(models.Model):
         return False
 
     def containers_for_takeout(self) -> QuerySet:
-        """Возвращает список контейнеров, которые нужно вынести"""
-        containers_for_takeout = []
-        for container in self.containers.all():
-            if container.needs_takeout():
-                containers_for_takeout.append(container)
-        return containers_for_takeout
+        """Возвращает QuerySet полных контейнеров"""
+        return self.containers.filter(
+            _is_full=True
+        ).filter(
+            status=Container.ACTIVE
+        )
 
     def container_count(self) -> int:
         """Кол-во активных контейнеров"""
@@ -565,10 +565,6 @@ class Container(models.Model):
         else:
             """Если такого условия нет, то False"""
             return False
-
-    def needs_takeout(self) -> bool:
-        """Нужно ли вынести контейнер"""
-        return self.is_full() or self.check_time_conditions()
 
     def get_mass_rule_trigger(self) -> Union[Building, BuildingPart, None]:
         """Проверяет, выполняется ли условие по массе, и если да,

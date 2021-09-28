@@ -10,7 +10,8 @@ class AddContainersTakeoutSerializer(serializers.ModelSerializer):
     """Для создания заявки на вынос контейнера"""
 
     containers = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=Container.objects.filter(status=Container.ACTIVE)
+        many=True, queryset=Container.objects.filter(status=Container.ACTIVE),
+        required=False
     )
     emptied_containers = serializers.PrimaryKeyRelatedField(
         many=True, read_only=True
@@ -48,7 +49,8 @@ class ContainersTakeoutConfirmationSerializer(serializers.ModelSerializer):
         many=True, read_only=True
     )
     emptied_containers = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=Container.objects.filter(status=Container.ACTIVE)
+        many=True, queryset=Container.objects.filter(status=Container.ACTIVE),
+        required=False
     )
 
     class Meta:

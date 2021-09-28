@@ -17,7 +17,6 @@ class ContainerAdmin(admin.ModelAdmin):
         "ignore_reports_count",
         "is_full",
         "check_time_conditions",
-        "needs_takeout",
         "requested_activation"
     ]
 
