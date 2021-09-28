@@ -76,6 +76,7 @@ class BaseBuilding(models.Model):
         """Возвращает накопившуюся массу бумаги
         по зданию/корпусу"""
         current_mass = 0
+        container: Container
         for container in self.containers.filter(
             _is_full=True
         ):
@@ -536,7 +537,7 @@ class Container(models.Model):
             self.save()
             self.building.check_conditions_to_notify()
 
-    def get_time_condition_days(self) -> int:
+    def get_time_condition_days(self) -> Union[int, None]:
         """Возвращает максимальное кол-во дней, которое
         этот контейнер может быть заполнен по условию"""
         if self.is_public():
@@ -558,7 +559,7 @@ class Container(models.Model):
 
             if self.is_full():
                 days_full = self.cur_takeout_wait_time().days
-                return days_full > self.get_time_condition_days()
+                return days_full >= self.get_time_condition_days()
             else:
                 return False
         else:

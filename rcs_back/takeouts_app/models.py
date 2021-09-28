@@ -214,25 +214,25 @@ class TankTakeoutRequest(models.Model):
 class TakeoutCondition(models.Model):
     """Модель условий для сбора"""
 
-    office_days = models.SmallIntegerField(
+    office_days = models.PositiveSmallIntegerField(
         verbose_name="максимальное кол-во дней в офисе полным",
         blank=True,
         null=True
     )
 
-    public_days = models.SmallIntegerField(
+    public_days = models.PositiveSmallIntegerField(
         verbose_name="максимальное кол-во дней в общ. месте полным",
         blank=True,
         null=True
     )
 
-    mass = models.IntegerField(
+    mass = models.PositiveIntegerField(
         verbose_name="максимальная суммарная масса бумаги",
         blank=True,
         null=True
     )
 
-    ignore_reports = models.IntegerField(
+    ignore_reports = models.PositiveIntegerField(
         verbose_name="кол-во первых сообщений, которые нужно игнорировать",
         default=0
     )

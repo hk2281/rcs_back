@@ -12,7 +12,7 @@ sudo chown -R 777:777 ./rcs_back/media
 git clone https://github.com/xalvaine/restarter.git
 фронт
 
-Gunicorn workers на сервере иногда умирали с signal 9, скорее всего
+Gunicorn workers на dev сервере иногда умирали с signal 9, скорее всего
 потому что не хватало памяти. Пофиксил, добавив swap-memory.
 
 
