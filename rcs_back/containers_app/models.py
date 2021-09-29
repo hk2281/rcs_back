@@ -622,9 +622,9 @@ class Container(models.Model):
 
     def cur_takeout_wait_time(self) -> Union[datetime.timedelta, None]:
         """Текущее время ожидания выноса контейнера"""
-        if self.is_active() and self.last_full_report():
+        if self.is_active() and self.last_full_report().filled_at:
             wait_time = (timezone.now() -
-                         self.last_full_report().reported_full_at)
+                         self.last_full_report().filled_at)
             return wait_time
         else:
             return None
@@ -776,14 +776,14 @@ class FullContainerReport(models.Model):
 
     def takeout_wait_time(self) -> Union[datetime.timedelta, None]:
         """Возвращает время ожидания выноса"""
-        if self.emptied_at:
-            return self.emptied_at - self.reported_full_at
+        if self.emptied_at and self.filled_at:
+            return self.emptied_at - self.filled_at
         else:
             return None
 
     def __str__(self) -> str:
         return (f"Контейнер №{self.container.pk} заполнен, "
-                f"{self.reported_full_at.astimezone(tz).strftime('%d.%m.%Y %H:%M')}")
+                f"{self.reported_full_at.astimezone(tz).strftime('%d.%m.%Y')}")
 
     class Meta:
         verbose_name = "контейнер заполнен"
