@@ -622,7 +622,9 @@ class Container(models.Model):
 
     def cur_takeout_wait_time(self) -> Union[datetime.timedelta, None]:
         """Текущее время ожидания выноса контейнера"""
-        if self.is_active() and self.last_full_report().filled_at:
+        if (self.is_active() and
+            self.last_full_report() and
+                self.last_full_report().filled_at):
             wait_time = (timezone.now() -
                          self.last_full_report().filled_at)
             return wait_time
