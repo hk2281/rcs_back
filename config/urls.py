@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-from rcs_back.containers_app.views import (BuildingListView,
+from rcs_back.containers_app.views import (BuildingListView, ContainerCountView,
                                            PublicFeedbackView,
                                            BuildingPartView,
                                            FullContainerReportView)
@@ -34,7 +34,8 @@ urlpatterns = [
     path("api/takeout-conditions/<int:pk>",
          TakeoutConditionDetailView.as_view()),
     path("api/full-container-reports", FullContainerReportView.as_view()),
-    path("api/collected-mass", CollectedMassView.as_view())
+    path("api/collected-mass", CollectedMassView.as_view()),
+    path("api/container-count", ContainerCountView.as_view())
 ]
 
 if bool(settings.DEBUG):

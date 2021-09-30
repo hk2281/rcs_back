@@ -341,8 +341,8 @@ class Container(models.Model):
     OFFICE_BOX = 3
     KIND_CHOICES = (
         (ECOBOX, "экобокс"),
-        (PUBLIC_ECOBOX, "экобокс в общественном месте"),
-        (OFFICE_BOX, "коробка из-под бумаги")
+        (PUBLIC_ECOBOX, "контейнер в общественном месте"),
+        (OFFICE_BOX, "офисная урна")
     )
 
     """Масса бумаги, вмещающейся в вид контейнера, в кг"""

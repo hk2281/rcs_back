@@ -303,3 +303,19 @@ class ContainerActivationView(views.APIView):
         return HttpResponseRedirect(
             redirect_to=settings.DOMAIN + redirect_path
         )
+
+
+class ContainerCountView(views.APIView):
+    """Количество контейнеров по зданиям"""
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        resp = []
+        building: Building
+        for building in Building.objects.all():
+            building_dict = {}
+            building_dict["id"] = building.pk
+            building_dict["building"] = building.address
+            building_dict["count"] = building.container_count()
+            resp.append(building_dict)
+        return Response(resp)
