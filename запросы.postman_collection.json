@@ -507,6 +507,91 @@
 							"body": "{\n    \"Биржевая линия, д. 14-16\": {\n        \"collected_mass\": 0,\n        \"container_count\": 0\n    },\n    \"улица Чайковского, д. 11/2\": {\n        \"collected_mass\": 0,\n        \"container_count\": 0\n    },\n    \"Кронверкский проспект, д. 49\": {\n        \"collected_mass\": 1112,\n        \"container_count\": 1\n    },\n    \"переулок Гривцова, д. 14-16\": {\n        \"collected_mass\": 0,\n        \"container_count\": 0\n    },\n    \"улица Ломоносова, д. 9\": {\n        \"collected_mass\": 1057,\n        \"container_count\": 1\n    },\n    \"total_mass\": 2,\n    \"trees\": 24,\n    \"energy\": 9.4,\n    \"water\": 66\n}"
 						}
 					]
+				},
+				{
+					"name": "кол-во контейнеров по зданиям",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/container-count",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"container-count"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "кол-во контейнеров по зданиям",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/container-count",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"container-count"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 30 Sep 2021 08:28:29 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language, Origin"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "116"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 2,\n        \"building\": \"Ломоносова 9\",\n        \"count\": 1\n    },\n    {\n        \"id\": 1,\n        \"building\": \"Кронверкский 49\",\n        \"count\": 4\n    }\n]"
+						}
+					]
 				}
 			]
 		},
