@@ -186,6 +186,7 @@ class Building(BaseBuilding):
             link += f"&building={self.pk}"
 
             msg = render_to_string("takeout_condition_met.html", {
+                "address": self.address,
                 "due_date": due_date,
                 "containers": self.containers_for_takeout(),
                 "link": link,
@@ -316,7 +317,7 @@ class BuildingPart(BaseBuilding):
                 self.meets_time_takeout_condition())
 
     def __str__(self) -> str:
-        return f"корпус {self.num}"
+        return f"{str(self.building)}, корпус {self.num}"
 
     class Meta:
         verbose_name = "корпус здания"

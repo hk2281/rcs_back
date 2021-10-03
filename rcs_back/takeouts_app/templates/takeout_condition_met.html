@@ -4,7 +4,7 @@
 <div>Здравствуйте.</div>
 <br>
 <div>
-    Необходимо организовать сбора макулатуры в вашем здании.
+    Необходимо организовать сбора макулатуры в вашем здании ({{ address }}).
 </div>
 <br>
 <div>Контейнеры наполнены в следующих местах:</div>
@@ -78,7 +78,7 @@
                 <span style="font-size:15px"><span style="color:black"><span style="font-weight:400"><span
                                 style="text-decoration:none"><span><span><span
                                             style="font-family:Calibri,sans-serif"><span style="font-style:normal">
-                                                {{ container.building_part }}
+                                                {{ container.building_part.num }}
                                             </span></span></span></span></span></span></span></span>
             </td>
             {% endif %}
