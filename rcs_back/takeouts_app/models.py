@@ -104,7 +104,10 @@ class ContainersTakeoutRequest(models.Model):
     def emptied_containers_match(self) -> float:
         """Соответствие (действительно собранных контейнеров /
         число из списка на сбор)"""
-        return self.emptied_containers.count() / self.containers.count()
+        if self.containers.count():
+            return self.emptied_containers.count() / self.containers.count()
+        else:
+            return 1
 
     def __str__(self) -> str:
         return (f"Сбор контейнеров от "
