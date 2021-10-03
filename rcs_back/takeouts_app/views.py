@@ -3,6 +3,8 @@ import pdfkit
 
 from django.conf import settings
 from django.db.models import Q
+from django.db.models import Sum
+from django.db.models.functions import Coalesce
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.http.response import HttpResponseRedirect, HttpResponse
@@ -265,16 +267,22 @@ class CollectedMassView(views.APIView):
 
     def get(self, request, *args, **kwargs):
         resp = {}
-        total_mass = 0
-        for building in Building.objects.all():
-            building_dict = {}
-            building_dict[
-                "collected_mass"] = building.confirmed_collected_mass()
-            total_mass += building.confirmed_collected_mass()
-            building_dict["container_count"] = building.container_count()
-            resp[str(building)] = building_dict
-        total_mass = total_mass // 1000  # В тоннах
+
+        collected_mass = TankTakeoutRequest.objects.filter(
+            confirmed_mass__isnull=False
+        ).aggregate(
+            collected_mass=Coalesce(Sum("confirmed_mass"), 0)
+        )["collected_mass"]
+
+        precollected_mass = Building.objects.filter(
+            precollected_mass__isnull=False
+        ).aggregate(
+            precollected_mass=Coalesce(Sum("precollected_mass"), 0)
+        )["precollected_mass"]
+
+        total_mass = (collected_mass + precollected_mass) // 1000  # В тоннах
         resp["total_mass"] = total_mass
+
         resp["trees"] = total_mass * 12
         resp["energy"] = total_mass * 4.7
         resp["water"] = total_mass * 33
