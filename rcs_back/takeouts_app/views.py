@@ -1,6 +1,7 @@
 import pandas as pd
 import pdfkit
 
+from datetime import timedelta
 from django.conf import settings
 from django.db.models import Q
 from django.db.models import Sum
@@ -35,6 +36,11 @@ class ContainersTakeoutListView(generics.ListCreateAPIView):
             queryset = queryset.filter(
                 building=self.request.user.building
             )
+
+        three_months_ago = timezone.now() - timedelta(days=3*30)
+        queryset = queryset.filter(
+            created_at__gt=three_months_ago
+        )
         return queryset
 
     def get(self, request, *args, **kwargs):
@@ -198,6 +204,11 @@ class TankTakeoutRequestListView(generics.ListCreateAPIView):
             queryset = queryset.filter(
                 building=self.request.user.building
             )
+
+        three_months_ago = timezone.now() - timedelta(days=3*30)
+        queryset = queryset.filter(
+            created_at__gt=three_months_ago
+        )
         return queryset
 
     def perform_create(self, serializer):
