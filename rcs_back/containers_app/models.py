@@ -1,4 +1,5 @@
 import datetime
+import pdfkit
 import time
 
 from django.conf import settings
@@ -201,6 +202,17 @@ class Building(BaseBuilding):
                 emails
             )
             email.content_subtype = "html"
+            containers_html_s = render_to_string(
+                "containers_for_takeout.html", {
+                    "containers": self.containers_for_takeout(),
+                    "has_building_parts": hasattr(self, "building_parts"),
+                }
+            )
+            pdf = pdfkit.from_string(containers_html_s, False)
+            email.attach("containers.pdf",
+                         pdf,
+                         "application/pdf"
+                         )
             email.send()
 
     def tank_takeout_notify(self) -> None:
