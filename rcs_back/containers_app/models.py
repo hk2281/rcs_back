@@ -6,6 +6,8 @@ from django.core.mail import EmailMessage
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models.query import QuerySet
+from django.db.models import Sum
+from django.db.models.functions import Coalesce
 from django.utils import timezone
 from django.template.loader import render_to_string
 from secrets import choice
@@ -263,11 +265,12 @@ class Building(BaseBuilding):
     def confirmed_collected_mass(self) -> int:
         """Суммарная масса собранной макулатуры,
         подтверждённая после вывоза бака"""
-        mass = self.precollected_mass if self.precollected_mass else 0
-        for request in self.tank_takeout_requests.filter(
+        mass = self.tank_takeout_requests.filter(
             confirmed_mass__isnull=False
-        ):
-            mass += request.confirmed_mass
+        ).aggregate(
+            summ_mass=Coalesce(Sum("confirmed_mass"), 0)
+        )["summ_mass"]
+        mass += self.precollected_mass
         return mass
 
     def avg_fill_speed(self) -> Union[float, None]:
