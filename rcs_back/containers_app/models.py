@@ -87,8 +87,8 @@ class BaseBuilding(models.Model):
 
     def meets_mass_takeout_condition(self) -> bool:
         """Выполняются ли в здании/корпусе условия для сбора по общей массе"""
-        mass_condition = self.takeout_condition.mass
-        return mass_condition and self.current_mass() >= mass_condition
+        return bool(self.takeout_condition.mass and
+                    self.current_mass() >= mass_condition)
 
     def meets_time_takeout_condition(self) -> bool:
         """Выполняются ли в здании/корпусе условия для сбора
