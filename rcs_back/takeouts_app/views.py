@@ -140,7 +140,6 @@ class ContainersTakeoutDetailView(generics.RetrieveUpdateAPIView):
 class ContainersForTakeoutView(views.APIView):
     """View для получения PDF со списком
     контейнеров на сбор"""
-    permission_classes = [permissions.AllowAny]  # FIXME
 
     def get(self, request, *args, **kwargs):
         takeout_pk = self.kwargs["pk"]
