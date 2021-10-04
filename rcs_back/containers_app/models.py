@@ -224,9 +224,12 @@ class Building(BaseBuilding):
 
     def tank_takeout_notify(self) -> None:
         """Отправляет запрос на вывоз накопительного бака"""
-        tank_takeout_company = TankTakeoutCompany.objects.first()
-        if tank_takeout_company and tank_takeout_company.email:
-
+        emails = []
+        tank_takeout_companies = TankTakeoutCompany.objects.all()
+        if tank_takeout_companies:
+            company: TankTakeoutCompany
+            for company in tank_takeout_companies:
+                emails.append(company.email)
             phone = ""
             name = ""
             hoz_worker = self.get_hoz_workers().first()
@@ -245,7 +248,7 @@ class Building(BaseBuilding):
                 "Оповещание от сервиса RecycleStarter",
                 msg,
                 None,
-                [tank_takeout_company.email]
+                emails
             )
             email.content_subtype = "html"
             if self.passage_scheme:
