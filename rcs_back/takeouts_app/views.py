@@ -266,9 +266,11 @@ class CollectedMassView(views.APIView):
             precollected_mass=Coalesce(Sum("precollected_mass"), 0)
         )["precollected_mass"]
 
-        total_mass = (collected_mass + precollected_mass) // 1000  # В тоннах
+        total_mass = (collected_mass +
+                      precollected_mass) // 100 / 10  # В тоннах до десятых
         resp["total_mass"] = total_mass
 
+        total_mass = int(total_mass)
         resp["trees"] = total_mass * 12
         resp["energy"] = total_mass * 4.7
         resp["water"] = total_mass * 33
