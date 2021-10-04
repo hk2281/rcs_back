@@ -154,6 +154,13 @@ class Building(BaseBuilding):
         verbose_name="схема проезда"
     )
 
+    def street_name(self) -> str:
+        """Возвращает только улицу"""
+        if "," in self.address:
+            return self.address[:self.address.find(",")]
+        else:
+            return self.address
+
     def needs_takeout(self) -> bool:
         """Нужно ли вынести бумагу?"""
         if hasattr(self, "building_parts"):

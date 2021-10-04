@@ -315,7 +315,7 @@ class ContainerCountView(views.APIView):
         for building in Building.objects.all():
             building_dict = {}
             building_dict["id"] = building.pk
-            building_dict["building"] = building.address
+            building_dict["building"] = building.street_name()
             building_dict["count"] = building.container_count()
             # В тоннах до десятых
             building_dict["mass"] = building.confirmed_collected_mass(
