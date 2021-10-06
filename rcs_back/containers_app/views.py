@@ -301,7 +301,7 @@ class ContainerActivationView(views.APIView):
             status = "error"
         redirect_path = f"/result?title={title}&text={text}&status={status}"
         return HttpResponseRedirect(
-            redirect_to=settings.DOMAIN + redirect_path
+            redirect_to="https://" + settings.DOMAIN + redirect_path
         )
 
 

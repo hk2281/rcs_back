@@ -189,7 +189,7 @@ class Building(BaseBuilding):
             token = EmailToken.objects.create()
             token.set_token()
             token.save()
-            link = settings.DOMAIN
+            link = "https://" + settings.DOMAIN
             link += f"/api/container-takeout-requests?token={token.token}"
             link += f"&building={self.pk}"
 

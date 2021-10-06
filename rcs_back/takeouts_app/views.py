@@ -71,7 +71,7 @@ class ContainersTakeoutListView(generics.ListCreateAPIView):
             redirect_path = f"/result?title={title}&text={text}"
             redirect_path += f"&status={status}"
             return HttpResponseRedirect(
-                redirect_to=settings.DOMAIN + redirect_path
+                redirect_to="https://" + settings.DOMAIN + redirect_path
             )
         elif request.user.is_authenticated:
             """Получение списка сборов через сайт"""
