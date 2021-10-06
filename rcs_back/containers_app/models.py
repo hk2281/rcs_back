@@ -707,7 +707,7 @@ class Container(models.Model):
         """Отправляет запрос на активацию экологу и коменданту здания"""
         emails = self.building.get_worker_emails()
         if emails:
-            activation_link = settings.DOMAIN + "/api/containers/"
+            activation_link = "https://" + settings.DOMAIN + "/api/containers/"
             activation_link += str(self.pk)
             activation_link += f"/activate?token={token.token}"
             msg = render_to_string("container_activation_request.html", {
