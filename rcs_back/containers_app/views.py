@@ -19,7 +19,7 @@ class FullContainerReportView(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = FullContainerReportSerializer
 
-    def perform_create(self, serializer) -> None:
+    def perform_create(self, serializer) -> Union[Container, None]:
         if "container" in serializer.validated_data:
             container = serializer.validated_data["container"]
             by_staff = self.request.user.is_authenticated
@@ -35,6 +35,24 @@ class FullContainerReportView(generics.CreateAPIView):
                     container.pk,
                     by_staff
                 )
+            return container
+        return None
+
+    def create(self, request, *args, **kwargs):
+        """Изменённый create для того чтобы возвращать кол-во
+        дней, через которое опустошат контейнер"""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        container: Container = self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        resp = {}
+        if container:
+            resp[
+                "time_condition_days"
+            ] = container.get_time_condition_days() + 1
+        return Response(resp,
+                        status=status.HTTP_201_CREATED,
+                        headers=headers)
 
 
 class ContainerDetailView(UpdateThenRetrieveModelMixin,
