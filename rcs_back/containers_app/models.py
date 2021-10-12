@@ -322,7 +322,8 @@ class Building(BaseBuilding):
 class BuildingPart(BaseBuilding):
     """Модель корпуса здания"""
 
-    num = models.PositiveSmallIntegerField(
+    num = models.CharField(
+        max_length=32,
         verbose_name="номер корпуса"
     )
 
