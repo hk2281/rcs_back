@@ -144,6 +144,8 @@ class ContainerPublicAddView(generics.CreateAPIView):
             if "building_part" in serializer.validated_data:
                 container.building_part = serializer.validated_data[
                     "building_part"]
+            else:
+                container.building_part = container.detect_building_part()
             container.floor = serializer.validated_data["floor"]
             if "room" in serializer.validated_data:
                 container.room = serializer.validated_data["room"]
@@ -156,6 +158,8 @@ class ContainerPublicAddView(generics.CreateAPIView):
 
         else:
             container = serializer.save(status=Container.WAITING)
+            container.building_part = container.detect_building_part()
+            container.save()
 
         public_container_add_notify.delay(container.pk)
 

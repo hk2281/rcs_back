@@ -154,6 +154,11 @@ class Building(BaseBuilding):
         verbose_name="схема проезда"
     )
 
+    detect_building_part = models.BooleanField(
+        default=False,
+        verbose_name="определять номер корпуса по аудитории"
+    )
+
     def street_name(self) -> str:
         """Возвращает только улицу"""
         if "," in self.address:
@@ -756,6 +761,22 @@ class Container(models.Model):
             sticker_im.save(tmp.name, "pdf", quality=100)
             email.attach("sticker.pdf", tmp.read(), "application/pdf")
             email.send()
+
+    def detect_building_part(self) -> Union[BuildingPart, None]:
+        """Определяет корпус по номеру аудитории"""
+        if (self.room and self.building.detect_building_part
+                and not self.building_part):
+            ch: str
+            for ch in self.room:
+                if ch.isdigit():
+                    if self.building.building_parts.filter(
+                        num=ch
+                    ).first():
+                        return self.building.building_parts.filter(
+                            num=ch
+                        ).first()
+                    break
+        return None
 
     def __str__(self) -> str:
         return f"Контейнер №{self.pk}"

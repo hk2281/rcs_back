@@ -2596,7 +2596,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Mon, 09 Aug 2021 15:13:14 GMT"
+									"value": "Tue, 12 Oct 2021 15:50:48 GMT"
 								},
 								{
 									"key": "Server",
@@ -2620,7 +2620,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "213"
+									"value": "292"
 								},
 								{
 									"key": "Content-Language",
@@ -2640,7 +2640,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "[\n    {\n        \"id\": 1,\n        \"address\": \"Кронверкский 49\",\n        \"itmo_worker_email\": \"komendant@itmo.ru\",\n        \"containers_takeout_email\": \"takeout-company@com.com\",\n        \"building_parts\": [\n            {\n                \"id\": 1,\n                \"num\": 1\n            },\n            {\n                \"id\": 2,\n                \"num\": 2\n            },\n            {\n                \"id\": 3,\n                \"num\": 3\n            }\n        ]\n    }\n]"
+							"body": "[\n    {\n        \"id\": 1,\n        \"address\": \"Кронверкский 49\",\n        \"building_parts\": [\n            {\n                \"id\": 1,\n                \"num\": \"1\"\n            },\n            {\n                \"id\": 2,\n                \"num\": \"2\"\n            },\n            {\n                \"id\": 3,\n                \"num\": \"3asd\"\n            }\n        ],\n        \"detect_building_part\": false\n    },\n    {\n        \"id\": 2,\n        \"address\": \"Ломоносова, д. 9\",\n        \"building_parts\": [\n            {\n                \"id\": 4,\n                \"num\": \"1\"\n            },\n            {\n                \"id\": 5,\n                \"num\": \"2\"\n            }\n        ],\n        \"detect_building_part\": true\n    }\n]"
 						}
 					]
 				}
