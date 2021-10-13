@@ -778,6 +778,19 @@ class Container(models.Model):
                     break
         return None
 
+    def correct_fullness(self) -> None:
+        """Этот метод используется для корректировки
+        ошибок (заполненный в сервисе контейнер на самом деле пустой),
+        поэтому не вызываем handle_empty_container
+        (там устанавливается время опустошения)"""
+        last_report: FullContainerReport = self.last_full_report()
+        if last_report:
+            last_report.delete()
+            time.sleep(5)  # Ждём сохранения в БД
+            self._is_full = False  # Для сортировки
+            self.avg_fill_time = self.calc_avg_fill_time()
+            self.save()
+
     def __str__(self) -> str:
         return f"Контейнер №{self.pk}"
 

@@ -36,3 +36,9 @@ def handle_empty_container(container_id: int) -> None:
     и пересчитать среднее время выноса"""
     container: Container = Container.objects.get(pk=container_id)
     container.handle_empty()
+
+
+@shared_task
+def container_correct_fullness(container_id: int) -> None:
+    container: Container = Container.objects.get(pk=container_id)
+    container.correct_fullness()

@@ -3185,7 +3185,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"emptied_containers\": [1, 2],\n    \"worker_info\": \"Тест Тестович\"\n}",
+							"raw": "{\n    \"already_empty_containers\": [1],\n    \"unavailable_containers\": [2],\n    \"worker_info\": \"Тест Тестович\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3193,13 +3193,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/container-takeout-requests/4",
+							"raw": "{{host}}/container-takeout-requests/36",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"container-takeout-requests",
-								"4"
+								"36"
 							]
 						}
 					},
@@ -3211,7 +3211,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"emptied_containers\": [1, 2],\n    \"worker_info\": \"Тест Тестович\"\n}",
+									"raw": "{\n    \"already_empty_containers\": [1],\n    \"unavailable_containers\": [2],\n    \"worker_info\": \"Тест Тестович\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -3219,13 +3219,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{host}}/container-takeout-requests/30",
+									"raw": "{{host}}/container-takeout-requests/36",
 									"host": [
 										"{{host}}"
 									],
 									"path": [
 										"container-takeout-requests",
-										"30"
+										"36"
 									]
 								}
 							},
@@ -3235,7 +3235,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sun, 26 Sep 2021 17:30:20 GMT"
+									"value": "Wed, 13 Oct 2021 11:17:16 GMT"
 								},
 								{
 									"key": "Server",
@@ -3259,7 +3259,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "1065"
+									"value": "1919"
 								},
 								{
 									"key": "Content-Language",
@@ -3279,7 +3279,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"id\": 30,\n    \"created_at\": \"2021-09-07T19:55:40.041358+03:00\",\n    \"building\": 1,\n    \"containers\": [\n        {\n            \"id\": 1,\n            \"kind\": 1,\n            \"mass\": 30,\n            \"building\": {\n                \"id\": 1,\n                \"address\": \"Кронверкский 49\"\n            },\n            \"building_part\": {\n                \"id\": 1,\n                \"num\": 1\n            },\n            \"floor\": 6,\n            \"room\": \"1600\",\n            \"description\": \"\",\n            \"is_full\": false,\n            \"status\": 2,\n            \"requested_activation\": false,\n            \"email\": \"\",\n            \"phone\": \"\",\n            \"cur_fill_time\": \"614474.58776\",\n            \"cur_takeout_wait_time\": null,\n            \"avg_fill_time\": \"00:03:46.836039\",\n            \"avg_takeout_wait_time\": \"6 12:40:48.290148\"\n        },\n        {\n            \"id\": 2,\n            \"kind\": 1,\n            \"mass\": 30,\n            \"building\": {\n                \"id\": 1,\n                \"address\": \"Кронверкский 49\"\n            },\n            \"building_part\": {\n                \"id\": 1,\n                \"num\": 1\n            },\n            \"floor\": 3,\n            \"room\": \"1303\",\n            \"description\": \"У окна\",\n            \"is_full\": false,\n            \"status\": 2,\n            \"requested_activation\": false,\n            \"email\": \"\",\n            \"phone\": \"\",\n            \"cur_fill_time\": \"614474.020585\",\n            \"cur_takeout_wait_time\": null,\n            \"avg_fill_time\": null,\n            \"avg_takeout_wait_time\": \"26 04:38:34.982926\"\n        }\n    ],\n    \"confirmed_at\": \"2021-09-26T20:30:20.117950+03:00\",\n    \"emptied_containers\": [\n        1,\n        2\n    ],\n    \"worker_info\": \"Тест Тестович\",\n    \"mass\": 60,\n    \"requesting_worker_name\": \"\",\n    \"requesting_worker_phone\": \"\",\n    \"archive_room\": \"\",\n    \"archive_mass\": null\n}"
+							"body": "{\n    \"id\": 36,\n    \"created_at\": \"2021-10-06T20:30:44.159024+03:00\",\n    \"building\": 1,\n    \"containers\": [\n        {\n            \"id\": 1,\n            \"kind\": 1,\n            \"mass\": 30,\n            \"building\": {\n                \"id\": 1,\n                \"address\": \"Кронверкский 49\"\n            },\n            \"building_part\": {\n                \"id\": 1,\n                \"num\": \"1\"\n            },\n            \"floor\": 6,\n            \"room\": \"1600\",\n            \"description\": \"\",\n            \"is_full\": false,\n            \"status\": 2,\n            \"requested_activation\": false,\n            \"email\": \"\",\n            \"phone\": \"\",\n            \"cur_fill_time\": \"2060890.271868\",\n            \"cur_takeout_wait_time\": null,\n            \"avg_fill_time\": null,\n            \"avg_takeout_wait_time\": \"6 12:40:48.290148\"\n        },\n        {\n            \"id\": 2,\n            \"kind\": 1,\n            \"mass\": 30,\n            \"building\": {\n                \"id\": 1,\n                \"address\": \"Кронверкский 49\"\n            },\n            \"building_part\": {\n                \"id\": 1,\n                \"num\": \"1\"\n            },\n            \"floor\": 3,\n            \"room\": \"1303\",\n            \"description\": \"У окна\",\n            \"is_full\": true,\n            \"status\": 2,\n            \"requested_activation\": false,\n            \"email\": \"\",\n            \"phone\": \"\",\n            \"cur_fill_time\": null,\n            \"cur_takeout_wait_time\": \"1278066.623653\",\n            \"avg_fill_time\": \"32 22:52:25.288634\",\n            \"avg_takeout_wait_time\": \"26 04:38:34.982926\"\n        },\n        {\n            \"id\": 48,\n            \"kind\": 2,\n            \"mass\": 15,\n            \"building\": {\n                \"id\": 1,\n                \"address\": \"Кронверкский 49\"\n            },\n            \"building_part\": {\n                \"id\": 2,\n                \"num\": \"2\"\n            },\n            \"floor\": 3,\n            \"room\": \"2301\",\n            \"description\": \"в центре аудитории\",\n            \"is_full\": false,\n            \"status\": 2,\n            \"requested_activation\": false,\n            \"email\": \"test@test.com\",\n            \"phone\": \"89999999999\",\n            \"cur_fill_time\": \"1860.917998\",\n            \"cur_takeout_wait_time\": null,\n            \"avg_fill_time\": null,\n            \"avg_takeout_wait_time\": null\n        },\n        {\n            \"id\": 7,\n            \"kind\": 1,\n            \"mass\": 30,\n            \"building\": {\n                \"id\": 1,\n                \"address\": \"Кронверкский 49\"\n            },\n            \"building_part\": {\n                \"id\": 1,\n                \"num\": \"1\"\n            },\n            \"floor\": 3,\n            \"room\": \"\",\n            \"description\": \"\",\n            \"is_full\": false,\n            \"status\": 2,\n            \"requested_activation\": false,\n            \"email\": \"test@test.com\",\n            \"phone\": \"89999999999\",\n            \"cur_fill_time\": \"4125115.189874\",\n            \"cur_takeout_wait_time\": null,\n            \"avg_fill_time\": null,\n            \"avg_takeout_wait_time\": null\n        }\n    ],\n    \"confirmed_at\": \"2021-10-13T14:17:16.097969+03:00\",\n    \"emptied_containers\": [\n        48,\n        7\n    ],\n    \"already_empty_containers\": [\n        1\n    ],\n    \"unavailable_containers\": [\n        2\n    ],\n    \"worker_info\": \"Тест Тестович\",\n    \"mass\": 45,\n    \"requesting_worker_name\": \"\",\n    \"requesting_worker_phone\": \"\",\n    \"archive_room\": \"\",\n    \"archive_mass\": null\n}"
 						}
 					]
 				},

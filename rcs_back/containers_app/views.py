@@ -216,18 +216,11 @@ class EmptyContainerView(views.APIView):
 
     def post(self, request, *args, **kwargs):
         if "pk" in self.kwargs:
-            container = Container.objects.filter(
+            container: Container = Container.objects.filter(
                 pk=self.kwargs["pk"]
             ).first()
             if container:
-                last_report = container.last_full_report()
-                if last_report:
-                    """Этот view используется для корректировки
-                    ошибок, поэтому не вызываем handle_empty_container
-                    (там устанавливается время опустошения)"""
-                    last_report.delete()
-                    container._is_full = False  # Для сортировки
-                    container.save()
+                container_correct_fullness.delay(container.pk)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 

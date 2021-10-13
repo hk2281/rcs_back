@@ -48,7 +48,18 @@ class ContainersTakeoutConfirmationSerializer(serializers.ModelSerializer):
     containers = ContainerSerializer(
         many=True, read_only=True
     )
+
     emptied_containers = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Container.objects.filter(status=Container.ACTIVE),
+        required=False
+    )
+
+    already_empty_containers = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Container.objects.filter(status=Container.ACTIVE),
+        required=False
+    )
+
+    unavailable_containers = serializers.PrimaryKeyRelatedField(
         many=True, queryset=Container.objects.filter(status=Container.ACTIVE),
         required=False
     )
@@ -62,6 +73,8 @@ class ContainersTakeoutConfirmationSerializer(serializers.ModelSerializer):
             "containers",
             "confirmed_at",
             "emptied_containers",
+            "already_empty_containers",
+            "unavailable_containers",
             "worker_info",
             "mass",
             "requesting_worker_name",

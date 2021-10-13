@@ -54,6 +54,20 @@ class ContainersTakeoutRequest(models.Model):
         verbose_name="контейнеры подтверждённые пустыми"
     )
 
+    already_empty_containers = models.ManyToManyField(
+        to=Container,
+        blank=True,
+        related_name="fake_takeout_requests",
+        verbose_name="контейнеры, которые были пустыми"
+    )
+
+    unavailable_containers = models.ManyToManyField(
+        to=Container,
+        blank=True,
+        related_name="unconfirmed_takeout_requests",
+        verbose_name="недоступные контейнеры"
+    )
+
     worker_info = models.CharField(
         max_length=2048,
         verbose_name="информация о рабочем",

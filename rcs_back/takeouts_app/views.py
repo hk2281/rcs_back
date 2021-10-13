@@ -2,8 +2,7 @@ import pdfkit
 
 from datetime import timedelta
 from django.conf import settings
-from django.db.models import Q
-from django.db.models import Sum
+from django.db.models import Q, Sum
 from django.db.models.functions import Coalesce
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
@@ -17,7 +16,8 @@ from rcs_back.utils.mixins import UpdateThenRetrieveModelMixin
 from rcs_back.takeouts_app.models import *
 from rcs_back.takeouts_app.serializers import *
 from rcs_back.containers_app.models import Building, EmailToken
-from rcs_back.containers_app.tasks import handle_empty_container
+from rcs_back.containers_app.tasks import (container_correct_fullness,
+                                           handle_empty_container)
 
 
 class ContainersTakeoutListView(generics.ListCreateAPIView):
@@ -119,20 +119,44 @@ class ContainersTakeoutDetailView(generics.RetrieveUpdateAPIView):
         """PATCH-запрос должен использоваться только для подтверждения
         сбора"""
 
-        takeout = self.get_object()
+        takeout: ContainersTakeoutRequest = self.get_object()
         if takeout.confirmed_at:
             raise exceptions.ValidationError(
                 {"error": "Сбор уже подтверждён"}
             )
 
-        serializer.save(confirmed_at=timezone.now())
         if "emptied_containers" in serializer.validated_data:
             emptied_containers = serializer.validated_data[
                 "emptied_containers"
             ]
-            for container in emptied_containers:
-                handle_empty_container.delay(container.pk)
-            building = self.get_object().building
+
+        else:
+            emptied_containers = set(list(takeout.containers.all()))
+            if "already_empty_containers" in serializer.validated_data:
+                already_empty_containers = set(serializer.validated_data[
+                    "already_empty_containers"
+                ])
+                emptied_containers -= already_empty_containers
+
+                for container in already_empty_containers:
+                    container_correct_fullness.delay(container.pk)
+
+            if "unavailable_containers" in serializer.validated_data:
+                unavailable_containers = set(serializer.validated_data[
+                    "unavailable_containers"
+                ])
+                emptied_containers -= unavailable_containers
+
+        for container in emptied_containers:
+            handle_empty_container.delay(container.pk)
+
+        serializer.save(
+            confirmed_at=timezone.now(),
+            emptied_containers=emptied_containers
+        )
+
+        if not takeout.archive_mass and not takeout.archive_room:
+            building: Building = takeout.building
             building._takeout_notified = False
             building.save()
 
