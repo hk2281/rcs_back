@@ -3,5 +3,5 @@
 -r base.txt
 
 gunicorn==20.1.0  # https://github.com/benoitc/gunicorn
-sentry-sdk==1.4.3  # https://github.com/getsentry/sentry-python
+sentry-sdk==1.1.0  # https://github.com/getsentry/sentry-python
 django-anymail[sendinblue]==8.2  # https://github.com/anymail/django-anymail
