@@ -69,7 +69,8 @@ celerybeat-schedule
 .venv
 venv/
 ENV/
-.envs/
+.envs/*
+!.envs/.local/
 
 # Rope project settings
 .ropeproject
@@ -275,7 +276,7 @@ rcs_back/media/
 
 .ipython/
 .env
-.envs/
+.production/
 
 # vscode
 .vscode/
