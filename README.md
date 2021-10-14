@@ -32,6 +32,10 @@ coverage html
 смотрим htmlcov/index.html
 
 
+CI/CD:
+добавить в Github HOST, USERNAME и PASSWORD для ssh
+
+
 SSL
 
 добавил через certbot по этой статье: https://pentacent.medium.com/nginx-and-lets-encrypt-with-docker-in-less-than-5-minutes-b4b8a60d3a71
