@@ -233,6 +233,3 @@ class MassRuleIgnoreReportsTests(TestCase):
         self.assertTrue(self.office_container.is_full())
         self.assertTrue(self.building.meets_mass_takeout_condition())
         self.assertTrue(self.building.needs_takeout())
-
-    def test_fail(self):
-        self.assertTrue(False)
