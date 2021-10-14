@@ -23,18 +23,9 @@ class FullContainerReportView(generics.CreateAPIView):
         if "container" in serializer.validated_data:
             container = serializer.validated_data["container"]
             by_staff = self.request.user.is_authenticated
-            if container.last_full_report():
-                # Повторное сообщение о заполнении
-                handle_repeat_full_report.delay(
-                    container.pk,
-                    by_staff
-                )
-            else:
-                # Первое сообщение
-                handle_first_full_report.delay(
-                    container.pk,
-                    by_staff
-                )
+            """Фиксируем сообщение о заполненности и
+            проверяем полноту контейнера"""
+            container_add_report.delay(container.pk, by_staff)
             return container
         return None
 

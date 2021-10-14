@@ -155,14 +155,14 @@ class SimpleMassRuleTests(TestCase):
         self.assertFalse(self.building.meets_mass_takeout_condition())
 
     def test_not_enough_mass_empty_building(self):
-        self.office_container.handle_first_full_report(False)
+        self.office_container.add_report(False)
         self.assertFalse(self.public_container.is_full())
         self.assertTrue(self.office_container.is_full())
         self.assertFalse(self.building.meets_mass_takeout_condition())
 
     def test_enough_mass_full_building(self):
-        self.public_container.handle_first_full_report(False)
-        self.office_container.handle_first_full_report(False)
+        self.public_container.add_report(False)
+        self.office_container.add_report(False)
         self.assertTrue(self.public_container.is_full())
         self.assertTrue(self.office_container.is_full())
         self.assertTrue(self.building.meets_mass_takeout_condition())
@@ -204,31 +204,31 @@ class MassRuleIgnoreReportsTests(TestCase):
         self.assertFalse(self.building.meets_mass_takeout_condition())
 
     def test_not_enough_mass_empty_building(self):
-        self.office_container.handle_first_full_report(False)
+        self.office_container.add_report(False)
         self.assertFalse(self.public_container.is_full())
         self.assertTrue(self.office_container.is_full())
         self.assertFalse(self.building.meets_mass_takeout_condition())
 
     def test_enough_mass_not_enough_reports(self):
-        self.public_container.handle_first_full_report(False)
-        self.office_container.handle_first_full_report(False)
+        self.public_container.add_report(False)
+        self.office_container.add_report(False)
         self.assertFalse(self.public_container.is_full())
         self.assertTrue(self.office_container.is_full())
         self.assertFalse(self.building.meets_mass_takeout_condition())
         self.assertFalse(self.building.needs_takeout())
 
     def test_enough_mass_enough_reports(self):
-        self.public_container.handle_first_full_report(False)
-        self.public_container.handle_repeat_full_report(False)
-        self.office_container.handle_first_full_report(False)
+        self.public_container.add_report(False)
+        self.public_container.add_report(False)
+        self.office_container.add_report(False)
         self.assertTrue(self.public_container.is_full())
         self.assertTrue(self.office_container.is_full())
         self.assertTrue(self.building.meets_mass_takeout_condition())
         self.assertTrue(self.building.needs_takeout())
 
     def test_enough_mass_report_by_staff(self):
-        self.office_container.handle_first_full_report(False)
-        self.public_container.handle_first_full_report(True)
+        self.office_container.add_report(False)
+        self.public_container.add_report(True)
         self.assertTrue(self.public_container.is_full())
         self.assertTrue(self.office_container.is_full())
         self.assertTrue(self.building.meets_mass_takeout_condition())

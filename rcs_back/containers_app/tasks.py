@@ -15,22 +15,12 @@ def public_container_add_notify(container_id: int) -> None:
 
 
 @shared_task
-def handle_first_full_report(container_id: int, by_staff: bool) -> None:
-    """При заполнении контейнера нужно запомнить время
-    и пересчитать среднее время заполнения"""
+def container_add_report(container_id: int, by_staff: bool) -> None:
     container: Container = Container.objects.get(pk=container_id)
-    container.handle_first_full_report(by_staff)
+    container.add_report(by_staff)
 
 
-@shared_task
-def handle_repeat_full_report(container_id: int, by_staff: bool) -> None:
-    """При повторном сообщении о заполнении нужно
-    увеличить кол-во сообщений"""
-    container: Container = Container.objects.get(pk=container_id)
-    container.handle_repeat_full_report(by_staff)
-
-
-@shared_task
+@ shared_task
 def handle_empty_container(container_id: int) -> None:
     """При опустошении контейнера нужно запомнить время
     и пересчитать среднее время выноса"""
@@ -38,7 +28,7 @@ def handle_empty_container(container_id: int) -> None:
     container.handle_empty()
 
 
-@shared_task
+@ shared_task
 def container_correct_fullness(container_id: int) -> None:
     container: Container = Container.objects.get(pk=container_id)
     container.correct_fullness()

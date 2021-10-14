@@ -556,36 +556,31 @@ class Container(models.Model):
         else:
             return False
 
-    def handle_first_full_report(self, by_staff: bool):
-        """При первом сообщение о заполненности контейнера
-        нужно создать FullContainerReport"""
-        FullContainerReport.objects.create(
-            container=self,
-            by_staff=by_staff
-        )
+    def add_report(self, by_staff: bool):
+        """Фиксируем сообщение о заполненности и
+        проверяем полноту контейнера"""
+        report: FullContainerReport = self.last_full_report()
+
+        if report:
+            """При повторном сообщении о заполнении нужно
+            увеличить кол-во сообщений"""
+            if by_staff:
+                report.by_staff = True
+            report.count += 1
+            report.save()
+
+        else:
+            """При первом сообщение о заполненности контейнера
+            нужно создать FullContainerReport"""
+            FullContainerReport.objects.create(
+                container=self,
+                by_staff=by_staff
+            )
 
         time.sleep(5)  # Ждём сохранения в БД
-
         """Если выполняются условия для вывоза по
         кол-ву бумаги, нужно сообщить"""
         self.check_fullness()
-
-    def handle_repeat_full_report(self, by_staff: bool):
-        """При повторном сообщении о заполнении нужно
-        увеличить кол-во сообщений"""
-        report = self.last_full_report()
-        if report:
-            if by_staff:
-                report.by_staff = True
-            else:
-                report.count += 1
-            report.save()
-
-            time.sleep(5)  # Ждём сохранения в БД
-
-            """Если выполняются условия для вывоза по
-            кол-ву бумаги, сообщаем"""
-            self.check_fullness()
 
     def handle_empty(self):
         """При опустошении контейнера нужно запомнить время
