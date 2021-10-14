@@ -4,5 +4,7 @@ omit =
     */config/*
     */contrib/*
     manage.py
+    *__init__.py
+    *urls.py
 
 source = .

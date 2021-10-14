@@ -122,6 +122,44 @@ class ContainerModelTests(TestCase):
         self.assertEqual(
             self.public_container_in_building.get_time_condition_days(), 5)
 
+    def test_add_report(self):
+        container: Container = self.public_container_in_bpart
+        reports = FullContainerReport.objects.filter(container=container)
+        self.assertEqual(len(reports), 0)
+
+        container.add_report()
+        reports = FullContainerReport.objects.filter(container=container)
+        self.assertEqual(len(reports), 1)
+        report: FullContainerReport = reports.first()
+        self.assertEqual(report.count, 1)
+        self.assertEqual(report.by_staff, False)
+
+        container.add_report(True)
+        reports = FullContainerReport.objects.filter(container=container)
+        self.assertEqual(len(reports), 1)
+        report: FullContainerReport = reports.first()
+        self.assertEqual(report.count, 2)
+        self.assertEqual(report.by_staff, True)
+
+    def test_activate(self):
+        container: Container = self.public_container_in_bpart
+        container.status = Container.WAITING
+        container.activate()
+        self.assertEqual(container.status, Container.ACTIVE)
+        self.assertFalse(container.requested_activation)
+
+    def test_collected_mass(self):
+        container: Container = self.office_container_in_building
+        self.assertEqual(container.collected_mass(), 0)
+
+        container.add_report()
+        container.handle_empty()
+        self.assertEqual(container.collected_mass(), container.mass())
+
+        container.add_report()
+        container.handle_empty()
+        self.assertEqual(container.collected_mass(), container.mass() * 2)
+
 
 class SimpleMassRuleTests(TestCase):
     """Тест выполнения условий на сбор по массе"""

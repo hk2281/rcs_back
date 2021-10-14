@@ -556,7 +556,7 @@ class Container(models.Model):
         else:
             return False
 
-    def add_report(self, by_staff: bool):
+    def add_report(self, by_staff: bool = False):
         """Фиксируем сообщение о заполненности и
         проверяем полноту контейнера"""
         report: FullContainerReport = self.last_full_report()
