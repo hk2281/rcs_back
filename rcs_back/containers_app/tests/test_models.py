@@ -234,5 +234,5 @@ class MassRuleIgnoreReportsTests(TestCase):
         self.assertTrue(self.building.meets_mass_takeout_condition())
         self.assertTrue(self.building.needs_takeout())
 
-    def fail_test(self):
+    def test_fail(self):
         self.assertTrue(False)
