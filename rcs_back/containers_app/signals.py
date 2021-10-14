@@ -1,20 +1,35 @@
-from django.core.files import File
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from io import BytesIO
+from django.utils import timezone
 
-from rcs_back.containers_app.models import Container
-from .utils.qr import generate_sticker
+from rcs_back.containers_app.models import Container, Building, BuildingPart
+from rcs_back.takeouts_app.models import TakeoutCondition
 
 
 @receiver(post_save, sender=Container)
-def generate_new_sticker(sender, instance: Container,
-                         created: bool, **kwargs) -> None:
-    """Генерируем стикер, если у контейнера его нет"""
-    if not instance.sticker:
-        sticker_im = generate_sticker(instance.pk)
-        sticker_io = BytesIO()
-        sticker_im.save(sticker_io, "JPEG", quality=85)
-        sticker = File(sticker_io, name=f"sticker_{instance.pk}")
-        instance.sticker = sticker
+def check_container_state(sender, instance: Container,
+                          created: bool, **kwargs) -> None:
+    """Записываем время активации"""
+    if instance.is_active() and not instance.activated_at:
+        instance.activated_at = timezone.now()
         instance.save()
+
+
+@receiver(post_save, sender=Building)
+def create_takeout_condition_for_building(sender, instance: Building,
+                                          created: bool, **kwargs) -> None:
+    """Создаём условия для сбора при создании здания"""
+    if created:
+        TakeoutCondition.objects.create(
+            building=instance
+        )
+
+
+@receiver(post_save, sender=BuildingPart)
+def create_takeout_condition_for_bpart(sender, instance: BuildingPart,
+                                       created: bool, **kwargs) -> None:
+    """Создаём условия для сбора при создании корпуса здания"""
+    if created:
+        TakeoutCondition.objects.create(
+            building_part=instance
+        )

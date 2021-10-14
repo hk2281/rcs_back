@@ -11,7 +11,7 @@ from .base import env
 
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["e-kondr01.ru", "www.e-kondr01.ru"]
+ALLOWED_HOSTS = ["77.234.222.71", "recycle.itmo.ru"]
 
 # DATABASES
 # ------------------------------------------------------------------------------
@@ -63,10 +63,7 @@ TEMPLATES[-1]["OPTIONS"]["loaders"] = [  # type: ignore[index] # noqa F405
 
 # CORS
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",
-    "http://127.0.0.1:8080"  # FIXME
-]
+CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[])
 
 CORS_ALLOW_CREDENTIALS = True
 

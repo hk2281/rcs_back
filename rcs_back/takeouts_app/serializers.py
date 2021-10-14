@@ -1,14 +1,17 @@
 from rest_framework import serializers
 
-from rcs_back.containers_app.models import Container, Building
+from rcs_back.containers_app.models import Container
+from rcs_back.containers_app.serializers import (
+    BuildingShortSerializer, BuildingPartSerializer, ContainerSerializer)
 from rcs_back.takeouts_app.models import *
 
 
-class ContainersTakeoutRequestSerializer(serializers.ModelSerializer):
+class AddContainersTakeoutSerializer(serializers.ModelSerializer):
     """Для создания заявки на вынос контейнера"""
 
     containers = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=Container.objects.filter(status=Container.ACTIVE)
+        many=True, queryset=Container.objects.filter(status=Container.ACTIVE),
+        required=False
     )
     emptied_containers = serializers.PrimaryKeyRelatedField(
         many=True, read_only=True
@@ -25,7 +28,11 @@ class ContainersTakeoutRequestSerializer(serializers.ModelSerializer):
             "confirmed_at",
             "emptied_containers",
             "worker_info",
-            "mass"
+            "mass",
+            "requesting_worker_name",
+            "requesting_worker_phone",
+            "archive_room",
+            "archive_mass"
         ]
         read_only_fields = [
             "created_at",
@@ -38,11 +45,23 @@ class ContainersTakeoutRequestSerializer(serializers.ModelSerializer):
 class ContainersTakeoutConfirmationSerializer(serializers.ModelSerializer):
     """Для подтверждения выноса контейнеров"""
 
-    containers = serializers.PrimaryKeyRelatedField(
+    containers = ContainerSerializer(
         many=True, read_only=True
     )
+
     emptied_containers = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=Container.objects.filter(status=Container.ACTIVE)
+        many=True, queryset=Container.objects.filter(status=Container.ACTIVE),
+        required=False
+    )
+
+    already_empty_containers = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Container.objects.filter(status=Container.ACTIVE),
+        required=False
+    )
+
+    unavailable_containers = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Container.objects.filter(status=Container.ACTIVE),
+        required=False
     )
 
     class Meta:
@@ -54,8 +73,14 @@ class ContainersTakeoutConfirmationSerializer(serializers.ModelSerializer):
             "containers",
             "confirmed_at",
             "emptied_containers",
+            "already_empty_containers",
+            "unavailable_containers",
             "worker_info",
-            "mass"
+            "mass",
+            "requesting_worker_name",
+            "requesting_worker_phone",
+            "archive_room",
+            "archive_mass"
         ]
         read_only_fields = [
             "created_at",
@@ -68,9 +93,6 @@ class ContainersTakeoutConfirmationSerializer(serializers.ModelSerializer):
 
 class TankTakeoutRequestSerializer(serializers.ModelSerializer):
     """Для создания заявки на вывоз бака"""
-    building = serializers.PrimaryKeyRelatedField(
-        queryset=Building.objects.all()
-    )
 
     class Meta:
         model = TankTakeoutRequest
@@ -93,9 +115,6 @@ class TankTakeoutRequestSerializer(serializers.ModelSerializer):
 
 class TankTakeoutConfirmationSerializer(serializers.ModelSerializer):
     """Для подтверждения вывоза бака"""
-    building = serializers.PrimaryKeyRelatedField(
-        read_only=True
-    )
 
     class Meta:
         model = TankTakeoutRequest
@@ -117,34 +136,33 @@ class TankTakeoutConfirmationSerializer(serializers.ModelSerializer):
 
 
 class TakeoutConditionSerializer(serializers.ModelSerializer):
-    type = serializers.CharField(source="get_type_display")
-    building = serializers.StringRelatedField(
-        read_only=True
-    )
-    building_part = serializers.StringRelatedField(
-        read_only=True
-    )
+    building = BuildingShortSerializer()
+    building_part = BuildingPartSerializer()
 
     class Meta:
         model = TakeoutCondition
         fields = [
             "id",
-            "type",
-            "number",
             "building",
-            "building_part"
+            "building_part",
+            "office_days",
+            "public_days",
+            "mass",
+            "ignore_reports"
         ]
 
 
 class AddTakeoutConditionSerializer(serializers.ModelSerializer):
-    """Сериализатор с цифрой у типа и для id здания и корпуса"""
+    """Сериализатор с id здания и корпуса"""
 
     class Meta:
         model = TakeoutCondition
         fields = [
             "id",
-            "type",
-            "number",
             "building",
-            "building_part"
+            "building_part",
+            "office_days",
+            "public_days",
+            "mass",
+            "ignore_reports"
         ]

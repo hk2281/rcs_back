@@ -1,5 +1,10 @@
+from secrets import choice
+from string import ascii_letters, digits
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+from django.utils import timezone
+
+from rcs_back.containers_app.models import Building
 
 
 class UserManager(BaseUserManager):
@@ -44,5 +49,30 @@ class User(AbstractUser):
     username = None
     first_name = None
     last_name = None
-    email = models.EmailField(unique=True, verbose_name="почта")
+
+    email = models.EmailField(
+        unique=True,
+        verbose_name="почта"
+    )
+
+    building = models.ForeignKey(
+        to=Building,
+        on_delete=models.PROTECT,
+        verbose_name="здание",
+        blank=True,
+        null=True
+    )
+
+    name = models.CharField(
+        max_length=128,
+        blank=True,
+        verbose_name="ФИО"
+    )
+
+    phone = models.CharField(
+        max_length=16,
+        blank=True,
+        verbose_name="номер телефона"
+    )
+
     objects = UserManager()

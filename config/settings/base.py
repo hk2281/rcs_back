@@ -76,6 +76,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 # ------------------------------------------------------------------------------
 DJANGO_APPS = [
     "jazzmin",  # Needs to go before django.contrib.admin
+    "rcs_back.users_app",  # Needs to go before something for template
 
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -97,7 +98,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "rcs_back.containers_app",
-    "rcs_back.users_app",
+    "rcs_back.stats_app",
     "rcs_back.takeouts_app"
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -145,7 +146,6 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
@@ -154,7 +154,7 @@ MIDDLEWARE = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-root
 STATIC_ROOT = str(ROOT_DIR / "staticfiles")
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-url
-STATIC_URL = "/django-static/"
+STATIC_URL = "/api/static/"
 # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
@@ -225,18 +225,19 @@ EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-timeout
 EMAIL_TIMEOUT = 5
 DEFAULT_FROM_EMAIL = env(
-    "DJANGO_DEFAULT_FROM_EMAIL", default="RCS Back <noreply@e-kondr01.ru>"
+    "DJANGO_DEFAULT_FROM_EMAIL",
+    default="RecycleStarter <noreply@recycle.itmo.ru>"
 )
 SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
 EMAIL_SUBJECT_PREFIX = env(
     "DJANGO_EMAIL_SUBJECT_PREFIX",
-    default="[RCS Back]",
+    default="[RecycleStarter]",
 )
 
 # ADMIN
 # ------------------------------------------------------------------------------
 # Django Admin URL.
-ADMIN_URL = env.str("DJANGO_ADMIN_URL", "django-admin/")
+ADMIN_URL = env.str("DJANGO_ADMIN_URL", "api/django-admin/")
 # https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = [("""Egor Kondrashov""", "e.kondr01@gmail.com")]
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
@@ -310,19 +311,19 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ROTATE_REFRESH_TOKENS': True,
+    "ROTATE_REFRESH_TOKENS": True
 }
 
 # Djoser
 
 DJOSER = {
     "TOKEN_MODEL": None,  # We use only JWT
-    "HIDE_USERS": True
+    "HIDE_USERS": True,
+    "PASSWORD_RESET_CONFIRM_URL": "reset/{uid}/{token}"
 }
 
 # Constants
 
-# Groups
-
 ECO_GROUP = "эко"
 HOZ_GROUP = "хоз"
+DOMAIN = "recycle.itmo.ru"

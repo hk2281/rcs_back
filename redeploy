@@ -1,5 +1,6 @@
 #!/bin/bash
+cd ../restarter
 git pull
-docker-compose -f production.yml down
-docker-compose -f production.yml build
-docker-compose -f production.yml up
+cd ../rcs_back
+git pull
+docker-compose -f production.yml up --detach --build --force-recreate
