@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - master
-  workflow_dispatch:
 
 jobs:
   test:
@@ -32,4 +31,5 @@ jobs:
             git pull
             cd ~/rcs_back
             git pull
+            docker-compose -f production.yml exec postgres backup
             docker-compose -f production.yml up --detach --build --force-recreate
