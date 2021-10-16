@@ -15,4 +15,5 @@ jobs:
           script: |
             cd ~/restarter
             git pull
+            cd ~/rcs_back
             docker-compose -f production.yml up --detach --build --force-recreate

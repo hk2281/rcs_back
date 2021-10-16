@@ -31,5 +31,5 @@ jobs:
             git pull
             cd ~/rcs_back
             git pull
-            docker-compose -f production.yml exec postgres backup
+            docker-compose -f production.yml exec -T postgres backup
             docker-compose -f production.yml up --detach --build --force-recreate
