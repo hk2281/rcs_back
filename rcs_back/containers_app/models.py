@@ -138,6 +138,12 @@ class Building(BaseBuilding):
         blank=True
     )
 
+    sticker_giver = models.CharField(
+        max_length=256,
+        verbose_name="контакты человека, который выдаёт стикер",
+        blank=True
+    )
+
     _takeout_notified = models.BooleanField(
         default=False,
         verbose_name="послано оповещение о необходимоси сбора"
@@ -740,7 +746,8 @@ class Container(models.Model):
         msg = render_to_string("public_container_add.html", {
             "is_ecobox": is_ecobox,
             "container_room": self.building.get_container_room,
-            "sticker_room": self.building.get_sticker_room
+            "sticker_room": self.building.get_sticker_room,
+            "sticker_giver": self.building.sticker_giver
         }
         )
 
