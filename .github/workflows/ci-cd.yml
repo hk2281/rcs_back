@@ -14,7 +14,7 @@ jobs:
           version: "1.26.2"
       - run: docker-compose -f local.yml up --build --detach
       - run: sleep 10
-      - run: docker exec django bash -c "python manage.py migrate && python manage.py test --settings config.settings.test --parallel --failfast"
+      - run: docker exec django bash -c "python manage.py test --settings config.settings.test --parallel --failfast"
 
   deploy-production:
     needs: [test]
