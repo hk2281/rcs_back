@@ -42,3 +42,10 @@ SSL
 
 Postgres DB Backup:
 https://cookiecutter-django.readthedocs.io/en/latest/docker-postgres-backups.html
+
+
+Pre-commit:
+
+pip install pre-commit
+
+pre-commit run --all-files
