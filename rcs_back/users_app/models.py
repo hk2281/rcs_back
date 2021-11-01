@@ -1,5 +1,6 @@
 from secrets import choice
 from string import ascii_letters, digits
+
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils import timezone

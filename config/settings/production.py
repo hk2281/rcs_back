@@ -1,14 +1,13 @@
 import logging
-import sentry_sdk
 
+import sentry_sdk
+from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration, ignore_logger
-from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.redis import RedisIntegration
 
 from .base import *
 from .base import env
-
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ["77.234.222.71", "recycle.itmo.ru"]

@@ -1,23 +1,26 @@
-import pdfkit
-
 from datetime import timedelta
+
+import pdfkit
 from django.conf import settings
 from django.db.models import Q, Sum
 from django.db.models.functions import Coalesce
-from django.utils import timezone
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
-from django.http.response import HttpResponseRedirect, HttpResponse
-from rest_framework import (generics, views, permissions,
-                            status as drf_status, exceptions)
+from django.utils import timezone
+from rest_framework import exceptions, generics, permissions
+from rest_framework import status as drf_status
+from rest_framework import views
 from rest_framework.response import Response
 
-from rcs_back.utils.mixins import UpdateThenRetrieveModelMixin
+from rcs_back.containers_app.models import Building, EmailToken
+from rcs_back.containers_app.tasks import (
+    container_correct_fullness,
+    handle_empty_container,
+)
 from rcs_back.takeouts_app.models import *
 from rcs_back.takeouts_app.serializers import *
-from rcs_back.containers_app.models import Building, EmailToken
-from rcs_back.containers_app.tasks import (container_correct_fullness,
-                                           handle_empty_container)
+from rcs_back.utils.mixins import UpdateThenRetrieveModelMixin
 
 
 class ContainersTakeoutListView(generics.ListCreateAPIView):

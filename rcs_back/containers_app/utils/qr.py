@@ -1,8 +1,7 @@
 import qrcode
-
-from qrcode.image.styledpil import StyledPilImage
 from django.conf import settings
 from PIL import Image, ImageDraw, ImageFont
+from qrcode.image.styledpil import StyledPilImage
 
 
 def generate_qr_with_logo(container_id: int) -> Image:

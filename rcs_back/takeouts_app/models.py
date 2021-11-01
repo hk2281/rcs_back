@@ -1,12 +1,11 @@
 import datetime
+from typing import Union
 
 from django.db import models
 from django.db.models.query import QuerySet
 from django.utils import timezone
-from typing import Union
 
-from rcs_back.containers_app.models import Container, Building, BuildingPart
-
+from rcs_back.containers_app.models import Building, BuildingPart, Container
 
 tz = timezone.get_default_timezone()
 

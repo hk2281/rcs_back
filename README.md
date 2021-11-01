@@ -22,7 +22,7 @@ Gunicorn workers на dev сервере иногда умирали с signal 9
 docker exec django bash -c "python manage.py test --settings config.settings.test --parallel --keepdb"
 
 
-coverage: 
+coverage:
 
 docker exec django bash -c "coverage run manage.py test --settings config.settings.test --keepdb && coverage html"
 

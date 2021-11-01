@@ -1,17 +1,19 @@
-from django.http.response import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404
-from django.conf import settings
-from django.db.models import Q
-from rest_framework import generics, permissions, views, status
-from rest_framework.response import Response
 from tempfile import NamedTemporaryFile
 
-from rcs_back.utils.mixins import UpdateThenRetrieveModelMixin
+from django.conf import settings
+from django.db.models import Q
+from django.http.response import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from rest_framework import generics, permissions, status, views
+from rest_framework.response import Response
+
 from rcs_back.containers_app.models import *
-from .utils.email import *
-from .utils.qr import generate_sticker
+from rcs_back.utils.mixins import UpdateThenRetrieveModelMixin
+
 from .serializers import *
 from .tasks import *
+from .utils.email import *
+from .utils.qr import generate_sticker
 
 
 class FullContainerReportView(generics.CreateAPIView):

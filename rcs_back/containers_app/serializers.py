@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import BuildingPart, Container, Building, FullContainerReport
+from .models import Building, BuildingPart, Container, FullContainerReport
 
 
 class BuildingPartSerializer(serializers.ModelSerializer):

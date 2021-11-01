@@ -22,7 +22,7 @@ services:
       - ./.envs/.production/.django
       - ./.envs/.production/.postgres
     command: /start
-    expose: 
+    expose:
       - 8000
     restart: always
 
@@ -38,7 +38,7 @@ services:
     env_file:
       - ./.envs/.production/.postgres
     restart: always
-    
+
   nginx:
     build: ./compose/production/nginx
     ports:
@@ -82,7 +82,7 @@ services:
     command: /start-flower
     expose:
       - 5555
-  
+
   next:
     build: ../restarter
     command: yarn start
@@ -91,7 +91,7 @@ services:
     environment:
       - NEXT_PUBLIC_BACKEND_URL=/api
     restart: always
-  
+
   certbot:
     image: certbot/certbot
     volumes:

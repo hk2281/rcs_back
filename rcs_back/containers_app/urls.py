@@ -2,7 +2,6 @@ from django.urls import path
 
 from .views import *
 
-
 urlpatterns = [
     path("", ContainerListView.as_view()),
     path("/public-add", ContainerPublicAddView.as_view()),

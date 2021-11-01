@@ -2,7 +2,10 @@ from rest_framework import serializers
 
 from rcs_back.containers_app.models import Container
 from rcs_back.containers_app.serializers import (
-    BuildingShortSerializer, BuildingPartSerializer, ContainerSerializer)
+    BuildingPartSerializer,
+    BuildingShortSerializer,
+    ContainerSerializer,
+)
 from rcs_back.takeouts_app.models import *
 
 

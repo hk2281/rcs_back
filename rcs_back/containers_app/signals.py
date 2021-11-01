@@ -2,7 +2,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 
-from rcs_back.containers_app.models import Container, Building, BuildingPart
+from rcs_back.containers_app.models import Building, BuildingPart, Container
 from rcs_back.takeouts_app.models import TakeoutCondition
 
 

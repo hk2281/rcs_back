@@ -2,18 +2,21 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from drf_spectacular.views import (SpectacularAPIView,
-                                   SpectacularSwaggerView,
-                                   SpectacularRedocView)
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 
-from rcs_back.containers_app.views import (BuildingListView,
-                                           ContainerCountView,
-                                           PublicFeedbackView,
-                                           BuildingPartView,
-                                           FullContainerReportView)
+from rcs_back.containers_app.views import (
+    BuildingListView,
+    BuildingPartView,
+    ContainerCountView,
+    FullContainerReportView,
+    PublicFeedbackView,
+)
 from rcs_back.takeouts_app.views import *
 from rcs_back.users_app.views import *
-
 
 urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),

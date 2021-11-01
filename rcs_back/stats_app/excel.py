@@ -1,13 +1,13 @@
 from datetime import timedelta
-from django.db.models.query import QuerySet
+
 from django.db.models import Q
+from django.db.models.query import QuerySet
 from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.worksheet.worksheet import Worksheet
 
-from rcs_back.containers_app.models import Container, Building
-from rcs_back.takeouts_app.models import (ContainersTakeoutRequest,
-                                          TankTakeoutRequest)
+from rcs_back.containers_app.models import Building, Container
+from rcs_back.takeouts_app.models import ContainersTakeoutRequest, TankTakeoutRequest
 
 
 def queryset_to_ids(qs: QuerySet) -> str:

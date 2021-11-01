@@ -2,7 +2,6 @@ from django.urls import path
 
 from .views import *
 
-
 urlpatterns = [
     path("/containers", ContainerStatsExcelView.as_view()),
     path("/container-takeouts", ContainerTakeoutStatsExcelView.as_view()),

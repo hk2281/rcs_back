@@ -1,24 +1,23 @@
 import datetime
-import pdfkit
 import time
-
-from django.conf import settings
-from django.core.mail import EmailMessage
-from django.contrib.auth import get_user_model
-from django.db import models
-from django.db.models.query import QuerySet
-from django.db.models import Sum
-from django.db.models.functions import Coalesce
-from django.utils import timezone
-from django.template.loader import render_to_string
 from secrets import choice
 from string import ascii_letters, digits
 from tempfile import NamedTemporaryFile
 from typing import Union
 
-from rcs_back.utils.model import *
-from rcs_back.containers_app.utils.qr import generate_sticker
+import pdfkit
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.core.mail import EmailMessage
+from django.db import models
+from django.db.models import Sum
+from django.db.models.functions import Coalesce
+from django.db.models.query import QuerySet
+from django.template.loader import render_to_string
+from django.utils import timezone
 
+from rcs_back.containers_app.utils.qr import generate_sticker
+from rcs_back.utils.model import *
 
 tz = timezone.get_default_timezone()
 

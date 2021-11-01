@@ -5,4 +5,4 @@ set -o pipefail
 set -o nounset
 
 
-celery -A config.celery_app beat -l INFO --logfile=/app/logs/celery/celery_beat.log --pidfile= 
+celery -A config.celery_app beat -l INFO --logfile=/app/logs/celery/celery_beat.log --pidfile=

@@ -1,0 +1,16 @@
+exclude: "migrations|.git"
+default_stages: [commit]
+fail_fast: true
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+
+  - repo: https://github.com/timothycrosley/isort
+    rev: 5.8.0
+    hooks:
+      - id: isort

@@ -1,5 +1,5 @@
-from rest_framework.response import Response
 from rest_framework.mixins import UpdateModelMixin
+from rest_framework.response import Response
 
 
 class UpdateThenRetrieveModelMixin(UpdateModelMixin):

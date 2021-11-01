@@ -1,11 +1,10 @@
 """
 Base settings to build other settings files upon.
 """
-import environ
-
 from pathlib import Path
-from celery.schedules import crontab
 
+import environ
+from celery.schedules import crontab
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # rcs_back/
