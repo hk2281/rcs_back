@@ -16,4 +16,5 @@ jobs:
             cd ~/restarter
             git pull
             cd ~/rcs_back
+            yes yes | docker image prune -a
             docker-compose -f production.yml up --detach --build --force-recreate
