@@ -87,8 +87,10 @@ def write_container(c: Container, ws: Worksheet, i: int) -> None:
     ws[f"I{i}"] = c.get_status_display()
     if c.cur_fill_time():
         ws[f"J{i}"] = format_td(c.cur_fill_time())
-    else:
+    elif c.is_active():
         ws[f"J{i}"] = "Уже заполнен"
+    else:
+        ws[f"J{i}"] = "Ещё не подключён"
     if c.avg_fill_time:
         ws[f"K{i}"] = format_td(c.avg_fill_time)
     else:
