@@ -10,6 +10,7 @@ ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # rcs_back/
 APPS_DIR = ROOT_DIR / "rcs_back"
 env = environ.Env()
+env.read_env()
 
 # GENERAL
 # ------------------------------------------------------------------------------

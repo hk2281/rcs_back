@@ -7,4 +7,5 @@ class ContainersAppConfig(AppConfig):
     verbose_name = "Контейнеры"
 
     def ready(self):
+        # pylint: disable=import-outside-toplevel,unused-import
         from rcs_back.containers_app import signals

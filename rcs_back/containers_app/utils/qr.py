@@ -7,14 +7,14 @@ from qrcode.image.styledpil import StyledPilImage
 def generate_qr_with_logo(container_id: int) -> Image:
     """Генерирует QR код с ссылкой на фронт на контейнер и с лого"""
     url = settings.DOMAIN + f"/fill/{container_id}"
-    qr = qrcode.QRCode(
+    qr_code = qrcode.QRCode(
         version=5,
         error_correction=qrcode.constants.ERROR_CORRECT_H,
         box_size=15
     )
-    qr.add_data(url)
-    qr.make()
-    sticker = qr.make_image(
+    qr_code.add_data(url)
+    qr_code.make()
+    sticker = qr_code.make_image(
         image_factory=StyledPilImage,
         embeded_image_path=str(
             settings.APPS_DIR / "containers_app" /
@@ -51,8 +51,8 @@ def add_container_id(sticker: Image, container_id: int) -> Image:
 
 def generate_sticker(container_id: int) -> Image:
     """Создаёт стикер для контейнера по ID"""
-    qr = generate_qr_with_logo(container_id=container_id)
-    sticker = add_container_id(add_background(qr), container_id)
+    qr_img = generate_qr_with_logo(container_id=container_id)
+    sticker = add_container_id(add_background(qr_img), container_id)
     return sticker
 
 
@@ -73,8 +73,8 @@ def add_border_background(sticker: Image) -> Image:
 def generate_sticker_for_print(container_id: int) -> Image:
     """Создаёт стикер для контейнера по ID.
     Версия для печати - с рамкой"""
-    qr: Image = generate_qr_with_logo(container_id=container_id)
-    sticker: Image = add_container_id(add_border_background(qr), container_id)
+    qr_img: Image = generate_qr_with_logo(container_id=container_id)
+    sticker: Image = add_container_id(add_border_background(qr_img), container_id)
     return sticker
 
 

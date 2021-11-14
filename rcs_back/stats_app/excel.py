@@ -12,29 +12,29 @@ from rcs_back.takeouts_app.models import ContainersTakeoutRequest, TankTakeoutRe
 
 def queryset_to_ids(qs: QuerySet) -> str:
     """Форматирование QuerySet"""
-    s = ""
+    string = ""
     for item in qs:
-        s += str(item.pk)
-        s += ", "
-    return s[:len(s)-2]
+        string += str(item.pk)
+        string += ", "
+    return string[:len(string)-2]
 
 
-def format_td(td: timedelta) -> str:
+def format_td(timed: timedelta) -> str:
     """Форматирование timedelta"""
-    td_s = str(td)
+    td_s = str(timed)
     if "day" in td_s:
-        td_s = td_s.split(":")[0]
+        td_s = td_s.split(":", maxsplit=1)[0]
         days = td_s[:td_s.find(" ")]
         hours = td_s[td_s.find(",") + 2:]
         return f"{days} дн {hours} ч"
     else:
-        return td_s.split(":")[0] + " ч"
+        return td_s.split(":", maxsplit=1)[0] + " ч"
 
 
-def set_width(ws: Worksheet) -> None:
+def set_width(worksheet: Worksheet) -> None:
     """Ширина столбца как наибольшая из клеток"""
     dims = {}
-    for row in ws.rows:
+    for row in worksheet.rows:
         for cell in row:
             if cell.value:
                 dims[cell.column_letter] = max(
@@ -42,302 +42,302 @@ def set_width(ws: Worksheet) -> None:
                      len(str(cell.value)))
                 )
     for col, value in dims.items():
-        ws.column_dimensions[col].width = value + 2
+        worksheet.column_dimensions[col].width = value + 2
 
 
-def write_container_headers(ws: Worksheet) -> None:
+def write_container_headers(worksheet: Worksheet) -> None:
     """Записывает заголовки в статистику о контейнере"""
-    ws["A2"] = "ID"
-    ws["B2"] = "Вид контейнера"
-    ws["C2"] = "Масса, кг"
-    ws["D2"] = "Адрес здания"
-    ws["E2"] = "Номер корпуса"
-    ws["F2"] = "Этаж"
-    ws["G2"] = "Аудитория"
-    ws["H2"] = "Описание"
-    ws["I2"] = "Состояние"
-    ws["J2"] = "Текущее"
-    ws["K2"] = "Среднее"
-    ws["L2"] = "Текущее"
-    ws["M2"] = "Среднее"
-    ws["N2"] = "Номер телефона"
-    ws["O2"] = "Почта"
-    ws["P2"] = "Суммарная масса, кг"
-    ws["J1"] = "Время заполнения"
-    ws["L1"] = "Ожидание сбора после заполнения"
-    ws["N1"] = "Контактное лицо"
+    worksheet["A2"] = "ID"
+    worksheet["B2"] = "Вид контейнера"
+    worksheet["C2"] = "Масса, кг"
+    worksheet["D2"] = "Адрес здания"
+    worksheet["E2"] = "Номер корпуса"
+    worksheet["F2"] = "Этаж"
+    worksheet["G2"] = "Аудитория"
+    worksheet["H2"] = "Описание"
+    worksheet["I2"] = "Состояние"
+    worksheet["J2"] = "Текущее"
+    worksheet["K2"] = "Среднее"
+    worksheet["L2"] = "Текущее"
+    worksheet["M2"] = "Среднее"
+    worksheet["N2"] = "Номер телефона"
+    worksheet["O2"] = "Почта"
+    worksheet["P2"] = "Суммарная масса, кг"
+    worksheet["J1"] = "Время заполнения"
+    worksheet["L1"] = "Ожидание сбора после заполнения"
+    worksheet["N1"] = "Контактное лицо"
 
-    ws.row_dimensions[1].font = Font(bold=True)
-    ws.row_dimensions[2].font = Font(bold=True)
+    worksheet.row_dimensions[1].font = Font(bold=True)
+    worksheet.row_dimensions[2].font = Font(bold=True)
 
 
-def write_container(c: Container, ws: Worksheet, i: int) -> None:
+def write_container(container: Container, worksheet: Worksheet, i: int) -> None:
     """Записывает статистику одного контейнера"""
-    ws[f"A{i}"] = c.pk
-    ws[f"B{i}"] = c.get_kind_display()
-    ws[f"C{i}"] = c.mass()
-    ws[f"D{i}"] = c.building.address
-    if c.building_part:
-        ws[f"E{i}"] = c.building_part.num
+    worksheet[f"A{i}"] = container.pk
+    worksheet[f"B{i}"] = container.get_kind_display()
+    worksheet[f"C{i}"] = container.mass()
+    worksheet[f"D{i}"] = container.building.address
+    if container.building_part:
+        worksheet[f"E{i}"] = container.building_part.num
     else:
-        ws[f"E{i}"] = "-"
-    ws[f"F{i}"] = c.floor
-    ws[f"G{i}"] = c.room
-    ws[f"H{i}"] = c.description
-    ws[f"I{i}"] = c.get_status_display()
-    if c.cur_fill_time():
-        ws[f"J{i}"] = format_td(c.cur_fill_time())
-    elif c.is_active():
-        ws[f"J{i}"] = "Уже заполнен"
+        worksheet[f"E{i}"] = "-"
+    worksheet[f"F{i}"] = container.floor
+    worksheet[f"G{i}"] = container.room
+    worksheet[f"H{i}"] = container.description
+    worksheet[f"I{i}"] = container.get_status_display()
+    if container.cur_fill_time():
+        worksheet[f"J{i}"] = format_td(container.cur_fill_time())
+    elif container.is_active():
+        worksheet[f"J{i}"] = "Уже заполнен"
     else:
-        ws[f"J{i}"] = "Ещё не подключён"
-    if c.avg_fill_time:
-        ws[f"K{i}"] = format_td(c.avg_fill_time)
+        worksheet[f"J{i}"] = "Ещё не подключён"
+    if container.avg_fill_time:
+        worksheet[f"K{i}"] = format_td(container.avg_fill_time)
     else:
-        ws[f"K{i}"] = "Недостаточно данных"
-    if c.cur_takeout_wait_time():
-        ws[f"L{i}"] = format_td(c.cur_takeout_wait_time())
+        worksheet[f"K{i}"] = "Недостаточно данных"
+    if container.cur_takeout_wait_time():
+        worksheet[f"L{i}"] = format_td(container.cur_takeout_wait_time())
     else:
-        ws[f"L{i}"] = "Ещё не заполнен"
-    if c.avg_takeout_wait_time:
-        ws[f"M{i}"] = format_td(c.avg_takeout_wait_time)
+        worksheet[f"L{i}"] = "Ещё не заполнен"
+    if container.avg_takeout_wait_time:
+        worksheet[f"M{i}"] = format_td(container.avg_takeout_wait_time)
     else:
-        ws[f"M{i}"] = "Недостаточно данных"
-    ws[f"N{i}"] = c.phone
-    ws[f"O{i}"] = c.email
-    ws[f"P{i}"] = c.collected_mass()
+        worksheet[f"M{i}"] = "Недостаточно данных"
+    worksheet[f"N{i}"] = container.phone
+    worksheet[f"O{i}"] = container.email
+    worksheet[f"P{i}"] = container.collected_mass()
 
 
-def get_container_stats_ws(ws: Worksheet) -> None:
+def get_container_stats_ws(worksheet: Worksheet) -> None:
     """Создаёт страницу из excel с актуальной статистикой по контейнерам"""
-    ws.title = "Контейнеры"
-    write_container_headers(ws)
+    worksheet.title = "Контейнеры"
+    write_container_headers(worksheet)
     containers = Container.objects.filter(
         ~Q(status=Container.RESERVED)
     ).order_by("pk")
 
     for i in range(3, len(containers) + 3):
         container = containers[i-3]
-        write_container(container, ws, i)
+        write_container(container, worksheet, i)
 
-    set_width(ws)
+    set_width(worksheet)
 
 
 def get_container_stats_xl() -> Workbook:
     """Создаёт excel-WorkBook с актуальной статистикой по контейнерам"""
-    wb = Workbook()
-    ws = wb.active
-    get_container_stats_ws(ws)
-    return wb
+    workbook = Workbook()
+    worksheet = workbook.active
+    get_container_stats_ws(worksheet)
+    return workbook
 
 
-def write_container_takeout_headers(ws: Worksheet) -> None:
+def write_container_takeout_headers(worksheet: Worksheet) -> None:
     """Записывает заголовки в статистику о сборе"""
-    ws["A1"] = "Дата сбора"
-    ws["A2"] = "создание"
-    ws["B2"] = "подтверждение"
-    ws["C1"] = "Здание"
-    ws["D1"] = "Корпус"
-    ws["E1"] = "Список контейнеров на сбор"
-    ws["F1"] = "Неподтверждённые контейнеры"
-    ws["G1"] = "Соответствие"
-    ws["H1"] = "Суммарная масса сбора"
-    ws["I1"] = "Данные подсобного рабочего"
+    worksheet["A1"] = "Дата сбора"
+    worksheet["A2"] = "создание"
+    worksheet["B2"] = "подтверждение"
+    worksheet["C1"] = "Здание"
+    worksheet["D1"] = "Корпус"
+    worksheet["E1"] = "Список контейнеров на сбор"
+    worksheet["F1"] = "Неподтверждённые контейнеры"
+    worksheet["G1"] = "Соответствие"
+    worksheet["H1"] = "Суммарная масса сбора"
+    worksheet["I1"] = "Данные подсобного рабочего"
 
-    ws.row_dimensions[1].font = Font(bold=True)
-    ws.row_dimensions[2].font = Font(bold=True)
+    worksheet.row_dimensions[1].font = Font(bold=True)
+    worksheet.row_dimensions[2].font = Font(bold=True)
 
 
-def write_container_takeout(t: ContainersTakeoutRequest,
-                            ws: Worksheet, i: int) -> None:
+def write_container_takeout(request: ContainersTakeoutRequest,
+                            worksheet: Worksheet, i: int) -> None:
     """Записывает статистику одного сбора"""
-    ws[f"A{i}"] = t.created_at.strftime("%d.%m.%Y")
-    if t.confirmed_at:
-        ws[f"B{i}"] = t.confirmed_at.strftime("%d.%m.%Y")
+    worksheet[f"A{i}"] = request.created_at.strftime("%d.%m.%Y")
+    if request.confirmed_at:
+        worksheet[f"B{i}"] = request.confirmed_at.strftime("%d.%m.%Y")
     else:
-        ws[f"B{i}"] = "-"
-    ws[f"C{i}"] = t.building.address
-    if t.building_part:
-        ws[f"D{i}"] = t.building_part.num
+        worksheet[f"B{i}"] = "-"
+    worksheet[f"C{i}"] = request.building.address
+    if request.building_part:
+        worksheet[f"D{i}"] = request.building_part.num
     else:
-        ws[f"D{i}"] = "-"
-    ws[f"E{i}"] = queryset_to_ids(t.containers.all())
-    ws[f"F{i}"] = queryset_to_ids(t.unconfirmed_containers())
-    ws[f"G{i}"] = t.emptied_containers_match()
-    ws[f"H{i}"] = t.mass()
-    ws[f"I{i}"] = t.worker_info
+        worksheet[f"D{i}"] = "-"
+    worksheet[f"E{i}"] = queryset_to_ids(request.containers.all())
+    worksheet[f"F{i}"] = queryset_to_ids(request.unconfirmed_containers())
+    worksheet[f"G{i}"] = request.emptied_containers_match()
+    worksheet[f"H{i}"] = request.mass()
+    worksheet[f"I{i}"] = request.worker_info
 
 
-def get_container_takeout_stats_ws(ws: Worksheet) -> None:
+def get_container_takeout_stats_ws(worksheet: Worksheet) -> None:
     """Создаёт страницу из excel с актуальной статистикой по сборам"""
-    ws.title = "Сборы"
-    write_container_takeout_headers(ws)
+    worksheet.title = "Сборы"
+    write_container_takeout_headers(worksheet)
     container_takeouts = ContainersTakeoutRequest.objects.order_by(
         "pk")
 
     for i in range(3, len(container_takeouts) + 3):
         takeout = container_takeouts[i-3]
-        write_container_takeout(takeout, ws, i)
+        write_container_takeout(takeout, worksheet, i)
 
-    set_width(ws)
+    set_width(worksheet)
 
 
 def get_container_takeout_stats_xl() -> Workbook:
     """Создаёт excel-WorkBook с актуальной статистикой по сборам"""
-    wb = Workbook()
-    ws = wb.active
-    get_container_takeout_stats_ws(ws)
-    return wb
+    workbook = Workbook()
+    worksheet = workbook.active
+    get_container_takeout_stats_ws(worksheet)
+    return workbook
 
 
-def write_tank_takeout_headers(ws: Worksheet) -> None:
+def write_tank_takeout_headers(worksheet: Worksheet) -> None:
     """Записывает заголовки в статистику о вывозе"""
-    ws["A1"] = "Дата обращения к оператору"
-    ws["B1"] = "Дата вывоза"
-    ws["C1"] = "Здание"
-    ws["D1"] = "Время заполнения накопительного бака"
-    ws["E1"] = "Расчётная масса вывоза, кг"
-    ws["F1"] = "Подтверждённая масса вывоза, кг"
-    ws["G1"] = "Соответствие (расчётная/подтверждённая"
-    ws["H1"] = "Разница (расчётная - подтверждённая), кг"
+    worksheet["A1"] = "Дата обращения к оператору"
+    worksheet["B1"] = "Дата вывоза"
+    worksheet["C1"] = "Здание"
+    worksheet["D1"] = "Время заполнения накопительного бака"
+    worksheet["E1"] = "Расчётная масса вывоза, кг"
+    worksheet["F1"] = "Подтверждённая масса вывоза, кг"
+    worksheet["G1"] = "Соответствие (расчётная/подтверждённая"
+    worksheet["H1"] = "Разница (расчётная - подтверждённая), кг"
 
-    ws.row_dimensions[1].font = Font(bold=True)
+    worksheet.row_dimensions[1].font = Font(bold=True)
 
 
-def write_tank_takeout(t: TankTakeoutRequest,
-                       ws: Worksheet, i: int) -> None:
+def write_tank_takeout(request: TankTakeoutRequest,
+                       worksheet: Worksheet, i: int) -> None:
     """Записывает статистику одного вывоза"""
-    ws[f"A{i}"] = t.created_at.strftime("%d.%m.%Y")
-    if t.confirmed_at:
-        ws[f"B{i}"] = t.confirmed_at.strftime("%d.%m.%Y")
+    worksheet[f"A{i}"] = request.created_at.strftime("%d.%m.%Y")
+    if request.confirmed_at:
+        worksheet[f"B{i}"] = request.confirmed_at.strftime("%d.%m.%Y")
     else:
-        ws[f"B{i}"] = "-"
-    ws[f"C{i}"] = t.building.address
-    if t.fill_time():
-        ws[f"D{i}"] = format_td(t.fill_time())
+        worksheet[f"B{i}"] = "-"
+    worksheet[f"C{i}"] = request.building.address
+    if request.fill_time():
+        worksheet[f"D{i}"] = format_td(request.fill_time())
     else:
-        ws[f"D{i}"] = "Недостаточно данных"
-    ws[f"E{i}"] = t.mass()
-    ws[f"F{i}"] = t.confirmed_mass
-    ws[f"G{i}"] = t.confirmed_mass_match()
-    ws[f"H{i}"] = t.mass_difference()
+        worksheet[f"D{i}"] = "Недостаточно данных"
+    worksheet[f"E{i}"] = request.mass()
+    worksheet[f"F{i}"] = request.confirmed_mass
+    worksheet[f"G{i}"] = request.confirmed_mass_match()
+    worksheet[f"H{i}"] = request.mass_difference()
 
 
-def get_tank_takeout_stats_ws(ws: Worksheet) -> None:
+def get_tank_takeout_stats_ws(worksheet: Worksheet) -> None:
     """Создаёт страницу из excel с актуальной статистикой по вывозам"""
-    ws.title = "Вывозы"
-    write_tank_takeout_headers(ws)
+    worksheet.title = "Вывозы"
+    write_tank_takeout_headers(worksheet)
     tank_takeouts = TankTakeoutRequest.objects.order_by(
         "pk")
 
     for i in range(2, len(tank_takeouts) + 2):
         takeout = tank_takeouts[i-2]
-        write_tank_takeout(takeout, ws, i)
+        write_tank_takeout(takeout, worksheet, i)
 
-    set_width(ws)
+    set_width(worksheet)
 
 
-def write_building_headers(ws: Worksheet) -> None:
+def write_building_headers(worksheet: Worksheet) -> None:
     """Записывает заголовки в статистику по зданию"""
-    ws["A1"] = "Здание"
-    ws["B1"] = "Число контейнеров"
-    ws["C1"] = "Суммарный объём, кг"
-    ws["D1"] = "Средняя скорость сбора, кг/месяц"
+    worksheet["A1"] = "Здание"
+    worksheet["B1"] = "Число контейнеров"
+    worksheet["C1"] = "Суммарный объём, кг"
+    worksheet["D1"] = "Средняя скорость сбора, кг/месяц"
 
-    ws.row_dimensions[1].font = Font(bold=True)
+    worksheet.row_dimensions[1].font = Font(bold=True)
 
 
-def write_building(b: Building, ws: Worksheet, i: int) -> None:
+def write_building(building: Building, worksheet: Worksheet, i: int) -> None:
     """Записывает статистику одного здания"""
-    ws[f"A{i}"] = b.address
-    ws[f"B{i}"] = b.container_count()
-    ws[f"C{i}"] = b.confirmed_collected_mass()
-    ws[f"D{i}"] = b.avg_fill_speed()
+    worksheet[f"A{i}"] = building.address
+    worksheet[f"B{i}"] = building.container_count()
+    worksheet[f"C{i}"] = building.confirmed_collected_mass()
+    worksheet[f"D{i}"] = building.avg_fill_speed()
 
 
-def get_building_stats_ws(ws: Worksheet) -> None:
+def get_building_stats_ws(worksheet: Worksheet) -> None:
     """Создаёт страницу из excel с актуальной статистикой по зданию"""
-    ws.title = "По зданиям"
-    write_building_headers(ws)
+    worksheet.title = "По зданиям"
+    write_building_headers(worksheet)
     buildings = Building.objects.order_by("pk")
 
     for i in range(2, len(buildings) + 2):
         building = buildings[i-2]
-        write_building(building, ws, i)
+        write_building(building, worksheet, i)
 
-    set_width(ws)
+    set_width(worksheet)
 
 
 def get_tank_takeout_stats_xl() -> Workbook:
     """Создаёт excel-WorkBook с актуальной статистикой по вывозам"""
-    wb = Workbook()
-    ws = wb.active
-    get_tank_takeout_stats_ws(ws)
-    ws1 = wb.create_sheet()
+    workbook = Workbook()
+    worksheet = workbook.active
+    get_tank_takeout_stats_ws(worksheet)
+    ws1 = workbook.create_sheet()
     get_building_stats_ws(ws1)
-    return wb
+    return workbook
 
 
 def get_all_stats_xl() -> Workbook:
     """Создаёт excel-WorkBook со всей актуальной статистикой"""
-    wb = Workbook()
-    ws = wb.active
-    get_container_stats_ws(ws)
-    ws1 = wb.create_sheet()
+    workbook = Workbook()
+    worksheet = workbook.active
+    get_container_stats_ws(worksheet)
+    ws1 = workbook.create_sheet()
     get_container_takeout_stats_ws(ws1)
-    ws2 = wb.create_sheet()
+    ws2 = workbook.create_sheet()
     get_tank_takeout_stats_ws(ws2)
-    ws3 = wb.create_sheet()
+    ws3 = workbook.create_sheet()
     get_building_stats_ws(ws3)
-    return wb
+    return workbook
 
 
-def write_short_container_headers(ws: Worksheet) -> None:
+def write_short_container_headers(worksheet: Worksheet) -> None:
     """Записывает заголовки в короткую статистику о контейнерах"""
-    ws["A1"] = "ID"
-    ws["B1"] = "Вид контейнера"
-    ws["C1"] = "Номер корпуса"
-    ws["D1"] = "Этаж"
-    ws["E1"] = "Аудитория"
-    ws["F1"] = "Описание"
-    ws["G1"] = "Номер телефона"
-    ws["H1"] = "Почта"
+    worksheet["A1"] = "ID"
+    worksheet["B1"] = "Вид контейнера"
+    worksheet["C1"] = "Номер корпуса"
+    worksheet["D1"] = "Этаж"
+    worksheet["E1"] = "Аудитория"
+    worksheet["F1"] = "Описание"
+    worksheet["G1"] = "Номер телефона"
+    worksheet["H1"] = "Почта"
 
-    ws.row_dimensions[1].font = Font(bold=True)
+    worksheet.row_dimensions[1].font = Font(bold=True)
 
 
-def write_short_container_info(c: Container, ws: Worksheet, i: int) -> None:
+def write_short_container_info(container: Container, worksheet: Worksheet, i: int) -> None:
     """Записывает краткую информацию об одном контейнере"""
-    ws[f"A{i}"] = c.pk
-    ws[f"B{i}"] = c.get_kind_display()
-    if c.building_part:
-        ws[f"C{i}"] = c.building_part.num
+    worksheet[f"A{i}"] = container.pk
+    worksheet[f"B{i}"] = container.get_kind_display()
+    if container.building_part:
+        worksheet[f"C{i}"] = container.building_part.num
     else:
-        ws[f"C{i}"] = "-"
-    ws[f"D{i}"] = c.floor
-    ws[f"E{i}"] = c.room
-    ws[f"F{i}"] = c.description
-    ws[f"G{i}"] = c.phone
-    ws[f"H{i}"] = c.email
+        worksheet[f"C{i}"] = "-"
+    worksheet[f"D{i}"] = container.floor
+    worksheet[f"E{i}"] = container.room
+    worksheet[f"F{i}"] = container.description
+    worksheet[f"G{i}"] = container.phone
+    worksheet[f"H{i}"] = container.email
 
 
-def get_short_container_info_ws(ws: Worksheet,
+def get_short_container_info_ws(worksheet: Worksheet,
                                 containers: QuerySet[Container]) -> None:
     """Создаёт страницу из excel с краткой информацией
     по выбранным контейнерам"""
-    ws.title = "Контейнеры"
-    write_short_container_headers(ws)
+    worksheet.title = "Контейнеры"
+    write_short_container_headers(worksheet)
 
     for i in range(2, len(containers) + 2):
         container = containers[i-2]
-        write_short_container_info(container, ws, i)
+        write_short_container_info(container, worksheet, i)
 
-    set_width(ws)
+    set_width(worksheet)
 
 
 def get_short_container_info_xl(containers: QuerySet[Container]) -> Workbook:
     """Создаёт excel-WorkBook с актуальной статистикой по контейнерам"""
-    wb = Workbook()
-    ws = wb.active
-    get_short_container_info_ws(ws, containers)
-    return wb
+    workbook = Workbook()
+    worksheet = workbook.active
+    get_short_container_info_ws(worksheet, containers)
+    return workbook

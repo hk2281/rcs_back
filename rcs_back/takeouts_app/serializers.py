@@ -6,7 +6,11 @@ from rcs_back.containers_app.serializers import (
     BuildingShortSerializer,
     ContainerSerializer,
 )
-from rcs_back.takeouts_app.models import *
+from rcs_back.takeouts_app.models import (
+    ContainersTakeoutRequest,
+    TakeoutCondition,
+    TankTakeoutRequest,
+)
 
 
 class AddContainersTakeoutSerializer(serializers.ModelSerializer):

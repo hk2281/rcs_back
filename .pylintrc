@@ -1,0 +1,15 @@
+[MASTER]
+load-plugins=pylint_django, pylint_celery
+django-settings-module=config.settings.base
+
+[FORMAT]
+max-line-length=120
+
+[MESSAGES CONTROL]
+disable=missing-docstring,no-else-return,duplicate-code
+
+[DESIGN]
+max-parents=13
+
+[TYPECHECK]
+generated-members=REQUEST,"[a-zA-Z]+_set{1,2}",save,delete,takeout_condition

@@ -7,8 +7,7 @@ from rcs_back.takeouts_app.models import TakeoutCondition
 
 
 @receiver(post_save, sender=Container)
-def check_container_state(sender, instance: Container,
-                          created: bool, **kwargs) -> None:
+def check_container_state(instance: Container, **kwargs) -> None:
     """Записываем время активации"""
     if instance.is_active() and not instance.activated_at:
         instance.activated_at = timezone.now()
@@ -16,7 +15,7 @@ def check_container_state(sender, instance: Container,
 
 
 @receiver(post_save, sender=Building)
-def create_takeout_condition_for_building(sender, instance: Building,
+def create_takeout_condition_for_building(instance: Building,
                                           created: bool, **kwargs) -> None:
     """Создаём условия для сбора при создании здания"""
     if created:
@@ -26,7 +25,7 @@ def create_takeout_condition_for_building(sender, instance: Building,
 
 
 @receiver(post_save, sender=BuildingPart)
-def create_takeout_condition_for_bpart(sender, instance: BuildingPart,
+def create_takeout_condition_for_bpart(instance: BuildingPart,
                                        created: bool, **kwargs) -> None:
     """Создаём условия для сбора при создании корпуса здания"""
     if created:

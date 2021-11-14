@@ -8,7 +8,7 @@ from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.utils import timezone
-from rest_framework import exceptions, generics, permissions
+from rest_framework import exceptions, generics, permissions, serializers
 from rest_framework import status as drf_status
 from rest_framework import views
 from rest_framework.response import Response
@@ -18,8 +18,19 @@ from rcs_back.containers_app.tasks import (
     container_correct_fullness,
     handle_empty_container,
 )
-from rcs_back.takeouts_app.models import *
-from rcs_back.takeouts_app.serializers import *
+from rcs_back.takeouts_app.models import (
+    ContainersTakeoutRequest,
+    TakeoutCondition,
+    TankTakeoutRequest,
+)
+from rcs_back.takeouts_app.serializers import (
+    AddContainersTakeoutSerializer,
+    AddTakeoutConditionSerializer,
+    ContainersTakeoutConfirmationSerializer,
+    TakeoutConditionSerializer,
+    TankTakeoutConfirmationSerializer,
+    TankTakeoutRequestSerializer,
+)
 from rcs_back.utils.mixins import UpdateThenRetrieveModelMixin
 
 
@@ -47,7 +58,7 @@ class ContainersTakeoutListView(generics.ListCreateAPIView):
     def get(self, request, *args, **kwargs):
         if ("token" in request.query_params and
                 "building" in request.query_params):
-            """Создание сбора через письмо"""
+            # Создание сбора через письмо
             r_token = self.request.query_params.get("token")
             r_building = self.request.query_params.get("building")
             token: EmailToken = EmailToken.objects.filter(
@@ -77,19 +88,19 @@ class ContainersTakeoutListView(generics.ListCreateAPIView):
                 redirect_to="https://" + settings.DOMAIN + redirect_path
             )
         elif request.user.is_authenticated:
-            """Получение списка сборов через сайт"""
+            # Получение списка сборов через сайт
             return self.list(request, *args, **kwargs)
         else:
-            """Попытка выполнить метод GET без токена и авторизации"""
+            # Попытка выполнить метод GET без токена и авторизации
             raise exceptions.NotAuthenticated()
 
     def post(self, request, *args, **kwargs):
         if self.request.user.is_authenticated:
-            """Создание сбора через сайт"""
+            # Создание сбора через сайт
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             if "all-full-containers" in self.request.query_params:
-                """Сбор всех полных контейнеров"""
+                # Сбор всех полных контейнеров
                 building = serializer.validated_data["building"]
                 takeout = serializer.save()
                 takeout.containers.add(*building.containers_for_takeout())
@@ -100,7 +111,7 @@ class ContainersTakeoutListView(generics.ListCreateAPIView):
                     headers=headers
                 )
             else:
-                """Обычное создание сбора"""
+                # Обычное создание сбора
                 serializer.save()
                 headers = self.get_success_headers(serializer.data)
                 return Response(
@@ -108,7 +119,7 @@ class ContainersTakeoutListView(generics.ListCreateAPIView):
                     headers=headers
                 )
         else:
-            """Попытка создать сбора без авторизации"""
+            # Попытка создать сбора без авторизации
             raise exceptions.NotAuthenticated()
 
 
@@ -160,7 +171,7 @@ class ContainersTakeoutDetailView(generics.RetrieveUpdateAPIView):
 
         if not takeout.archive_mass and not takeout.archive_room:
             building: Building = takeout.building
-            building._takeout_notified = False
+            building._takeout_notified = False  # pylint: disable=protected-access
             building.save()
 
 
@@ -187,7 +198,7 @@ class ContainersForTakeoutView(views.APIView):
             headers={
                 "Content-Type": "application/pdf",
                 "Content-Disposition":
-                    f'attachment; filename=containers.pdf'
+                    'attachment; filename=containers.pdf'
             }
         )
 
@@ -259,6 +270,8 @@ class TakeoutConditionListView(generics.ListCreateAPIView):
                 Q(building__pk=building_pk) |
                 Q(building_part__building__pk=building_pk)
             )
+        else:
+            raise serializers.ValidationError("Specify building")
 
 
 class TakeoutConditionDetailView(UpdateThenRetrieveModelMixin,

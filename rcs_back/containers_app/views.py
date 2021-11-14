@@ -1,4 +1,5 @@
 from tempfile import NamedTemporaryFile
+from typing import Union
 
 from django.conf import settings
 from django.db.models import Q
@@ -7,12 +8,24 @@ from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, status, views
 from rest_framework.response import Response
 
-from rcs_back.containers_app.models import *
+from rcs_back.containers_app.models import Building, BuildingPart, Container, EmailToken
 from rcs_back.utils.mixins import UpdateThenRetrieveModelMixin
 
-from .serializers import *
-from .tasks import *
-from .utils.email import *
+from .serializers import (
+    BuildingPartSerializer,
+    BuildingSerializer,
+    ChangeContainerSerializer,
+    ContainerPublicAddSerializer,
+    ContainerSerializer,
+    FullContainerReportSerializer,
+    PublicFeedbackSerializer,
+)
+from .tasks import (
+    container_add_report,
+    container_correct_fullness,
+    public_container_add_notify,
+)
+from .utils.email import send_public_feedback
 from .utils.qr import generate_sticker
 
 
@@ -25,8 +38,8 @@ class FullContainerReportView(generics.CreateAPIView):
         if "container" in serializer.validated_data:
             container = serializer.validated_data["container"]
             by_staff = self.request.user.is_authenticated
-            """Фиксируем сообщение о заполненности и
-            проверяем полноту контейнера"""
+            #  Фиксируем сообщение о заполненности и
+            #  проверяем полноту контейнера
             container_add_report.delay(container.pk, by_staff)
             return container
         return None
@@ -98,7 +111,7 @@ class ContainerListView(generics.ListAPIView):
             )
         if "is_full" in self.request.query_params:
             is_full_param = self.request.query_params.get("is_full")
-            is_full = False if is_full_param == "false" else True
+            is_full = not is_full_param == "false"
             queryset = Container.objects.filter(
                 _is_full=is_full
             )
@@ -138,8 +151,8 @@ class ContainerPublicAddView(generics.CreateAPIView):
     def perform_create(self, serializer):
         building = serializer.validated_data["building"]
 
-        """Если в заданном здании есть распечатанные стикеры,
-        то нужно использовать их id"""
+        #  Если в заданном здании есть распечатанные стикеры,
+        #  то нужно использовать их id
         if Container.objects.filter(
             status=Container.RESERVED
         ).filter(
@@ -283,7 +296,7 @@ class ContainerActivationView(views.APIView):
         if container.is_active():
             title = "Повторная активация"
             text = "Контейнер уже был активирован"
-            status = "info"
+            msg_status = "info"
         elif "token" in self.request.query_params:
             r_token = self.request.query_params.get("token")
             token: EmailToken = EmailToken.objects.filter(
@@ -294,20 +307,20 @@ class ContainerActivationView(views.APIView):
                 token.use()
                 title = "Успешная активация"
                 text = "Контейнер успешно активирован"
-                status = "success"
+                msg_status = "success"
             elif token:
                 title = "Повторная активация"
                 text = "Контейнер уже был активирован"
-                status = "info"
+                msg_status = "info"
             else:
                 title = "Ошибка активации"
                 text = "Неверный токен для активации"
-                status = "error"
+                msg_status = "error"
         else:
             title = "Ошибка активации"
             text = "Неверный токен для активации"
-            status = "error"
-        redirect_path = f"/result?title={title}&text={text}&status={status}"
+            msg_status = "error"
+        redirect_path = f"/result?title={title}&text={text}&status={msg_status}"
         return HttpResponseRedirect(
             redirect_to="https://" + settings.DOMAIN + redirect_path
         )

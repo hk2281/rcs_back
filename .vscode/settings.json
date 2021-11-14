@@ -1,0 +1,13 @@
+{
+    "python.linting.pylintArgs": [
+        "--rcfile=${workspaceFolder}/.pylintrc"
+    ],
+    "python.linting.pylintEnabled": true,
+    "python.formatting.provider": "autopep8",
+    "editor.formatOnSave": true,
+    "python.linting.pycodestyleEnabled": true,
+    "python.sortImports.path": "isort",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true,
+  },
+}

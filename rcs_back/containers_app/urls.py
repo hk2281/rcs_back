@@ -1,6 +1,14 @@
 from django.urls import path
 
-from .views import *
+from .views import (
+    ContainerActivationRequestView,
+    ContainerActivationView,
+    ContainerDetailView,
+    ContainerListView,
+    ContainerPublicAddView,
+    ContainerStickerView,
+    EmptyContainerView,
+)
 
 urlpatterns = [
     path("", ContainerListView.as_view()),

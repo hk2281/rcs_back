@@ -121,7 +121,7 @@ class ContainerPublicAddSerializer(serializers.ModelSerializer):
         }
 
 
-class PublicFeedbackSerializer(serializers.Serializer):
+class PublicFeedbackSerializer(serializers.Serializer):  # pylint: disable=abstract-method
     """Сериализатор для оставления обратной связи"""
     email = serializers.EmailField()
     container_id = serializers.IntegerField(required=False)

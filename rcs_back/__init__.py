@@ -1,4 +1,5 @@
 __version__ = "0.1.0"
+# pylint: disable=consider-using-generator
 __version_info__ = tuple(
     [
         int(num) if num.isdigit() else num

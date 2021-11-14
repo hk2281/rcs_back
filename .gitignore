@@ -278,8 +278,5 @@ rcs_back/media/
 .env
 .production/
 
-# vscode
-.vscode/
-
 # Certbot
 certbot/

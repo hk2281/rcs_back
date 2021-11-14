@@ -3,7 +3,7 @@ import time
 from secrets import choice
 from string import ascii_letters, digits
 from tempfile import NamedTemporaryFile
-from typing import Union
+from typing import List, Union
 
 import pdfkit
 from django.conf import settings
@@ -17,7 +17,7 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 
 from rcs_back.containers_app.utils.qr import generate_sticker
-from rcs_back.utils.model import *
+from rcs_back.utils.model import get_eco_emails
 
 tz = timezone.get_default_timezone()
 
@@ -51,7 +51,7 @@ class EmailToken(models.Model):
         """Задать значение поля token"""
         while True:
             token = self.generate_token()
-            """Проверка на уникальность"""
+            # Проверка на уникальность
             if not EmailToken.objects.filter(
                 token=token
             ).first():
@@ -303,7 +303,8 @@ class Building(BaseBuilding):
         ).aggregate(
             summ_mass=Coalesce(Sum("confirmed_mass"), 0)
         )["summ_mass"]
-        mass += self.precollected_mass
+        if self.precollected_mass:
+            mass += self.precollected_mass
         return mass
 
     def avg_fill_speed(self) -> Union[float, None]:
@@ -357,10 +358,10 @@ class BuildingPart(BaseBuilding):
         verbose_name_plural = "корпусы зданий"
 
 
-class Container(models.Model):
+class Container(models.Model):  # pylint: disable=too-many-public-methods
     """ Модель контейнера """
 
-    """Варианты статуса"""
+    # Варианты статуса
     WAITING = 1
     ACTIVE = 2
     INACTIVE = 3
@@ -372,7 +373,7 @@ class Container(models.Model):
         (RESERVED, "распечатан стикер, контейнер не выбран")
     )
 
-    """Варианты вида"""
+    # Варианты вида
     ECOBOX = 1
     PUBLIC_ECOBOX = 2
     OFFICE_BOX = 3
@@ -382,7 +383,7 @@ class Container(models.Model):
         (OFFICE_BOX, "офисная урна")
     )
 
-    """Масса бумаги, вмещающейся в вид контейнера, в кг"""
+    # Масса бумаги, вмещающейся в вид контейнера, в кг
     ECOBOX_MASS = 30
     PUBLIC_ECOBOX_MASS = 15
     OFFICE_BOX_MASS = 4
@@ -520,6 +521,8 @@ class Container(models.Model):
                 return reports[0]
             if len(reports) > 1 and reports[1].emptied_at:
                 return reports[1]
+            else:
+                return None
         else:
             return None
 
@@ -567,24 +570,24 @@ class Container(models.Model):
         report: FullContainerReport = self.last_full_report()
 
         if report:
-            """При повторном сообщении о заполнении нужно
-            увеличить кол-во сообщений"""
+            # При повторном сообщении о заполнении нужно
+            # увеличить кол-во сообщений
             if by_staff:
                 report.by_staff = True
             report.count += 1
             report.save()
 
         else:
-            """При первом сообщение о заполненности контейнера
-            нужно создать FullContainerReport"""
+            # При первом сообщение о заполненности контейнера
+            # нужно создать FullContainerReport
             FullContainerReport.objects.create(
                 container=self,
                 by_staff=by_staff
             )
 
         time.sleep(5)  # Ждём сохранения в БД
-        """Если выполняются условия для вывоза по
-        кол-ву бумаги, нужно сообщить"""
+        # Если выполняются условия для вывоза по
+        # кол-ву бумаги, нужно сообщить
         self.check_fullness()
 
     def handle_empty(self):
@@ -640,7 +643,7 @@ class Container(models.Model):
             else:
                 return False
         else:
-            """Если такого условия нет, то False"""
+            # Если такого условия нет, то False
             return False
 
     def cur_fill_time(self) -> Union[datetime.timedelta, None]:
@@ -767,14 +770,14 @@ class Container(models.Model):
         """Определяет корпус по номеру аудитории"""
         if (self.room and self.building.detect_building_part
                 and not self.building_part):
-            ch: str
-            for ch in self.room:
-                if ch.isdigit():
+            char: str
+            for char in self.room:
+                if char.isdigit():
                     if self.building.building_parts.filter(
-                        num=ch
+                        num=char
                     ).first():
                         return self.building.building_parts.filter(
-                            num=ch
+                            num=char
                         ).first()
                     break
         return None

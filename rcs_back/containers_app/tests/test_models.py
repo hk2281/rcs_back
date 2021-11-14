@@ -1,9 +1,10 @@
 from django.test import TestCase
 
-from rcs_back.containers_app.models import *
-from rcs_back.takeouts_app.models import *
+from rcs_back.containers_app.models import Container, FullContainerReport
+from rcs_back.takeouts_app.models import Building, BuildingPart, TakeoutCondition
 
 
+# pylint: disable=too-many-instance-attributes
 class ContainerModelTests(TestCase):
 
     def setUp(self):

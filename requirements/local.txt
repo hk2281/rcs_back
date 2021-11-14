@@ -1,7 +1,10 @@
 -r base.txt
 
 autopep8==1.5.7
+isort==5.9.1
 pycodestyle==2.7.0
 pylint==2.8.3
+pylint-django==2.4.4
+pylint-celery==0.3
 coverage==5.5
 tblib==1.7.0

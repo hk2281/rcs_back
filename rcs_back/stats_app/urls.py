@@ -1,6 +1,11 @@
 from django.urls import path
 
-from .views import *
+from .views import (
+    AllStatsExcelView,
+    ContainerStatsExcelView,
+    ContainerTakeoutStatsExcelView,
+    TankTakeoutStatsExcelView,
+)
 
 urlpatterns = [
     path("/containers", ContainerStatsExcelView.as_view()),
