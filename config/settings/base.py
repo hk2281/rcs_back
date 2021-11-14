@@ -9,8 +9,13 @@ from celery.schedules import crontab
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # rcs_back/
 APPS_DIR = ROOT_DIR / "rcs_back"
+
+# django environ
 env = environ.Env()
-env.read_env()
+
+if env.str("DJANGO_SETTINGS_MODULE", "config.settings.local") != "config.settings.production":
+    # Необходимо для работы pylint в IDE
+    env.read_env(str(ROOT_DIR / ".envs" / ".local" / ".django"))
 
 # GENERAL
 # ------------------------------------------------------------------------------
@@ -284,10 +289,8 @@ CELERY_TASK_SERIALIZER = "json"
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-result_serializer
 CELERY_RESULT_SERIALIZER = "json"
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-time-limit
-# TODO: set to whatever value is adequate in your circumstances
 CELERY_TASK_TIME_LIMIT = 5 * 60
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-soft-time-limit
-# TODO: set to whatever value is adequate in your circumstances
 CELERY_TASK_SOFT_TIME_LIMIT = 60
 
 CELERY_BEAT_SCHEDULE = {
