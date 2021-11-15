@@ -41,6 +41,8 @@ def set_width(worksheet: Worksheet) -> None:
                     (dims.get(cell.column_letter, 0),
                      len(str(cell.value)))
                 )
+                if dims[cell.column_letter] > 20:
+                    dims[cell.column_letter] = 30
     for col, value in dims.items():
         worksheet.column_dimensions[col].width = value + 2
 

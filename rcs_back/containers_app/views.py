@@ -95,7 +95,8 @@ class ContainerListView(generics.ListAPIView):
         "building_part",
         "floor",
         "status",
-        "is_full"
+        "is_full",
+        "description"
     ]
 
     def get_queryset(self):
