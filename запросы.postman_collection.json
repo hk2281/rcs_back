@@ -651,6 +651,190 @@
 							"body": "[\n    {\n        \"id\": 2,\n        \"building\": \"Ломоносова 9\",\n        \"count\": 1,\n        \"mass\": 0\n    },\n    {\n        \"id\": 1,\n        \"building\": \"Кронверкский 49\",\n        \"count\": 4,\n        \"mass\": 0\n    }\n]"
 						}
 					]
+				},
+				{
+					"name": "Масса по месяцам",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/mass-per-month",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"mass-per-month"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Масса по месяцам",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/mass-per-month",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"mass-per-month"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 24 Nov 2021 08:58:59 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "617"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language, Origin"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=60; includeSubDomains; preload"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 3,\n        \"address\": \"переулок Гривцова, д. 14-16\",\n        \"collected_mass\": [\n            {\n                \"month_name\": \"October\",\n                \"mass\": 0\n            },\n            {\n                \"month_name\": \"November\",\n                \"mass\": 0\n            }\n        ]\n    },\n    {\n        \"id\": 2,\n        \"address\": \"улица Ломоносова, д. 9\",\n        \"collected_mass\": [\n            {\n                \"month_name\": \"October\",\n                \"mass\": 0\n            },\n            {\n                \"month_name\": \"November\",\n                \"mass\": 0\n            }\n        ]\n    },\n    {\n        \"id\": 4,\n        \"address\": \"улица Чайковского, д. 11/2\",\n        \"collected_mass\": [\n            {\n                \"month_name\": \"October\",\n                \"mass\": 0\n            },\n            {\n                \"month_name\": \"November\",\n                \"mass\": 0\n            }\n        ]\n    },\n    {\n        \"id\": 1,\n        \"address\": \"Кронверкский проспект, д. 49\",\n        \"collected_mass\": [\n            {\n                \"month_name\": \"October\",\n                \"mass\": 0\n            },\n            {\n                \"month_name\": \"November\",\n                \"mass\": 152\n            }\n        ]\n    }\n]"
+						},
+						{
+							"name": "Масса по месяцам, одно здание",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/mass-per-month?building=1",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"mass-per-month"
+									],
+									"query": [
+										{
+											"key": "building",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 24 Nov 2021 08:59:19 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "162"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language, Origin"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=60; includeSubDomains; preload"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 1,\n        \"address\": \"Кронверкский проспект, д. 49\",\n        \"collected_mass\": [\n            {\n                \"month_name\": \"October\",\n                \"mass\": 0\n            },\n            {\n                \"month_name\": \"November\",\n                \"mass\": 152\n            }\n        ]\n    }\n]"
+						}
+					]
 				}
 			]
 		},
@@ -4385,7 +4569,80 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "контейнеры",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/stats/containers",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"stats",
+										"containers"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "raw",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 15 Nov 2021 14:52:51 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.9.5"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/vnd.ms-excel"
+								},
+								{
+									"key": "Content-Disposition",
+									"value": "attachment; filename=recycle-starter-container-stats-15.11.2021.xlsx"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru-RU"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language, Origin"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "6591"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "PK\u0003\u0004\u0014\u0000\u0000\u0000\b\u0000��oS\u0007AMb�\u0000\u0000\u0000�\u0000\u0000\u0000\u0010\u0000\u0000\u0000docProps/app.xmlM�=\u000b\u00021\u0010D��q��A�Bb@�R��\u000f{\u001b/�dC�B~�9��n\u001eo\u0018F�\ng*�\u000e-�T��\"�\u000f\u0000\u0015\u0017��N]�n\u001c�h�cy\u0000;�Ό�HI`��\u001e�\t���M�\u000e�F�r\u000e\u001e�xN��pe'å!\u0005\r�rmީ�5�&��\u001f��;i^PK\u0003\u0004\u0014\u0000\u0000\u0000\b\u0000��oS�\u0004׻�\u0000\u0000\u0000�\u0001\u0000\u0000\u0011\u0000\u0000\u0000docProps/core.xml��Mk�0\f��J�=Q��\u0003L���N\u001b\fV����jk\u001a'��H���dm���\u0006�X�G2n�K�\u0003=��S`Kq5���\u0012�:�3{\t\u0010qON�\"\u0011]\n�}p��5��k<�\u001dAU�7���Ѭa\u0012�~1f'��E�?B;\u000b\f\u0002���\b�\u0010pa���6��B��.�0\f�P�\\�H����˼|n�ȺC�TcPb �}PӋ�ql\u001b�VlN��\ndVi�䣧uvN^���C���\u0012�H�z#�d}+��}r��\b]o����x\u0016�\u0006~���\u0004PK\u0003\u0004\u0014\u0000\u0000\u0000\b\u0000��oS�\\�#\u0010\u0006\u0000\u0000�'\u0000\u0000\u0013\u0000\u0000\u0000xl/theme/theme1.xml�Z[s�8\u0014~��xg�m\u000b�6���\u0013siv۴���N\u001f�\u0011X�lyd���G6\u0010˖\r�M��<\u0004,���EG��8y��.b膈��x`�/�ֻ�/��W2$\u0011A0\u0019����\n�L^�Zi\u0000�8}�\u0013\u0012�܂�\bKx\u0014��\\�[\u001a/#����V�il�\u0018Gd`}^,h@�TQZo_ ��\u001f3�\u0015�T�e�\u0001\u0013WA&�����l����>e��:\u001d2�n0\u001bX �o��NZ��T���jg?Vk���H���}�\u0005�I���\u0015\b2\r;:�X�v|��ퟌ��t4m\u001a���x8��ҋp\u001c\u0004�Q���l��A\t��i�d��ڮ����SO��}��h�\n�[O�kw�ӎ�ƭ�x\r��O�î�ƫ�t�i&'��k��\u0016hBF��z\u0012\u0015��@� \u0000Xpv���\u0003�^)�u�\u001a�\u001d��A\\�X�9�\u0011���\u0004�i�\u0019�4Fr��\u0005\u000e\u00007��LP|�A����\\���)�P\u001a\b�ȁ�G�!�ܯ����ɤ3z�}:�k�i�\u0001����ϓ�s�䟧��MB�p�,\t��#[a�'n;\u0013r:\u001cgB|�����%2���\n�N<g\u001fV��]��䞌r#���X}�OGn#ש��\"הF$E��-��\u00118�I\r2\u0013?\b���jP\u001c\u0002�\t1�����Ƭ\u0011�\u0013}��\b�ߍ���o�=W�XIڄ�\u0010F\u001a�s�s�l�\u0007�F��U�ܣ�X\u0015\u0001�\u0018�4�5,��x���<\u001d\u0013\u0012͔\u000b\u0006A��$&\u0012�9~MH\u0013�+�����@�/$�J��i�#�t&��3\u001a�F�\u001bu�h�<z�\u0005��5\n\u001c�\u001b\u001d\u0002g\u001b�F!�i��\u001e�$����\u0011+B>b\u00196\u001ar�\u0016��q��`Z\u0012��xNҴ\u0011�Y�5�>`��͑u�֑\u000e\u0011�^7B>b΋�\u0011�\u001e�8J���qX\u0004��^�I���f��~��3l,��G�\u0017J�\u000f&�?�24\u0007��Y\t��Vj���4>�\u001e2\n\u0005�\u001e>�zx\n7�ƼP��{\u0001���7«���9.}ϥ��=�ҷ7#}g�Ӌ[�Fn[���1��4.(cWr���T��)�9����h>�����$���Y-#\u0016�K��A$�����*�\t�d[%\t�T�e7�\u0012�B\u001bn�S�J��对(�<[�鯡t>,��<_��\u000b3C�rK궔��&8J���pN\u001e�\f;g<�\u001d�w�\u001d5��]v�#�0S�C�\u001aB�\u0003m���:8����\n�R�o����x\u001a�9�\u0004�}�Wm�������Q���<�\u001dǈ�!���C�y{_�g��P4\u0014ml�$,F�`���,\u0014�d`-�\u0007��Q\u0002�RU`1[�\u0003+��|L�E�p�\\_�ђ�ۦe�n�)w\u0019m\"R9�i�\u0013g���e��U\u001d�U[�j=�\u0015N��Y�ȟ\f\u0011N\u0016\u000b\u0012Hc�\u0017�J��\u0019S��+I�U8�E3�\u0012�\u0018����qNS�\u0012v�\u000f\u00022��9�ze1g���-\f\t,[�Y\u0012�M]��盜�z\"v��w�`��p�G\u000f�;�_�]C�~����n�;HL�y�\u0011\u0001tE\u0002#�\u001c\u0006\u0016\u00172�P\u0006\u0013\u0001͔�D�\u0002�d�\u001c���\u000b��\f�)\u0015έ>9E,��N^�%\u0012\u0014��\f\u0005!\u0017r���jw���,�m�T2d�\u0017�C��=3rC�T%��&\u000b���Tͻ\u001a�&`K�zn�-'��^�=�\u0017=F��\u001e��s�z��E��X�\u001e�2�9p�:�\u0003^�\u0013,C�~�}���\u0011�b���O�%�;�{� ���ۤ���\f|ԫZ�d+\u0011?K\u0007|\u001f�\u0006c�[�4_�\u0014b������1\fy�X�\f�f8߇E�\u001a3Ջ�9�\noA�@�?��\rh�\r4\u001c�\u0005^1��6��N\n<���\r��Ď�틿\u0001PK\u0003\u0004\u0014\u0000\u0000\u0000\b\u0000��oS�$NL\u0005\b\u0000\u00000Q\u0000\u0000\u0018\u0000\u0000\u0000xl/worksheets/sheet1.xml�\\[S�F\u0014�+\u001aw&O-��}\u0013�i\u0002M!8\n�L�g\u0005\u0004xb[T\u0016!���ݻ�=G\"�m\u0019x@��\\���[�Z�\u001f����.\f\u0013��b�\\\u001d����������E�:���ez�&�\u0017A��Ʒ��>\u000e��\\h1�\rB\u001c}\u0011̖��8?v\u0019O��C2�-��X[=,\u0016A�߻p\u001e=\u001e��:�yv{��\u0007���>�\r���_��@���z�g�p��EK-\u000eo�Go��Kj�\"�%���\u0015�Yˢ�\u001aE߲����\u0011ɜ\n��U��\b����$��3U�+��ZGk��$��R�>O@���`\u0015�D�f�����\u001bi��M�0O>G�ga\u0019��+������X\\�z~��J�E)��]̖�6�Q%�\u00130\f@�(%\fY�R@�,%̆�\u0007HX��Ր�\u0001\t���e\t\u0007\u0010pJ\u0001�s\u0018n)�6RE\u0000\t���\u001a\u0012�\rVJ�Ω��\u001aA��\n�G����j�ic�a;����л�L5�����j�ic�aߪ\u0002�E\u0005�E��\rw\u001a$�d\u001cG�Z�\u000b\u0014\n�6,�$�����H�ӣ�e�:_�8=>K\u0015%�W�Pb\u0019o����\u001b�-��lC��Fˏ��dyiy�Sl�bc\u000b�ŞG*5c=I\u0003Ȭ�W�WS�+�*�y�\u001e�:�\u001b�p�-\\�JWM�G�\u0012�\u0014\u00010>�J�VB�ѐ�`�Pǈ���\u001f�,:b\u0002L>-̪�\u0011���ҩ��h���\u0006����\"�w��|��\u0003�qq�C/�KU9��U��\t�m\bye�&=�+�k�ԟ�a\n\u0005+�\u0016\u0013+\f.j���@\u0003\u0013\u000bߒҥJ�Ǘ8�R*\u0014\u000e��\u001cp��p�>V���C\nK�L\u0012�\u0001�\u0000����9��&'R\u0006�`��q��Pa�\u0010G�yWS\u001fPSb�\u0019|\u001e�˟S+��\u0012�`�\u0015\u001a\u0017U>ݦ�\u001f�鹿i�I�f�{L�������!p\u0002�ID��C�*P��脉���W��A��i0+p�Y������P}�б���\u001e\u0013��\u0012�WUŚ��~���7l\u0012��)b�fvO5�r��~�{�\"B�b*Z�\\�*\b�q�X�\u0004\u00159���U�>��戈eE=�!|V��\u0000�\"WA!d�v5��5��M�\u0002=t\u0000�^�4���\u0015�\u0011�p=_�\u001d�\bF���'Θ��͡e�yه5����V\u0005��#��yj �����\u0004��\u0014P�Xw�\u0000\u001aV\r\u001a\u0016w�!���Mа0�@,�\n4 \u0017��!\u0004#�\u0006��$�\n4���)��a�\u0015�1}}AM�Ϲ�zz�g�]@�-On5\u0003C�)��4�\u0002�\u001f!5F��-��e5��\u0007�\\\u0002\r%��]���]�J}oo��m��\u0011˻�{�\u0005e��H�ˊ�:\u0003Ϝc��ի�\r��%�`�\u0002H��PCm��w�ِ#X������?՝\n$��������U�Pݓ\u0000�#4�S7��]m��� ��๓V�#�S%>�w���В����7�½�R��\u000e��O\u0004�%��\u0012�#Ё\\0T�� �\u0003*2�\n�ΰثAd��aBb�^\u0014�Lt~6�mTS\u0017Ի��\u0010��5�\u001f��_�E4��$�՝\"����\u0007�\u0004�yH�\u0015��\u001e\u0007`ޭa��a^zf��}A0�b0�%¦�\u0007ʹH_�9B8�\u0013����4%�C�S!�� ��h=�\u0004Ϝ�5PF�|�X=�%�o\t]q�o\u0016�a�]��/\u0002?`�v\u0002��z��1�\u0002��Aa�t����뇓3\u001fr�\u0005�!�V\\w�qݫq��q]�I�^\u0010�{\u0018�c��>�C֕3w\u000f�uP\u00110s�����\u001d��a1\u000e��>\u0018\u0007��A��t����8��3\u001fr��q �V���\u0019�Ռ�x��$�a/�q\u0018�8X\"v��\brAI;\f�\u001dP\u0011@;X���\u001dԻ�\u001e\u0018A6L�)_�\\�E4(Țb��\u0014�\u000f'g>�j\u000b�Cb�0��a��\u001a�\u0017��@�$�/Ͼ\f�\u0017Rрz4\u0015ۿ�\u0000�+q^\bE\u0006zX\u0015��h���zܽ��\u001e\u001f����\u0000�F_c\u0000�,���\u0018~ʺ\u000fJ��\u001e(�\n{P����~a�R�z����-Cxv�GQ�CWdl\u001f� �j�\u0018��� ��B\u001f\u0000�E:�g+���x��������͓�׼���惾�q\u0010$��A����XS��S���>�V\u001d<;\n2P\nB\u0017`l�� ��7\u0001�P\u001a\u0014\u0004��(\b\u000b}\u0000\u0014�\u0016��(\b]K�\u000f\n�\\j `:�<y�Q��d�\u0007}m� H����\u000e\u0014�^)F�E\"��b(Ŗ�<;\n2Q\nB\u0017?m�� �ʷ��P\u001a\u0014\u0004�2!\nB��ퟂ�\"\u001d\u0018\u0005m�.�o\n:�5}�'�7\n:�����m\u0014\u0004ɵS�ف���\u000e)�\\�6e\n�\u0016�=;\n�P\nB��m�� �j\n�\u0016B�����˪N�Sr\u0012��q���V��8\t�u/������u�y�z��ɚ\u000f���I�\\;'Y\b'���e�$�1�og˕6\u000foR\u0019r��#-.~���I���\u0017��FI\u0012-�wap\u001d��\u0005���(J��g��\u001fI��\u000fPK\u0003\u0004\u0014\u0000\u0000\u0000\b\u0000��oS\u0018�\u001cWd\u0002\u0000\u0000�\n\u0000\u0000\r\u0000\u0000\u0000xl/styles.xml�Vێ�0\u0010�\u0015�\u000f(KPQ�B\u001e�\u0014�R[����W\u0013Lb�\u0017j�*���c;��fX��SA��9>s�Xd3س`OG�lr�B\r\u00159Z�J�ad�\u000e\u001ftϔC:m$�N5�t�\r��\u0000$)���C�J�\u0015�n�(w�\u000e�^��V�$�v�i5�V$\u0018�Z*Y�BEEj*xcxXL%\u0017�`_y�^\u000bm\u0012�a\u0015ɼi�\u0015\u0016dQ�T�/ɕ6ޚ�0��D�\u001c����B���\f�MO�eF�\u0012H��\u0016���w�\u001d\f=g��d��/\u0017�Ѧe�\u001a(#\u0017�v#Xg�a���\u0005�{x5�Z-Aj9=hEC&\u0017Z\u0014��=\u0013�\tv�Gw\u0013��%aK��~7��貊bp\u0013\u0015\b0w\u0017������o�_��<�����ڲG�:~����\u0012��g��}\u001a+����kWk\u00023Z��0�b�\u0019��\\E��ۖ���s�-m��\t�V������W�\"����|��u�#\u0014\u0016WM�W����\u000e�\u000b�U�N���j\u000e�\u0017\u0013'�������_\b��\u0002�@\u0000���4PVࡱ�Ǻ�x]\u0001D3\\߇�8k��\u0002�.T�\u001b���Jw!%�e�\u0017\u0005�޺��F���(��8D3\u0004\u000e\u001a\u000b��i�\u0017\u0006`alޙ\rt�\u0017�\u0006-yaDђ\u0017:\u000f\u0010�C��%2\u0000h,ࠛ�N\u0014$�ĂQCXy\u000e��f�\u001e�\u0005�,Q\b�\u0014�ޢ�\u001aU���\u0017z��,\u0011\b@$�<G!8�\u000b\u0010�\u0006$�By\u001e>���g��;�N�Y��\u0001PK\u0003\u0004\u0014\u0000\u0000\u0000\b\u0000��oS�G��\u0000\u0000\u0000\u0016\u0002\u0000\u0000\u000b\u0000\u0000\u0000_rels/.rels��Kn\u00021\f@�\u0012e_L��\u00021�ذC�\u000b��磙đc������ h\u0011K���-�\u000f4�v\u001csۥl�0�\\�V5�\u0000�k)`�q�X*5K@-�4����\u0010,��%�-�nַLs�I�\n��s�ew\n\u0014�\u0001��Ú#JCZ�q�3K����\nԚ������5���� ��GEp,���L�v��>�ݾ��cb�x����Ш\u0014=���0����E\t&o��\u0005PK\u0003\u0004\u0014\u0000\u0000\u0000\b\u0000��oSIҏ�P\u0001\u0000\u00007\u0002\u0000\u0000\u000f\u0000\u0000\u0000xl/workbook.xml���N�@\u0010�_��\u0007�@�DB�HT\u0012�F\f�m;�\u0013vw��\u0001����\u001b�\u001e\u001c<�3�7r�\u0015%��iw��|��3\\�]�D��I+�\u00066\u0011%s5�c����;�\n��\u0015d�d_�yLE�\u0019�)[j0\u001c�:�~lAIF2��ʉ��\u001f��,�ܕ\u0000�U��\u0012�\u0018\r\u000f��m\u0014\u001fWĐ�MA\r�\fa�~\u0007B\u0019��a�\n�9\u0011�_��4\u001aԸ�<\u0011\u001d\u0011����dqC���f��JD�m��2f�i��(S�(,Ӈ�9\u0011��\u0007\u0016h\u001d7\u0013\r_z�+��m�d�D�`ǒ��ҲB3o0>F|��9�ፌԐ�����w��z[Իz�ٿ\u0005G~b����c���\u0001�����\u000b\u000e�\u001c\n4��z�\u000b\r�1�\u0007\u000eOCꝞu�}��R\u0017^�37$�\u001f��\u001b��\u0000PK\u0003\u0004\u0014\u0000\u0000\u0000\b\u0000��oS3�㺭\u0000\u0000\u0000�\u0001\u0000\u0000\u001a\u0000\u0000\u0000xl/_rels/workbook.xml.rels��=\u000e�0\f��\u0012�\u0000\u0018�ԡ\u0002�.�\u0015\u0017���\u0011�D����\u001b�\u0000H\u001d�0Yϖ��dg/4�{;Q�;\u0012�h&�e��\u001e\u0000�;\u001c\u0015E��\u0014&���� }\u000bN�A�\bi\u001c��\u001f\u0019�ȎLQ-\u000e�!ڦ�5>�~�8�\u000f0|�\u001f�Cd)*�[�\\�l�6�Z�(��(�\\��N���\u0012\u0011/\u0006i���z�?�]��W�5�G��!����\u000bPK\u0003\u0004\u0014\u0000\u0000\u0000\b\u0000��oS��B�\u001b\u0001\u0000\u0000�\u0003\u0000\u0000\u0013\u0000\u0000\u0000[Content_Types].xml���N�0\f�_��uj38p@�.�+��\u000b��]��boto�۲J��\r�K����s�%��c\u0004�:g=VyC\u0014\u001f�@Հ�X�\b�#uHN\u0012����R�r\u0007�~�|\u0010*x\u0002O\u0005�\u001a�z��Z�-e�\u001do�\t��\u0013X̳�1�gU���\u001a%�����\u000fJ�E(�r���D\\pB����!�+�T�z����l+\u0013�H�i��\u0002�h\u0001��\u001ag�\fum\u0014���KJ�\t��\u0006��-G��\u00154�a���n`��H��m\n\u0011ٵ\u0004�l髋�B��\\9�d��'��q\r�V8O�#�v�\u0004Ű�\u001f�w�'�[\u001ay\u000f���{֯���O\r��=�?\u0001PK\u0001\u0002\u0014\u0003\u0014\u0000\u0000\u0000\b\u0000��oS\u0007AMb�\u0000\u0000\u0000�\u0000\u0000\u0000\u0010\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000�\u0001\u0000\u0000\u0000\u0000docProps/app.xmlPK\u0001\u0002\u0014\u0003\u0014\u0000\u0000\u0000\b\u0000��oS�\u0004׻�\u0000\u0000\u0000�\u0001\u0000\u0000\u0011\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000�\u0001�\u0000\u0000\u0000docProps/core.xmlPK\u0001\u0002\u0014\u0003\u0014\u0000\u0000\u0000\b\u0000��oS�\\�#\u0010\u0006\u0000\u0000�'\u0000\u0000\u0013\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000�\u0001�\u0001\u0000\u0000xl/theme/theme1.xmlPK\u0001\u0002\u0014\u0003\u0014\u0000\u0000\u0000\b\u0000��oS�$NL\u0005\b\u0000\u00000Q\u0000\u0000\u0018\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000��\n\b\u0000\u0000xl/worksheets/sheet1.xmlPK\u0001\u0002\u0014\u0003\u0014\u0000\u0000\u0000\b\u0000��oS\u0018�\u001cWd\u0002\u0000\u0000�\n\u0000\u0000\r\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000�\u0001E\u0010\u0000\u0000xl/styles.xmlPK\u0001\u0002\u0014\u0003\u0014\u0000\u0000\u0000\b\u0000��oS�G��\u0000\u0000\u0000\u0016\u0002\u0000\u0000\u000b\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000�\u0001�\u0012\u0000\u0000_rels/.relsPK\u0001\u0002\u0014\u0003\u0014\u0000\u0000\u0000\b\u0000��oSIҏ�P\u0001\u0000\u00007\u0002\u0000\u0000\u000f\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000�\u0001�\u0013\u0000\u0000xl/workbook.xmlPK\u0001\u0002\u0014\u0003\u0014\u0000\u0000\u0000\b\u0000��oS3�㺭\u0000\u0000\u0000�\u0001\u0000\u0000\u001a\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000�\u0001:\u0015\u0000\u0000xl/_rels/workbook.xml.relsPK\u0001\u0002\u0014\u0003\u0014\u0000\u0000\u0000\b\u0000��oS��B�\u001b\u0001\u0000\u0000�\u0003\u0000\u0000\u0013\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000�\u0001\u001f\u0016\u0000\u0000[Content_Types].xmlPK\u0005\u0006\u0000\u0000\u0000\u0000\t\u0000\t\u0000>\u0002\u0000\u0000k\u0017\u0000\u0000\u0000\u0000"
+						}
+					]
 				},
 				{
 					"name": "сборы",
