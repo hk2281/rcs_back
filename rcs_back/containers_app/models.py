@@ -295,15 +295,24 @@ class Building(BaseBuilding):
             mass += request.mass()
         return mass
 
-    def confirmed_collected_mass(self) -> int:
+    def confirmed_collected_mass(self, start_date: datetime.date = None) -> int:
         """Суммарная масса собранной макулатуры,
-        подтверждённая после вывоза бака"""
-        mass = self.tank_takeout_requests.filter(
+        подтверждённая после вывоза бака.
+        При указании start_date возвращает массу макулатуры,
+        собранную за месяц после start_date."""
+        confirmed_requests = self.tank_takeout_requests.filter(
             confirmed_mass__isnull=False
-        ).aggregate(
+        )
+        if start_date:
+            end_date = (start_date + datetime.timedelta(days=32)).replace(day=1)
+            confirmed_requests = confirmed_requests.filter(
+                confirmed_at__gte=start_date,
+                confirmed_at__lt=end_date
+            )
+        mass = confirmed_requests.aggregate(
             summ_mass=Coalesce(Sum("confirmed_mass"), 0)
         )["summ_mass"]
-        if self.precollected_mass:
+        if self.precollected_mass and not start_date:
             mass += self.precollected_mass
         return mass
 

@@ -11,12 +11,22 @@ from drf_spectacular.views import (
 from rcs_back.containers_app.views import (
     BuildingListView,
     BuildingPartView,
+    CollectedMassPerMonthView,
     ContainerCountView,
     FullContainerReportView,
     PublicFeedbackView,
 )
-from rcs_back.takeouts_app.views import *
-from rcs_back.users_app.views import *
+from rcs_back.takeouts_app.views import (
+    CollectedMassView,
+    ContainersForTakeoutView,
+    ContainersTakeoutDetailView,
+    ContainersTakeoutListView,
+    TakeoutConditionDetailView,
+    TakeoutConditionListView,
+    TankTakeoutDetailView,
+    TankTakeoutRequestListView,
+)
+from rcs_back.users_app.views import RetrieveCurrentUserView
 
 urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
@@ -42,7 +52,8 @@ urlpatterns = [
          TakeoutConditionDetailView.as_view()),
     path("api/full-container-reports", FullContainerReportView.as_view()),
     path("api/collected-mass", CollectedMassView.as_view()),
-    path("api/container-count", ContainerCountView.as_view())
+    path("api/container-count", ContainerCountView.as_view()),
+    path("api/mass-per-month", CollectedMassPerMonthView.as_view())
 ]
 
 if bool(settings.DEBUG):
