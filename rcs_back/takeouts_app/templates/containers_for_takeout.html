@@ -1,96 +1,124 @@
 {% autoescape on %}
 <meta charset="UTF-8">
 <table style="border-collapse:collapse;width:100%">
-    <colgroup>
-        <col style="width:25%">
-        <col style="width:15%">
-        <col style="width:15%">
-        <col style="width:45%">
-    </colgroup>
-    <tbody>
-        <tr>
-            <td
-                style="border-bottom:.7px solid black;height:20px;width:87px;text-align:center;padding-top:1px;padding-right:1px;padding-left:1px;vertical-align:bottom;white-space:nowrap;background-color:white;border-top:.7px solid black;border-right:.7px solid black;border-left:.7px solid black">
-                <span style="font-size:18px">
-                    <span style="color:black">
-                        <span style="font-weight:700">
-                            <span style="text-decoration:none">
-                                <span>
-                                    <span>
-                                        <span style="font-family:Calibri,sans-serif">
-                                            <span style="font-style:normal">
-                                                Номер аудитории
-                                            </span>
-                                        </span>
-                                    </span>
-                                </span>
-                            </span>
-                        </span>
+  <colgroup>
+    <col style="width:15%">
+    <col style="width:15%">
+    <col style="width:15%">
+    <col style="width:15%">
+    <col style="width:15%">
+    <col style="width:15%">
+  </colgroup>
+  <tbody>
+    <tr>
+      <td
+        style="border-bottom:.7px solid black;height:20px;width:87px;text-align:center;padding-top:1px;padding-right:1px;padding-left:1px;vertical-align:bottom;white-space:nowrap;background-color:white;border-top:.7px solid black;border-right:.7px solid black;border-left:.7px solid black">
+        <span style="font-size:18px">
+          <span style="color:black">
+            <span style="font-weight:700">
+              <span style="text-decoration:none">
+                <span>
+                  <span>
+                    <span style="font-family:Calibri,sans-serif">
+                      <span style="font-style:normal">
+                        Номер аудитории
+                      </span>
                     </span>
+                  </span>
                 </span>
-            </td>
-            {% if has_building_parts %}
-            <td
-                style="border-bottom:.7px solid black;width:103px;text-align:center;padding-top:1px;padding-right:1px;padding-left:1px;vertical-align:bottom;white-space:nowrap;background-color:white;border-top:.7px solid black;border-right:.7px solid black;border-left:none">
-                <span style="font-size:18px"><span style="color:black"><span style="font-weight:700"><span
-                                style="text-decoration:none"><span><span><span
-                                            style="font-family:Calibri,sans-serif"><span
-                                                style="font-style:normal">Корпус</span></span></span></span></span></span></span></span>
-            </td>
-            {% endif %}
-            <td
-                style="border-bottom:.7px solid black;width:103px;text-align:center;padding-top:1px;padding-right:1px;padding-left:1px;vertical-align:bottom;white-space:nowrap;background-color:white;border-top:.7px solid black;border-right:.7px solid black;border-left:none">
-                <span style="font-size:18px"><span style="color:black"><span style="font-weight:700"><span
-                                style="text-decoration:none"><span><span><span
-                                            style="font-family:Calibri,sans-serif"><span
-                                                style="font-style:normal">Этаж</span></span></span></span></span></span></span></span>
-            </td>
-            <td
-                style="border-bottom:.7px solid black;width:103px;text-align:center;padding-top:1px;padding-right:1px;padding-left:1px;vertical-align:bottom;white-space:nowrap;background-color:white;border-top:.7px solid black;border-right:.7px solid black;border-left:none">
-                <span style="font-size:18px"><span style="color:black"><span style="font-weight:700"><span
-                                style="text-decoration:none"><span><span><span
-                                            style="font-family:Calibri,sans-serif"><span
-                                                style="font-style:normal">Комментарий</span></span></span></span></span></span></span></span>
-            </td>
-        </tr>
-        {% for container in containers %}
-        <tr>
-            <td
-                style="border-bottom:.7px solid black;height:20px;text-align:center;padding-top:1px;padding-right:1px;padding-left:1px;vertical-align:bottom;white-space:nowrap;background-color:white;border-top:none;border-right:.7px solid black;border-left:.7px solid black">
-                <span style="font-size:18px"><span style="color:black"><span style="font-weight:400"><span
-                                style="text-decoration:none"><span><span><span
-                                            style="font-family:Calibri,sans-serif"><span style="font-style:normal">
-                                                {{ container.room }}
-                                            </span></span></span></span></span></span></span></span>
-            </td>
-            {% if has_building_parts %}
-            <td
-                style="border-bottom:.7px solid black;text-align:center;padding-top:1px;padding-right:1px;padding-left:1px;vertical-align:bottom;white-space:nowrap;background-color:white;border-top:none;border-right:.7px solid black;border-left:none">
-                <span style="font-size:18px"><span style="color:black"><span style="font-weight:400"><span
-                                style="text-decoration:none"><span><span><span
-                                            style="font-family:Calibri,sans-serif"><span style="font-style:normal">
-                                                {{ container.building_part.num }}
-                                            </span></span></span></span></span></span></span></span>
-            </td>
-            {% endif %}
-            <td
-                style="border-bottom:.7px solid black;text-align:center;padding-top:1px;padding-right:1px;padding-left:1px;vertical-align:bottom;white-space:nowrap;background-color:white;border-top:none;border-right:.7px solid black;border-left:none">
-                <span style="font-size:18px"><span style="color:black"><span style="font-weight:400"><span
-                                style="text-decoration:none"><span><span><span
-                                            style="font-family:Calibri,sans-serif"><span style="font-style:normal">
-                                                {{ container.floor }}
-                                            </span></span></span></span></span></span></span></span>
-            </td>
-            <td
-                style="border-bottom:.7px solid black;text-align:center;padding-top:1px;padding-right:1px;padding-left:1px;vertical-align:bottom;white-space:nowrap;background-color:white;border-top:none;border-right:.7px solid black;border-left:none">
-                <span style="font-size:18px"><span style="color:black"><span style="font-weight:400"><span
-                                style="text-decoration:none"><span><span><span
-                                            style="font-family:Calibri,sans-serif"><span style="font-style:normal">
-                                                {{ container.description }}
-                                            </span></span></span></span></span></span></span></span>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
+              </span>
+            </span>
+          </span>
+        </span>
+      </td>
+      {% if has_building_parts %}
+      <td
+        style="border-bottom:.7px solid black;width:103px;text-align:center;padding-top:1px;padding-right:1px;padding-left:1px;vertical-align:bottom;white-space:nowrap;background-color:white;border-top:.7px solid black;border-right:.7px solid black;border-left:none">
+        <span style="font-size:18px"><span style="color:black"><span style="font-weight:700"><span
+                style="text-decoration:none"><span><span><span style="font-family:Calibri,sans-serif"><span
+                        style="font-style:normal">Корпус</span></span></span></span></span></span></span></span>
+      </td>
+      {% endif %}
+      <td
+        style="border-bottom:.7px solid black;width:103px;text-align:center;padding-top:1px;padding-right:1px;padding-left:1px;vertical-align:bottom;white-space:nowrap;background-color:white;border-top:.7px solid black;border-right:.7px solid black;border-left:none">
+        <span style="font-size:18px"><span style="color:black"><span style="font-weight:700"><span
+                style="text-decoration:none"><span><span><span style="font-family:Calibri,sans-serif"><span
+                        style="font-style:normal">Этаж</span></span></span></span></span></span></span></span>
+      </td>
+      <td
+        style="border-bottom:.7px solid black;width:103px;text-align:center;padding-top:1px;padding-right:1px;padding-left:1px;vertical-align:bottom;white-space:nowrap;background-color:white;border-top:.7px solid black;border-right:.7px solid black;border-left:none">
+        <span style="font-size:18px"><span style="color:black"><span style="font-weight:700"><span
+                style="text-decoration:none"><span><span><span style="font-family:Calibri,sans-serif"><span
+                        style="font-style:normal">ID контейнера</span></span></span></span></span></span></span></span>
+      </td>
+      <td
+        style="border-bottom:.7px solid black;width:103px;text-align:center;padding-top:1px;padding-right:1px;padding-left:1px;vertical-align:bottom;white-space:nowrap;background-color:white;border-top:.7px solid black;border-right:.7px solid black;border-left:none">
+        <span style="font-size:18px"><span style="color:black"><span style="font-weight:700"><span
+                style="text-decoration:none"><span><span><span style="font-family:Calibri,sans-serif"><span
+                        style="font-style:normal">Тип контейнера</span></span></span></span></span></span></span></span>
+      </td>
+
+      <td
+        style="border-bottom:.7px solid black;width:103px;text-align:center;padding-top:1px;padding-right:1px;padding-left:1px;vertical-align:bottom;white-space:nowrap;background-color:white;border-top:.7px solid black;border-right:.7px solid black;border-left:none">
+        <span style="font-size:18px"><span style="color:black"><span style="font-weight:700"><span
+                style="text-decoration:none"><span><span><span style="font-family:Calibri,sans-serif"><span
+                        style="font-style:normal">Комментарий</span></span></span></span></span></span></span></span>
+      </td>
+    </tr>
+    {% for container in containers %}
+    <tr>
+      <td
+        style="border-bottom:.7px solid black;height:20px;text-align:center;padding-top:1px;padding-right:1px;padding-left:1px;vertical-align:bottom;white-space:nowrap;background-color:white;border-top:none;border-right:.7px solid black;border-left:.7px solid black">
+        <span style="font-size:18px"><span style="color:black"><span style="font-weight:400"><span
+                style="text-decoration:none"><span><span><span style="font-family:Calibri,sans-serif"><span
+                        style="font-style:normal">
+                        {{ container.room }}
+                      </span></span></span></span></span></span></span></span>
+      </td>
+      {% if has_building_parts %}
+      <td
+        style="border-bottom:.7px solid black;text-align:center;padding-top:1px;padding-right:1px;padding-left:1px;vertical-align:bottom;white-space:nowrap;background-color:white;border-top:none;border-right:.7px solid black;border-left:none">
+        <span style="font-size:18px"><span style="color:black"><span style="font-weight:400"><span
+                style="text-decoration:none"><span><span><span style="font-family:Calibri,sans-serif"><span
+                        style="font-style:normal">
+                        {{ container.building_part.num }}
+                      </span></span></span></span></span></span></span></span>
+      </td>
+      {% endif %}
+      <td
+        style="border-bottom:.7px solid black;text-align:center;padding-top:1px;padding-right:1px;padding-left:1px;vertical-align:bottom;white-space:nowrap;background-color:white;border-top:none;border-right:.7px solid black;border-left:none">
+        <span style="font-size:18px"><span style="color:black"><span style="font-weight:400"><span
+                style="text-decoration:none"><span><span><span style="font-family:Calibri,sans-serif"><span
+                        style="font-style:normal">
+                        {{ container.floor }}
+                      </span></span></span></span></span></span></span></span>
+      </td>
+      <td
+        style="border-bottom:.7px solid black;text-align:center;padding-top:1px;padding-right:1px;padding-left:1px;vertical-align:bottom;white-space:nowrap;background-color:white;border-top:none;border-right:.7px solid black;border-left:none">
+        <span style="font-size:18px"><span style="color:black"><span style="font-weight:400"><span
+                style="text-decoration:none"><span><span><span style="font-family:Calibri,sans-serif"><span
+                        style="font-style:normal">
+                        {{ container.pk }}
+                      </span></span></span></span></span></span></span></span>
+      </td>
+      <td
+        style="border-bottom:.7px solid black;text-align:center;padding-top:1px;padding-right:1px;padding-left:1px;vertical-align:bottom;white-space:nowrap;background-color:white;border-top:none;border-right:.7px solid black;border-left:none">
+        <span style="font-size:18px"><span style="color:black"><span style="font-weight:400"><span
+                style="text-decoration:none"><span><span><span style="font-family:Calibri,sans-serif"><span
+                        style="font-style:normal">
+                        {{ container.get_kind_display }}
+                      </span></span></span></span></span></span></span></span>
+      </td>
+      <td
+        style="border-bottom:.7px solid black;text-align:center;padding-top:1px;padding-right:1px;padding-left:1px;vertical-align:bottom;white-space:nowrap;background-color:white;border-top:none;border-right:.7px solid black;border-left:none">
+        <span style="font-size:18px"><span style="color:black"><span style="font-weight:400"><span
+                style="text-decoration:none"><span><span><span style="font-family:Calibri,sans-serif"><span
+                        style="font-style:normal">
+                        {{ container.description }}
+                      </span></span></span></span></span></span></span></span>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
 {% endautoescape %}
