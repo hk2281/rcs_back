@@ -9,7 +9,7 @@ from django.utils import timezone
 from rcs_back.takeouts_app.models import ContainersTakeoutRequest
 
 
-@receiver(post_save)
+@receiver(post_save, sender=ContainersTakeoutRequest)
 def notify_about_archive(instance: ContainersTakeoutRequest, created: bool, **kwargs):
     if created and instance.archive_room:
         emails = instance.building.get_worker_emails()
