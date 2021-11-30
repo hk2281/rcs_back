@@ -82,10 +82,11 @@ def get_collected_mass_percentage(email: str,
         return 100
 
 
+@shared_task
 def collected_mass_mailing() -> None:
     """Рассылка раз в три месяца о кол-ве собранной макулатуры."""
     emails = get_container_owner_emails()
-    end_date = timezone.now().date().replace(day=1)
+    end_date = timezone.now().date()
     start_date = end_date - relativedelta(months=3)
     total_mass = get_total_mass(start_date, end_date)
     collected_mass_per_owner = get_collected_mass_per_owner(
