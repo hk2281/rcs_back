@@ -3,7 +3,7 @@ from typing import List
 
 from celery import shared_task
 from dateutil.relativedelta import relativedelta
-# from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from django.template.loader import render_to_string
@@ -77,7 +77,7 @@ def get_collected_mass_percentage(email: str,
             if collected_mass[user] < collected_mass[email]:
                 less += 1
         res = (less / len(collected_mass.keys())) * 100 // 1
-        return res
+        return int(res)
     else:
         return 100
 
@@ -124,12 +124,11 @@ def collected_mass_mailing() -> None:
             )
         }
         )
-        print(msg)
-        # email = EmailMessage(
-        #     "Оповещение от сервиса RecycleStarter",
-        #     msg,
-        #     None,
-        #     [user_email]
-        # )
-        # email.content_subtype = "html"
-        # email.send()
+        email = EmailMessage(
+            "Оповещение от сервиса RecycleStarter",
+            msg,
+            None,
+            [user_email]
+        )
+        email.content_subtype = "html"
+        email.send()

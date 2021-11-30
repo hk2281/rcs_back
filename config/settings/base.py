@@ -297,6 +297,14 @@ CELERY_BEAT_SCHEDULE = {
     "check-time-conditions": {
         "task": "rcs_back.takeouts_app.tasks.check_time_conditions",
         "schedule": crontab(minute=0, hour=0)
+    },
+    "collected-mass-mailing": {
+        "task": "rcs_back.takeouts_app.tasks.collected_mass_mailing",
+        "schedule": crontab(
+            0,
+            0,
+            month_of_year=[1, 4, 7, 10]
+        )
     }
 }
 
