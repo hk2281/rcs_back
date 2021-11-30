@@ -3,7 +3,7 @@ from typing import List
 
 from celery import shared_task
 from dateutil.relativedelta import relativedelta
-from django.core.mail import EmailMessage
+# from django.core.mail import EmailMessage
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from django.template.loader import render_to_string

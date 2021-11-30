@@ -701,9 +701,12 @@ class Container(models.Model):  # pylint: disable=too-many-public-methods
         if (self.is_active() and
             self.last_full_report() and
                 self.last_full_report().filled_at):
-            wait_time = (timezone.now() -
-                         self.last_full_report().filled_at)
-            return wait_time
+            try:
+                wait_time = (timezone.now() -
+                             self.last_full_report().filled_at)
+                return wait_time
+            except AttributeError:
+                return None
         else:
             return None
 
