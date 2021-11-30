@@ -11,7 +11,6 @@ from drf_spectacular.views import (
 from rcs_back.containers_app.views import (
     BuildingListView,
     BuildingPartView,
-    CollectedMassPerMonthView,
     ContainerCountView,
     FullContainerReportView,
     PublicFeedbackView,
@@ -52,8 +51,7 @@ urlpatterns = [
          TakeoutConditionDetailView.as_view()),
     path("api/full-container-reports", FullContainerReportView.as_view()),
     path("api/collected-mass", CollectedMassView.as_view()),
-    path("api/container-count", ContainerCountView.as_view()),
-    path("api/mass-per-month", CollectedMassPerMonthView.as_view())
+    path("api/container-count", ContainerCountView.as_view())
 ]
 
 if bool(settings.DEBUG):

@@ -295,16 +295,28 @@ class Building(BaseBuilding):
             mass += request.mass()
         return mass
 
-    def confirmed_collected_mass(self, start_date: datetime.date = None) -> int:
+    def confirmed_collected_mass(self,
+                                 start_date: datetime.date = None,
+                                 yearly: bool = False
+                                 ) -> int:
         """Суммарная масса собранной макулатуры,
         подтверждённая после вывоза бака.
-        При указании start_date возвращает массу макулатуры,
-        собранную за месяц после start_date."""
+        При указании start_date, возвращает массу макулатуры,
+        собранную за месяц после start_date.
+        При указании yearly=True, возвращает массу
+        макулатуры, собранную за год после start_date"""
         confirmed_requests = self.tank_takeout_requests.filter(
             confirmed_mass__isnull=False
         )
         if start_date:
-            end_date = (start_date + datetime.timedelta(days=32)).replace(day=1)
+            if yearly:
+                end_date = start_date.replace(
+                    day=1
+                ).replace(
+                    year=start_date.year+1
+                )
+            else:
+                end_date = (start_date + datetime.timedelta(days=31)).replace(day=1)
             confirmed_requests = confirmed_requests.filter(
                 confirmed_at__gte=start_date,
                 confirmed_at__lt=end_date
@@ -315,6 +327,15 @@ class Building(BaseBuilding):
         if self.precollected_mass and not start_date:
             mass += self.precollected_mass
         return mass
+
+    def activated_containers(self, start_date: datetime.date) -> int:
+        """Возвращает кол-во контейнеров, активированных
+        в течение месяца с заданной даты"""
+        end_date = (start_date + datetime.timedelta(days=31)).replace(day=1)
+        return self.containers.filter(
+            activated_at__gte=start_date,
+            activated_at__lt=end_date
+        ).count()
 
     def avg_fill_speed(self) -> Union[float, None]:
         """Средняя скорость сбора макулатуры (кг/месяц)"""

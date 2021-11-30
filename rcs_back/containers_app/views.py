@@ -1,4 +1,3 @@
-import datetime
 from tempfile import NamedTemporaryFile
 from typing import Union
 
@@ -6,7 +5,6 @@ from django.conf import settings
 from django.db.models import Q
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.utils import timezone
 from rest_framework import generics, permissions, status, views
 from rest_framework.response import Response
 
@@ -345,48 +343,5 @@ class ContainerCountView(views.APIView):
             # В тоннах до десятых
             building_dict["mass"] = building.confirmed_collected_mass(
             ) // 100 / 10
-            resp.append(building_dict)
-        return Response(resp)
-
-
-# Дата запуска сервиса в прод
-START_DATE = datetime.date(day=1, month=10, year=2021)
-
-
-class CollectedMassPerMonthView(views.APIView):
-    """Масса макулатуры, подтверждённой после вывозов баков,
-    за каждый месяц. По всем зданиям либо по конкретному."""
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
-        resp = []
-
-        end_date = timezone.now().date().replace(day=1)
-
-        if "building" in self.request.query_params:
-            building_pk = self.request.query_params.get("building")
-            building = get_object_or_404(Building, pk=building_pk)
-            buildings = [building]
-        else:
-            buildings = Building.objects.all()
-
-        building: Building
-        for building in buildings:
-            building_dict = {}
-            building_dict["id"] = building.pk
-            building_dict["address"] = building.address
-
-            current_date = START_DATE
-            months = []
-            while current_date <= end_date:
-                month_dict = {}
-                month_dict["month_name"] = current_date.strftime("%B")
-                month_dict["mass"] = building.confirmed_collected_mass(
-                    current_date
-                )
-                current_date = (current_date + datetime.timedelta(days=32)).replace(day=1)
-                months.append(month_dict)
-
-            building_dict["collected_mass"] = months
             resp.append(building_dict)
         return Response(resp)
