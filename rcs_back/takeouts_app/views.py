@@ -26,6 +26,7 @@ from rcs_back.takeouts_app.models import (
 from rcs_back.takeouts_app.serializers import (
     AddContainersTakeoutSerializer,
     AddTakeoutConditionSerializer,
+    ArchiveTakeoutSerializer,
     ContainersTakeoutConfirmationSerializer,
     TakeoutConditionSerializer,
     TankTakeoutConfirmationSerializer,
@@ -97,7 +98,7 @@ class ContainersTakeoutListView(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         if self.request.user.is_authenticated:
             # Создание сбора через сайт
-            serializer = self.get_serializer(data=request.data)
+            serializer = AddContainersTakeoutSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             if "all-full-containers" in self.request.query_params:
                 # Сбор всех полных контейнеров
@@ -120,7 +121,19 @@ class ContainersTakeoutListView(generics.ListCreateAPIView):
                 )
         else:
             # Попытка создать сбора без авторизации
-            raise exceptions.NotAuthenticated()
+            if "archive_room" in request.data:
+                # Можно создать сбор архива без авторизации
+                serializer = ArchiveTakeoutSerializer(data=request.data)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+                headers = self.get_success_headers(serializer.data)
+                return Response(
+                    serializer.data, status=drf_status.HTTP_201_CREATED,
+                    headers=headers
+                )
+            else:
+                # Обычный сбор создать без авторизации нельзя
+                raise exceptions.NotAuthenticated()
 
 
 class ContainersTakeoutDetailView(generics.RetrieveUpdateAPIView):

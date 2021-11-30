@@ -18,7 +18,7 @@ class ContainersTakeoutRequest(models.Model):
         verbose_name="время создания"
     )
 
-    building = models.ForeignKey(
+    building: Building = models.ForeignKey(
         to=Building,
         on_delete=models.CASCADE,
         related_name="containers_takeout_requests",
@@ -85,6 +85,12 @@ class ContainersTakeoutRequest(models.Model):
         blank=True
     )
 
+    requesting_worker_email = models.CharField(
+        max_length=64,
+        verbose_name="email сотрудника (архив)",
+        blank=True
+    )
+
     archive_room = models.CharField(
         max_length=16,
         verbose_name="аудитория",
@@ -95,6 +101,11 @@ class ContainersTakeoutRequest(models.Model):
         verbose_name="масса",
         blank=True,
         null=True
+    )
+
+    archive_description = models.TextField(
+        verbose_name="описание для выноса архива",
+        blank=True
     )
 
     def mass(self) -> int:
@@ -139,7 +150,7 @@ class TankTakeoutRequest(models.Model):
         verbose_name="время создания"
     )
 
-    building = models.ForeignKey(
+    building: Building = models.ForeignKey(
         to=Building,
         on_delete=models.CASCADE,
         related_name="tank_takeout_requests",

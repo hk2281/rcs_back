@@ -149,7 +149,7 @@ class MonthlyMassPerBuildingView(views.APIView):
                 month_dict = {}
                 month_dict["month"] = current_month
                 month_dict["mass"] = building.confirmed_collected_mass(
-                    datetime.date(year=year, month=current_month, day=1)
+                    start_date=datetime.date(year=year, month=current_month, day=1)
                 )
                 current_month += 1
                 months.append(month_dict)
@@ -180,7 +180,8 @@ class YearlyMassPerBuildingView(views.APIView):
                 year_dict = {}
                 year_dict["year"] = current_year
                 year_dict["mass"] = building.confirmed_collected_mass(
-                    datetime.date(year=current_year, month=1, day=1), yearly=True
+                    start_date=datetime.date(year=current_year, month=1, day=1),
+                    yearly=True
                 )
                 current_year += 1
                 years.append(year_dict)

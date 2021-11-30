@@ -651,190 +651,6 @@
 							"body": "[\n    {\n        \"id\": 2,\n        \"building\": \"Ломоносова 9\",\n        \"count\": 1,\n        \"mass\": 0\n    },\n    {\n        \"id\": 1,\n        \"building\": \"Кронверкский 49\",\n        \"count\": 4,\n        \"mass\": 0\n    }\n]"
 						}
 					]
-				},
-				{
-					"name": "Масса по месяцам",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{host}}/mass-per-month",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"mass-per-month"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "Масса по месяцам",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/mass-per-month",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"mass-per-month"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Server",
-									"value": "nginx"
-								},
-								{
-									"key": "Date",
-									"value": "Wed, 24 Nov 2021 08:58:59 GMT"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Content-Length",
-									"value": "617"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Vary",
-									"value": "Accept, Accept-Language, Origin"
-								},
-								{
-									"key": "Allow",
-									"value": "GET, HEAD, OPTIONS"
-								},
-								{
-									"key": "X-Frame-Options",
-									"value": "DENY"
-								},
-								{
-									"key": "Content-Language",
-									"value": "ru"
-								},
-								{
-									"key": "Strict-Transport-Security",
-									"value": "max-age=60; includeSubDomains; preload"
-								},
-								{
-									"key": "X-Content-Type-Options",
-									"value": "nosniff"
-								},
-								{
-									"key": "X-XSS-Protection",
-									"value": "1; mode=block"
-								},
-								{
-									"key": "Referrer-Policy",
-									"value": "same-origin"
-								}
-							],
-							"cookie": [],
-							"body": "[\n    {\n        \"id\": 3,\n        \"address\": \"переулок Гривцова, д. 14-16\",\n        \"collected_mass\": [\n            {\n                \"month_name\": \"October\",\n                \"mass\": 0\n            },\n            {\n                \"month_name\": \"November\",\n                \"mass\": 0\n            }\n        ]\n    },\n    {\n        \"id\": 2,\n        \"address\": \"улица Ломоносова, д. 9\",\n        \"collected_mass\": [\n            {\n                \"month_name\": \"October\",\n                \"mass\": 0\n            },\n            {\n                \"month_name\": \"November\",\n                \"mass\": 0\n            }\n        ]\n    },\n    {\n        \"id\": 4,\n        \"address\": \"улица Чайковского, д. 11/2\",\n        \"collected_mass\": [\n            {\n                \"month_name\": \"October\",\n                \"mass\": 0\n            },\n            {\n                \"month_name\": \"November\",\n                \"mass\": 0\n            }\n        ]\n    },\n    {\n        \"id\": 1,\n        \"address\": \"Кронверкский проспект, д. 49\",\n        \"collected_mass\": [\n            {\n                \"month_name\": \"October\",\n                \"mass\": 0\n            },\n            {\n                \"month_name\": \"November\",\n                \"mass\": 152\n            }\n        ]\n    }\n]"
-						},
-						{
-							"name": "Масса по месяцам, одно здание",
-							"originalRequest": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{host}}/mass-per-month?building=1",
-									"host": [
-										"{{host}}"
-									],
-									"path": [
-										"mass-per-month"
-									],
-									"query": [
-										{
-											"key": "building",
-											"value": "1"
-										}
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Server",
-									"value": "nginx"
-								},
-								{
-									"key": "Date",
-									"value": "Wed, 24 Nov 2021 08:59:19 GMT"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Content-Length",
-									"value": "162"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Vary",
-									"value": "Accept, Accept-Language, Origin"
-								},
-								{
-									"key": "Allow",
-									"value": "GET, HEAD, OPTIONS"
-								},
-								{
-									"key": "X-Frame-Options",
-									"value": "DENY"
-								},
-								{
-									"key": "Content-Language",
-									"value": "ru"
-								},
-								{
-									"key": "Strict-Transport-Security",
-									"value": "max-age=60; includeSubDomains; preload"
-								},
-								{
-									"key": "X-Content-Type-Options",
-									"value": "nosniff"
-								},
-								{
-									"key": "X-XSS-Protection",
-									"value": "1; mode=block"
-								},
-								{
-									"key": "Referrer-Policy",
-									"value": "same-origin"
-								}
-							],
-							"cookie": [],
-							"body": "[\n    {\n        \"id\": 1,\n        \"address\": \"Кронверкский проспект, д. 49\",\n        \"collected_mass\": [\n            {\n                \"month_name\": \"October\",\n                \"mass\": 0\n            },\n            {\n                \"month_name\": \"November\",\n                \"mass\": 152\n            }\n        ]\n    }\n]"
-						}
-					]
 				}
 			]
 		},
@@ -3471,14 +3287,7 @@
 					"name": "создать сбор архива",
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt}}",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "POST",
 						"header": [],
@@ -3488,7 +3297,8 @@
 								{
 									"key": "requesting_worker_name",
 									"value": "Тест Тестов",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "requesting_worker_phone",
@@ -3503,11 +3313,22 @@
 								{
 									"key": "archive_mass",
 									"value": "150",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "building",
 									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "archive_description",
+									"value": "заберите",
+									"type": "text"
+								},
+								{
+									"key": "requesting_worker_email",
+									"value": "test@test.com",
 									"type": "text"
 								}
 							]
@@ -3534,7 +3355,8 @@
 										{
 											"key": "requesting_worker_name",
 											"value": "Тест Тестов",
-											"type": "text"
+											"type": "text",
+											"disabled": true
 										},
 										{
 											"key": "requesting_worker_phone",
@@ -3549,11 +3371,22 @@
 										{
 											"key": "archive_mass",
 											"value": "150",
-											"type": "text"
+											"type": "text",
+											"disabled": true
 										},
 										{
 											"key": "building",
 											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "archive_description",
+											"value": "заберите",
+											"type": "text"
+										},
+										{
+											"key": "requesting_worker_email",
+											"value": "test@test.com",
 											"type": "text"
 										}
 									]
@@ -3574,7 +3407,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Mon, 06 Sep 2021 11:45:55 GMT"
+									"value": "Tue, 30 Nov 2021 10:31:34 GMT"
 								},
 								{
 									"key": "Server",
@@ -3598,7 +3431,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "309"
+									"value": "167"
 								},
 								{
 									"key": "Content-Language",
@@ -3618,7 +3451,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"id\": 20,\n    \"created_at\": \"2021-09-06T14:45:55.504683+03:00\",\n    \"building\": 1,\n    \"building_part\": null,\n    \"containers\": [],\n    \"confirmed_at\": null,\n    \"emptied_containers\": [],\n    \"worker_info\": \"\",\n    \"mass\": 150,\n    \"requesting_worker_name\": \"Тест Тестов\",\n    \"requesting_worker_phone\": \"89222222222\",\n    \"archive_room\": \"1234\",\n    \"archive_mass\": 150\n}"
+							"body": "{\n    \"id\": 40,\n    \"building\": 1,\n    \"requesting_worker_phone\": \"89222222222\",\n    \"requesting_worker_email\": \"test@test.com\",\n    \"archive_room\": \"1234\",\n    \"archive_description\": \"заберите\"\n}"
 						}
 					]
 				},
@@ -4726,6 +4559,356 @@
 						}
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "Статистика для диаграмм",
+			"item": [
+				{
+					"name": "Масса по месяцам",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/stats/mass-per-building/monthly?year=2021",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"stats",
+								"mass-per-building",
+								"monthly"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2021"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Масса по месяцам",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/stats/mass-per-building/monthly?year=2021",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"stats",
+										"mass-per-building",
+										"monthly"
+									],
+									"query": [
+										{
+											"key": "year",
+											"value": "2021"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 30 Nov 2021 09:10:54 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "517"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language, Origin"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=60; includeSubDomains; preload"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 3,\n        \"address\": \"переулок Гривцова, д. 14-16\",\n        \"collected_mass\": [\n            {\n                \"month\": 10,\n                \"mass\": 0\n            },\n            {\n                \"month\": 11,\n                \"mass\": 0\n            }\n        ]\n    },\n    {\n        \"id\": 2,\n        \"address\": \"улица Ломоносова, д. 9\",\n        \"collected_mass\": [\n            {\n                \"month\": 10,\n                \"mass\": 0\n            },\n            {\n                \"month\": 11,\n                \"mass\": 0\n            }\n        ]\n    },\n    {\n        \"id\": 4,\n        \"address\": \"улица Чайковского, д. 11/2\",\n        \"collected_mass\": [\n            {\n                \"month\": 10,\n                \"mass\": 0\n            },\n            {\n                \"month\": 11,\n                \"mass\": 0\n            }\n        ]\n    },\n    {\n        \"id\": 1,\n        \"address\": \"Кронверкский проспект, д. 49\",\n        \"collected_mass\": [\n            {\n                \"month\": 10,\n                \"mass\": 0\n            },\n            {\n                \"month\": 11,\n                \"mass\": 152\n            }\n        ]\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Масса по годам",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/stats/mass-per-building/yearly",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"stats",
+								"mass-per-building",
+								"yearly"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Масса по годам",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/stats/mass-per-building/yearly",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"stats",
+										"mass-per-building",
+										"yearly"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 30 Nov 2021 09:11:10 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "433"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language, Origin"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=60; includeSubDomains; preload"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 3,\n        \"address\": \"переулок Гривцова, д. 14-16\",\n        \"collected_mass\": [\n            {\n                \"year\": 2021,\n                \"mass\": 0\n            }\n        ]\n    },\n    {\n        \"id\": 2,\n        \"address\": \"улица Ломоносова, д. 9\",\n        \"collected_mass\": [\n            {\n                \"year\": 2021,\n                \"mass\": 0\n            }\n        ]\n    },\n    {\n        \"id\": 4,\n        \"address\": \"улица Чайковского, д. 11/2\",\n        \"collected_mass\": [\n            {\n                \"year\": 2021,\n                \"mass\": 0\n            }\n        ]\n    },\n    {\n        \"id\": 1,\n        \"address\": \"Кронверкский проспект, д. 49\",\n        \"collected_mass\": [\n            {\n                \"year\": 2021,\n                \"mass\": 152\n            }\n        ]\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Активаций в месяц",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/stats/activations-per-building/monthly?year=2021",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"stats",
+								"activations-per-building",
+								"monthly"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2021"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Активаций в месяц",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/stats/activations-per-building/monthly?year=2021",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"stats",
+										"activations-per-building",
+										"monthly"
+									],
+									"query": [
+										{
+											"key": "year",
+											"value": "2021"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 30 Nov 2021 09:11:18 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "561"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Accept-Language, Origin"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Language",
+									"value": "ru"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=60; includeSubDomains; preload"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 3,\n        \"address\": \"переулок Гривцова, д. 14-16\",\n        \"activations\": [\n            {\n                \"month\": 10,\n                \"activations\": 5\n            },\n            {\n                \"month\": 11,\n                \"activations\": 0\n            }\n        ]\n    },\n    {\n        \"id\": 2,\n        \"address\": \"улица Ломоносова, д. 9\",\n        \"activations\": [\n            {\n                \"month\": 10,\n                \"activations\": 26\n            },\n            {\n                \"month\": 11,\n                \"activations\": 2\n            }\n        ]\n    },\n    {\n        \"id\": 4,\n        \"address\": \"улица Чайковского, д. 11/2\",\n        \"activations\": [\n            {\n                \"month\": 10,\n                \"activations\": 6\n            },\n            {\n                \"month\": 11,\n                \"activations\": 0\n            }\n        ]\n    },\n    {\n        \"id\": 1,\n        \"address\": \"Кронверкский проспект, д. 49\",\n        \"activations\": [\n            {\n                \"month\": 10,\n                \"activations\": 18\n            },\n            {\n                \"month\": 11,\n                \"activations\": 2\n            }\n        ]\n    }\n]"
+						}
+					]
 				}
 			]
 		}

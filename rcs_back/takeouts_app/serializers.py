@@ -39,13 +39,29 @@ class AddContainersTakeoutSerializer(serializers.ModelSerializer):
             "requesting_worker_name",
             "requesting_worker_phone",
             "archive_room",
-            "archive_mass"
+            "archive_mass",
+            "archive_description"
         ]
         read_only_fields = [
             "created_at",
             "confirmed_at",
             "emptied_containers",
             "worker_info"
+        ]
+
+
+class ArchiveTakeoutSerializer(serializers.ModelSerializer):
+    """Для создания сбора архива неавторизированным пользователем"""
+
+    class Meta:
+        model = ContainersTakeoutRequest
+        fields = [
+            "id",
+            "building",
+            "requesting_worker_phone",
+            "requesting_worker_email",
+            "archive_room",
+            "archive_description"
         ]
 
 
@@ -87,7 +103,8 @@ class ContainersTakeoutConfirmationSerializer(serializers.ModelSerializer):
             "requesting_worker_name",
             "requesting_worker_phone",
             "archive_room",
-            "archive_mass"
+            "archive_mass",
+            "archive_description"
         ]
         read_only_fields = [
             "created_at",

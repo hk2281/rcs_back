@@ -182,7 +182,7 @@ class Building(BaseBuilding):
 
     def check_conditions_to_notify(self) -> None:
         """Проверяет условия на вынос и если нужно,
-        отправляет email-оповещание о необходимости сбора"""
+        отправляет email-Оповещение о необходимости сбора"""
         if not self._takeout_notified and self.needs_takeout():
 
             self._takeout_notified = True
@@ -213,7 +213,7 @@ class Building(BaseBuilding):
             )
 
             email = EmailMessage(
-                "Оповещание от сервиса RecycleStarter",
+                "Оповещение от сервиса RecycleStarter",
                 msg,
                 None,
                 emails
@@ -255,7 +255,7 @@ class Building(BaseBuilding):
             )
 
             email = EmailMessage(
-                "Оповещание от сервиса RecycleStarter",
+                "Оповещение от сервиса RecycleStarter",
                 msg,
                 None,
                 emails
@@ -297,6 +297,7 @@ class Building(BaseBuilding):
 
     def confirmed_collected_mass(self,
                                  start_date: datetime.date = None,
+                                 end_date: datetime.date = None,
                                  yearly: bool = False
                                  ) -> int:
         """Суммарная масса собранной макулатуры,
@@ -316,7 +317,9 @@ class Building(BaseBuilding):
                     year=start_date.year+1
                 )
             else:
-                end_date = (start_date + datetime.timedelta(days=31)).replace(day=1)
+                if not end_date:
+                    end_date = (start_date + datetime.timedelta(days=31)).replace(day=1)
+
             confirmed_requests = confirmed_requests.filter(
                 confirmed_at__gte=start_date,
                 confirmed_at__lt=end_date
@@ -513,11 +516,19 @@ class Container(models.Model):  # pylint: disable=too-many-public-methods
         else:
             return 0
 
-    def collected_mass(self) -> int:
+    def collected_mass(self,
+                       start_date: datetime.date = None,
+                       end_date: datetime.date = None) -> int:
         """Рассчитанная суммарная масса, собранная из этого контейнера"""
-        takeout_count = self.full_reports.filter(
+        reports = self.full_reports.filter(
             emptied_at__isnull=False
-        ).count()
+        )
+        if start_date and end_date:
+            reports.filter(
+                emptied_at__gte=start_date,
+                emptied_at__lte=end_date
+            )
+        takeout_count = reports.count()
         return takeout_count * self.mass()
 
     def is_active(self) -> bool:
