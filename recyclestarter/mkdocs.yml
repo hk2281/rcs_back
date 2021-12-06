@@ -1,0 +1,10 @@
+site_name: Recycle Starter Backend
+theme:
+  name: rtd-dropdown
+nav:
+  - Home: index.md
+  - Project:
+      - "deploy": project/deploy.md
+      - "usage": project/usage.md
+  - API:
+      - "containers list": api/containers_list.md
