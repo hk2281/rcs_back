@@ -323,8 +323,7 @@ class CollectedMassView(views.APIView):
                       precollected_mass) // 100 / 10  # В тоннах до десятых
         resp["total_mass"] = total_mass
 
-        total_mass = int(total_mass)
-        resp["trees"] = total_mass * 12
-        resp["energy"] = total_mass * 4.7
-        resp["water"] = total_mass * 33
+        resp["trees"] = int(total_mass * 12)
+        resp["energy"] = int(total_mass * 4.7)
+        resp["water"] = int(total_mass * 33)
         return Response(resp)
