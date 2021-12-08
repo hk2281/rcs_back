@@ -185,8 +185,10 @@ class TankTakeoutRequest(models.Model):
         ).order_by(
             "-created_at"
         )
-        if requests and requests[0].confirmed_at:
-            return self.created_at - requests[0].confirmed_at
+        # requests[0] - предыдущий вывоз
+        if requests and requests[0].created_at:
+            three_days_after_creation = requests[0].created_at + datetime.timedelta(days=3)
+            return self.created_at - three_days_after_creation
         else:
             return None
 
