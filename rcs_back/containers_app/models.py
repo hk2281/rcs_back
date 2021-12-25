@@ -698,15 +698,18 @@ class Container(models.Model):  # pylint: disable=too-many-public-methods
 
     def cur_takeout_wait_time(self) -> Union[datetime.timedelta, None]:
         """Текущее время ожидания выноса контейнера"""
-        if (self.is_active() and
-            self.last_full_report() and
-                self.last_full_report().filled_at):
-            try:
-                wait_time = (timezone.now() -
-                             self.last_full_report().filled_at)
-                return wait_time
-            except AttributeError:
-                return None
+        try:
+            if (self.is_active() and
+                self.last_full_report() is not None and
+                    self.last_full_report().filled_at):
+                try:
+                    wait_time = (timezone.now() -
+                                 self.last_full_report().filled_at)
+                    return wait_time
+                except AttributeError:
+                    return None
+        except ValueError:
+            return None
         else:
             return None
 
