@@ -44,4 +44,5 @@ jobs:
             git pull
             docker-compose -f production.yml exec -T postgres backup
             yes yes | docker image prune -a
+            yes ${{ secrets.PASSWORD }} | sudo chown -R user:777 ./data
             docker-compose -f production.yml up --detach --build --force-recreate

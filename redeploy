@@ -3,4 +3,5 @@ cd ../restarter
 git pull
 cd ../rcs_back
 git pull
+chown -R user:777 ./data
 docker-compose -f production.yml up --detach --build --force-recreate
