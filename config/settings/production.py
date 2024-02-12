@@ -74,13 +74,19 @@ INSTALLED_APPS += ["anymail"]  # noqa F405
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 # https://anymail.readthedocs.io/en/stable/installation/#anymail-settings-reference
 # https://anymail.readthedocs.io/en/stable/esps/sendinblue/
-EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
-ANYMAIL = {
-    "SENDINBLUE_API_KEY": env("SENDINBLUE_API_KEY"),
-    "SENDINBLUE_API_URL": env(
-        "SENDINBLUE_API_URL", default="https://api.sendinblue.com/v3/"
-    ),
-}
+# EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
+# ANYMAIL = {
+#     "SENDINBLUE_API_KEY": env("SENDINBLUE_API_KEY"),
+#     "SENDINBLUE_API_URL": env(
+#         "SENDINBLUE_API_URL", default="https://api.sendinblue.com/v3/"
+#     ),
+# }
+EMAIL_HOST = env.str("EMAIL_HOST", default="smtp.mail.ru")
+EMAIL_PORT = env.int("EMAIL_PORT", default=465)
+EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD")
+EMAIL_SUBJECT_PREFIX = ""
+EMAIL_USE_TLS = True
 
 
 # LOGGING
