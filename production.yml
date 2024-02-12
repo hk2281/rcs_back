@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 volumes:
   production_postgres_data: {}
@@ -26,7 +26,6 @@ services:
       - 8000
     restart: always
 
-
   postgres:
     build:
       context: .
@@ -42,26 +41,21 @@ services:
   nginx:
     build: ./compose/production/nginx
     ports:
-      - "80:80"
-      - "443:443"
-      - "5555:5555"
+      - "127.0.0.1:8000:80"
     volumes:
       - ./logs/nginx:/etc/nginx/logs
       - ./rcs_back/media:/app/rcs_back/media
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
     depends_on:
       - django
       - next
       - flower
     restart: always
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
 
   redis:
     image: redis:5.0
     command: ["redis-server", "--appendonly", "yes"]
     volumes:
-        - production_redis_data:/data
+      - production_redis_data:/data
     restart: always
 
   celeryworker:
@@ -90,12 +84,4 @@ services:
       - next-build:/home/next/build
     environment:
       - NEXT_PUBLIC_BACKEND_URL=/api
-    restart: always
-
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     restart: always
