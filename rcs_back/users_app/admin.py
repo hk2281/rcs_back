@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 
-from .models import User
+from .models import User, MJMLTemplate
 
 
 class UserAdmin(DjangoUserAdmin):
@@ -27,5 +27,10 @@ class UserAdmin(DjangoUserAdmin):
     search_fields = ('email',)
     ordering = ('email',)
 
+@admin.register(MJMLTemplate)
+class MJMLTemplateAdmin(admin.ModelAdmin):
+    list_display = ("id", "name", "created_at", "updated_at")
+    search_fields = ("name",)
+    list_filter = ("created_at",)
 
 admin.site.register(User, UserAdmin)

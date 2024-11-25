@@ -42,13 +42,14 @@ class ContainersTakeoutListView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         queryset = ContainersTakeoutRequest.objects.all()
-        if (self.request.user.is_authenticated and
-            self.request.user.groups.filter(
-                name=settings.HOZ_GROUP) and
-                self.request.user.building):
-            queryset = queryset.filter(
-                building=self.request.user.building
-            )
+        if (
+            self.request.user.is_authenticated
+            and
+            self.request.user.groups.filter(name=settings.HOZ_GROUP).exists()
+            and
+            self.request.user.building.exists()
+        ):
+            queryset = queryset.filter(building__in=self.request.user.building.all())
 
         three_months_ago = timezone.now() - timedelta(days=3*30)
         queryset = queryset.filter(
@@ -223,13 +224,12 @@ class TankTakeoutRequestListView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         queryset = TankTakeoutRequest.objects.all()
-        if (self.request.user.is_authenticated and
-            self.request.user.groups.filter(
-                name=settings.HOZ_GROUP) and
-                self.request.user.building):
-            queryset = queryset.filter(
-                building=self.request.user.building
-            )
+        if (
+            self.request.user.is_authenticated and
+            self.request.user.groups.filter(name=settings.HOZ_GROUP).exists() and
+            self.request.user.building.exists()
+        ):
+            queryset = queryset.filter(building__in=self.request.user.building.all())
 
         three_months_ago = timezone.now() - timedelta(days=3*30)
         queryset = queryset.filter(
