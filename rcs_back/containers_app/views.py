@@ -1,24 +1,34 @@
 from tempfile import NamedTemporaryFile
 from typing import Union
-
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+from rest_framework.parsers import MultiPartParser
 from django.conf import settings
 from django.db.models import Q
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, status, views
 from rest_framework.response import Response
-
+from rest_framework.pagination import PageNumberPagination
+import os
 from rcs_back.containers_app.models import Building, BuildingPart, Container, EmailToken
 from rcs_back.utils.mixins import UpdateThenRetrieveModelMixin
+from rcs_back.users_app.models import User
+from rest_framework.permissions import IsAuthenticated
 
 from .serializers import (
+    AsignUsersToBuildingsSerializer,
     BuildingPartSerializer,
     BuildingSerializer,
     ChangeContainerSerializer,
     ContainerPublicAddSerializer,
     ContainerSerializer,
     FullContainerReportSerializer,
+    PasswordSerializer,
     PublicFeedbackSerializer,
+    BuildingAddSerializer,
+    BuildingPartAddSerializer,
+    AsignBuildingToUserSerializer,
+    UserSerializer,
 )
 from .tasks import (
     container_add_report,
@@ -104,13 +114,15 @@ class ContainerListView(generics.ListAPIView):
         queryset = Container.objects.filter(
             ~Q(status=Container.RESERVED)
         )
-        if (self.request.user.is_authenticated and
-            self.request.user.groups.filter(
-                name=settings.HOZ_GROUP) and
-                self.request.user.building):
-            queryset = queryset.filter(
-                building=self.request.user.building
-            )
+        if (
+            self.request.user.is_authenticated
+            and
+            self.request.user.groups.filter(name=settings.HOZ_GROUP).exists()
+            and
+            self.request.user.building.exists()
+        ):
+            queryset = queryset.filter(building__in=self.request.user.building.all())
+
         if "is_full" in self.request.query_params:
             is_full_param = self.request.query_params.get("is_full")
             is_full = not is_full_param == "false"
@@ -143,6 +155,164 @@ class BuildingListView(generics.ListAPIView):
     queryset = Building.objects.all()
     permission_classes = [permissions.AllowAny]
 
+
+class BuildingListPagiView(generics.ListAPIView):
+    """Списко зданий с пагинацией"""
+    class SmallPagesPagination(PageNumberPagination):  
+        page_size = 15
+    serializer_class = BuildingSerializer
+    queryset = Building.objects.all()
+    permission_classes = [permissions.AllowAny]
+    pagination_class = SmallPagesPagination
+
+
+class BuildingAddView(generics.CreateAPIView):
+    """Добавление нового здания"""
+    queryset = Building.objects.all()
+    serializer_class = BuildingAddSerializer
+    parser_classes = [MultiPartParser]
+
+
+class BuildingUpdateView(generics.UpdateAPIView):
+    """Обновления данных о здании"""
+    queryset = Building.objects.all()  # Все здания, которые можно обновить
+    serializer_class = BuildingAddSerializer  # Сериализатор для обновления
+    lookup_field = 'pk' 
+
+    def patch(self, request, *args, **kwargs):
+        # Получаем объект здания, который нужно обновить
+        building = self.get_object()
+
+        # Проверяем, что в запросе передан пустой passage_scheme
+        if 'passage_scheme' in request.data and request.data['passage_scheme'] == '':
+            # Если изображение есть в модели, удаляем его
+            if building.passage_scheme:
+                # Удаляем физический файл
+                if os.path.isfile(building.passage_scheme.path):
+                    os.remove(building.passage_scheme.path)
+                # Удаляем запись в базе данных
+                building.passage_scheme = None
+                building.save()
+
+        return super().patch(request, *args, **kwargs)
+
+class BuildingUsersView(views.APIView):
+    def get(self, request, building_id):
+        building = get_object_or_404(Building, id=building_id)
+        users = User.objects.filter(building=building)
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class BuildingDeleteView(views.APIView):
+    """Удаление записи о здании"""
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        # Получаем ID здания и пароль из тела запроса
+        building_id = kwargs.get('pk')
+        password = request.data.get('password')
+        user = request.user
+
+        # Проверяем правильность введенного пароля
+        if not password or not user.check_password(password):
+            return Response(
+                {"detail": "Неверный пароль. Доступ запрещен."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        # Находим здание для удаления
+        try:
+            building = Building.objects.get(pk=building_id)
+        except Building.DoesNotExist:
+            return Response(
+                {"detail": "Здание не найдено."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        # Удаляем здание
+        building.delete()
+        return Response({"detail": "Здание успешно удалено."}, status=status.HTTP_204_NO_CONTENT)
+
+    # Добавление документации для swagger
+    def get_serializer_class(self):
+        return PasswordSerializer
+    
+class BuildingPartAddView(generics.CreateAPIView):
+    """Добавление корпуса здания"""
+    queryset = BuildingPart.objects.all()
+    serializer_class = BuildingPartAddSerializer
+
+
+class BuildingPartUpdateView(generics.UpdateAPIView):
+    """Обновление данных о корпусе"""
+    queryset = BuildingPart.objects.all()
+    serializer_class = BuildingPartAddSerializer
+    lookup_field = 'pk'
+
+
+class BuildingPartDeleteView(generics.DestroyAPIView):
+    """Удаление данных о корпусе"""
+    queryset = BuildingPart.objects.all()
+    serializer_class = BuildingPartAddSerializer
+    lookup_field = 'pk'
+
+
+class AsignBuildingsToUserView(views.APIView):
+    @extend_schema(
+        request=AsignBuildingToUserSerializer,
+        responses=AsignBuildingToUserSerializer,
+        parameters=[
+            OpenApiParameter("user_id", int, OpenApiParameter.PATH),
+        ]
+    )
+    def patch(self, request, user_id):
+        """Добавляет здания для пользователя по его ID."""
+        user = User.objects.get(pk=user_id)
+        serializer = AsignBuildingToUserSerializer(user, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AsignUserToBuildingsView(views.APIView):
+    @extend_schema(
+        request=AsignUsersToBuildingsSerializer,
+        responses=AsignUsersToBuildingsSerializer,
+        parameters=[
+            OpenApiParameter("building_id", int, OpenApiParameter.PATH),
+        ]
+    )
+    def patch(self, request, building_id):
+        """Привязывает здание к пользователям по их ID."""
+        # Получаем здание по ID
+        building = Building.objects.get(pk=building_id)
+
+        # Сериализуем входные данные
+        serializer = AsignUsersToBuildingsSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            # Получаем список ID пользователей
+            user_ids = serializer.validated_data.get('user_ids', [])
+
+            # Если список не пустой, получаем пользователей
+            if user_ids:
+                # Получаем пользователей, которые должны быть связаны с этим зданием
+                users = User.objects.filter(id__in=user_ids)
+                
+                # Убираем это здание у всех пользователей, к которым оно было привязано
+                building.user_set.clear()
+                
+                # Привязываем это здание к новым пользователям
+                for user in users:
+                    user.building.add(building)
+            else:
+                # Если список пустой, убираем это здание у всех пользователей, к которым оно было привязано
+                building.user_set.clear()
+            # Возвращаем успешный ответ
+            return Response({"message": "Buildings assigned to users successfully."}, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ContainerPublicAddView(generics.CreateAPIView):
     """Добавление своего контейнера с главной страницы"""

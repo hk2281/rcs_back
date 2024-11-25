@@ -9,11 +9,22 @@ from drf_spectacular.views import (
 )
 
 from rcs_back.containers_app.views import (
+    AsignUserToBuildingsView,
     BuildingListView,
     BuildingPartView,
+    BuildingAddView,
+    BuildingDeleteView,
+    BuildingUpdateView,
+    AsignBuildingsToUserView,
+    BuildingListPagiView,
+    BuildingPartAddView,
+    BuildingPartUpdateView,
+    BuildingPartDeleteView,
+    BuildingUsersView,
     ContainerCountView,
     FullContainerReportView,
     PublicFeedbackView,
+
 )
 from rcs_back.takeouts_app.views import (
     CollectedMassView,
@@ -25,16 +36,27 @@ from rcs_back.takeouts_app.views import (
     TankTakeoutDetailView,
     TankTakeoutRequestListView,
 )
-from rcs_back.users_app.views import RetrieveCurrentUserView
+from rcs_back.users_app.views import RetrieveCurrentUserView, TemplateManager, UserListView
+
 
 urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
     path("api/stats", include("rcs_back.stats_app.urls")),
     path("api/auth/users/me/", RetrieveCurrentUserView.as_view()),
+#     path('api/auth/users/me/<int:pk>/',RetrieveCurrentUserView.as_view()),
+    path ('api/auth/all-users', UserListView.as_view()),
+    path('api/email-templates',TemplateManager.as_view()),
     path("api/auth/", include("djoser.urls")),
     path("api/auth/", include("djoser.urls.jwt")),
     path("api/containers", include("rcs_back.containers_app.urls")),
     path("api/buildings", BuildingListView.as_view()),
+    path('api/buildings/pagi', BuildingListPagiView.as_view(), name='building-list-pagi'),
+    path('api/buildings/<int:building_id>/users/', BuildingUsersView.as_view(), name='building-users'),
+    path('api/buildings/create', BuildingAddView.as_view(), name='building-create'),
+    path('api/buildings/delete/<int:pk>', BuildingDeleteView.as_view(), name='building-delete'),
+    path('api/buildings/<int:pk>',BuildingUpdateView.as_view(), name='building-update'),
+    path('api/buildings/asign-building-to-user/<int:user_id>',AsignBuildingsToUserView.as_view(), name='update-user-buildings'),
+    path('api/buildings/asign-user-to-buildings/<int:building_id>', AsignUserToBuildingsView.as_view()),
     path("api/container-takeout-requests/<int:pk>",
          ContainersTakeoutDetailView.as_view()),
     path("api/container-takeout-requests/<int:pk>/container-list",
@@ -46,6 +68,9 @@ urlpatterns = [
          ContainersTakeoutListView.as_view()),
     path("api/public-feedback", PublicFeedbackView.as_view()),
     path("api/building-parts", BuildingPartView.as_view()),
+    path('api/building-parts/create',BuildingPartAddView.as_view(), name='building-part-create'),
+    path('api/building-parts/<int:pk>', BuildingPartUpdateView.as_view(), name='building-part-update'),
+    path('api/building-parts/<int:pk>/delete', BuildingPartDeleteView.as_view(), name='building-part-delete'),
     path("api/takeout-conditions", TakeoutConditionListView.as_view()),
     path("api/takeout-conditions/<int:pk>",
          TakeoutConditionDetailView.as_view()),

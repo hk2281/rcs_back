@@ -242,15 +242,18 @@ class Building(BaseBuilding):
                 emails.append(company.email)
             phone = ""
             name = ""
+            email = ""
             hoz_worker = self.get_hoz_workers().first()
             if hoz_worker:
                 phone = hoz_worker.phone
                 name = hoz_worker.name
+                email = hoz_worker.email
 
             msg = render_to_string("tank_takeout.html", {
                 "address": self.address,
                 "phone": phone,
-                "name": name
+                "name": name,
+                "email": email
             }
             )
 
@@ -428,7 +431,7 @@ class Container(models.Model):  # pylint: disable=too-many-public-methods
 
     building = models.ForeignKey(
         to=Building,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name="containers",
         verbose_name="здание"
     )
