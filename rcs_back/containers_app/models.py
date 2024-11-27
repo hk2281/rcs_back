@@ -667,15 +667,16 @@ class Container(models.Model):  # pylint: disable=too-many-public-methods
         if self.is_public():
             if (self.building_part and
                     self.building_part.takeout_condition.public_days):
-                return self.building_part.takeout_condition.public_days
+                return self.building_part.takeout_condition.public_days or 0
             else:
-                return self.building.takeout_condition.public_days
+                return self.building.takeout_condition.public_days or 0
         else:
             if (self.building_part and
                     self.building_part.takeout_condition.office_days):
-                return self.building_part.takeout_condition.office_days
+                return self.building_part.takeout_condition.office_days or 0
             else:
-                return self.building.takeout_condition.office_days
+                return self.building.takeout_condition.office_days or 0
+        return 0
 
     def check_time_conditions(self) -> bool:
         '''Выполнены ли условия "не больше N дней"'''
