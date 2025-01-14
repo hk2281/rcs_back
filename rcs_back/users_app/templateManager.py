@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from functools import wraps
 from pathlib import Path
+from typing import Union
 import random
 import string
 
@@ -20,8 +21,8 @@ class Template:
     path:str
     name: str
     description: str
-    mjml_template: str | None = None
-    html_template: str | None = None
+    mjml_template: Union[str,None] = None
+    html_template: Union[str,None] = None
     if_statement: bool = False
     for_statement: bool = False
     template_id:str = field(default_factory=generate_random_id)
@@ -188,7 +189,7 @@ class MailTemplateManager():
             }
         
     @property
-    def current_template(self) -> str|None:
+    def current_template(self) -> Union[str,None]:
         return self._current_template
 
     @current_template.setter
