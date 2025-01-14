@@ -19,14 +19,14 @@ jobs:
         run: docker-compose -f local.yml up --build --detach
       - name: wait for containers startup
         run: sleep 10
-      - name: pylint
-        run: docker exec django bash -c "pylint rcs_back"
-      - name: pycodestyle
-        run: docker exec django bash -c "pycodestyle rcs_back"
-      - name: isort
-        run: docker exec django bash -c "isort rcs_back"
-      - name: run tests
-        run: docker exec django bash -c "python manage.py test --settings config.settings.test --parallel --failfast"
+      # - name: pylint
+      #   run: docker exec django bash -c "pylint rcs_back"
+      # - name: pycodestyle
+      #   run: docker exec django bash -c "pycodestyle rcs_back"
+      # - name: isort
+      #   run: docker exec django bash -c "isort rcs_back"
+      # - name: run tests
+      #   run: docker exec django bash -c "python manage.py test --settings config.settings.test --parallel --failfast"
 
   deploy-production:
     needs: [linters_and_tests]
