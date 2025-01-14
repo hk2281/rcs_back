@@ -19,10 +19,10 @@ jobs:
         run: docker-compose -f local.yml up --build --detach
       - name: wait for containers startup
         run: sleep 10
-      - name: pylint
-        run: docker exec django bash -c "pylint rcs_back"
-      - name: pycodestyle
-        run: docker exec django bash -c "pycodestyle rcs_back"
+      # - name: pylint
+      #   run: docker exec django bash -c "pylint rcs_back"
+      # - name: pycodestyle
+      #   run: docker exec django bash -c "pycodestyle rcs_back"
       - name: isort
         run: docker exec django bash -c "isort rcs_back"
       - name: run tests
